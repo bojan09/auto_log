@@ -1,0 +1,2 @@
+# AutoLog handoff
+Use the existing /workspace/auto_log checkout and master only. Do not create a worktree or another branch. Read docs/PRODUCT_SPEC.md, docs/PHASE_STATUS.md and docs/TEST_REPORT.md. Keep all vehicle data local and all displayed summaries honest. Future phases must pass relevant tests before commit/push to origin/master. Run npm start, npm test and npm run test:browser. Chromium defaults to /usr/bin/chromium, configurable through CHROMIUM_PATH. Do not invent completed checks or publish the environment automatically.

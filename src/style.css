@@ -1,0 +1,421 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  color: #f0f8f7;
+  background: #070e12;
+  --mint: #34e5ce;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+}
+aside {
+  width: 240px;
+  padding: 30px 22px;
+  border-right: 1px solid #28424a;
+  display: flex;
+  flex-direction: column;
+}
+aside p {
+  margin-top: auto;
+  color: #98aeb5;
+  font-size: 12px;
+}
+h1 {
+  font-size: 28px;
+}
+span,
+small {
+  color: var(--mint);
+}
+nav {
+  display: grid;
+  gap: 12px;
+}
+button {
+  font: inherit;
+  background: #143036;
+  color: #eafffc;
+  border: 1px solid #28424a;
+  border-radius: 10px;
+  padding: 12px 18px;
+  cursor: pointer;
+}
+button:hover {
+  border-color: var(--mint);
+}
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--mint);
+  outline-offset: 3px;
+}
+main {
+  padding: 32px;
+  max-width: 1350px;
+  width: 100%;
+  margin: auto;
+}
+header,
+.heading,
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+header {
+  margin-bottom: 35px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+}
+.card,
+.hero {
+  background: linear-gradient(135deg, #16272d, #0b171c);
+  border: 1px solid #28424a;
+  border-radius: 18px;
+  padding: 24px;
+  margin: 18px 0;
+}
+.hero {
+  min-height: 300px;
+  background: radial-gradient(ellipse at 45% 70%, #075850, #101c22 65%);
+}
+.car {
+  font-size: 100px;
+  text-align: center;
+  color: var(--mint);
+  padding: 20px;
+}
+.muted {
+  color: #98aeb5;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  margin-top: 0;
+}
+.metric {
+  font-size: 32px;
+  font-weight: 700;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+dialog {
+  background: #101c22;
+  color: #f0f8f7;
+  border: 1px solid #28424a;
+  border-radius: 18px;
+  width: min(480px, 95vw);
+}
+dialog::backdrop {
+  background: #000b;
+}
+label {
+  display: grid;
+  gap: 7px;
+  margin: 15px 0;
+}
+input {
+  font: inherit;
+  background: #070e12;
+  border: 1px solid #28424a;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  width: 100%;
+}
+footer {
+  margin-top: 24px;
+}
+@media (max-width: 700px) {
+  body {
+    display: block;
+  }
+  aside {
+    width: 100%;
+    padding: 12px 20px;
+    border: 0;
+  }
+  aside h1 {
+    margin: 0;
+  }
+  aside p {
+    display: none;
+  }
+  nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    background: #070e12;
+    padding: 12px;
+    z-index: 2;
+    border-top: 1px solid #28424a;
+  }
+  main {
+    padding: 20px 16px 90px;
+  }
+  header {
+    margin-bottom: 20px;
+  }
+  .hero {
+    padding: 18px;
+  }
+  h2 {
+    font-size: 25px;
+  }
+}
+figure {
+  margin: 14px 0;
+}
+.vehicle-art {
+  display: block;
+  width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 30px #00b7aa22);
+}
+figcaption {
+  font-size: 11px;
+  text-align: center;
+}
+input[type="file"] {
+  font-size: 12px;
+}
+dialog {
+  max-height: 90vh;
+  overflow: auto;
+}
+button {
+  min-height: 44px;
+}
+header small {
+  font-size: 14px;
+}
+.card {
+  box-shadow: 0 15px 35px #0002;
+}
+.hero .vehicle-art {
+  max-height: 320px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  button {
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+  }
+  .card {
+    animation: appear 0.3s ease-out;
+  }
+  @keyframes appear {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+select,
+textarea {
+  font: inherit;
+  background: #070e12;
+  border: 1px solid #28424a;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  width: 100%;
+}
+textarea {
+  min-height: 90px;
+}
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--mint);
+}
+nav [aria-current="page"] {
+  background: #123d3b;
+  border-left: 3px solid var(--mint);
+  color: var(--mint);
+}
+h1 {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.skip {
+  position: absolute;
+  top: -100px;
+}
+.skip:focus {
+  top: 0;
+  background: #101c22;
+  color: #34e5ce;
+  padding: 12px;
+  z-index: 5;
+}
+.checkbox {
+  display: flex;
+  align-items: center;
+}
+.checkbox input {
+  width: 24px;
+  height: 24px;
+}
+.checkbox span {
+  color: inherit;
+}
+#custom {
+  color: #98aeb5;
+  font-size: 13px;
+}
+#app:focus {
+  outline: none;
+}
+#error {
+  color: #ff9eab;
+}
+button:disabled {
+  cursor: default;
+  opacity: 0.7;
+  background: transparent;
+  border-color: transparent;
+}
+.mobile-add {
+  display: none;
+}
+.hero {
+  position: relative;
+  overflow: hidden;
+}
+.hero:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    165deg,
+    transparent 0 44px,
+    #34e5ce05 45px 46px
+  );
+  pointer-events: none;
+}
+.hero > * {
+  position: relative;
+}
+.card h3 {
+  font-size: 19px;
+}
+.card .actions button {
+  font-size: 13px;
+  padding: 10px 12px;
+}
+main {
+  align-self: flex-start;
+  margin: 0 auto;
+}
+aside {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+nav button {
+  text-align: left;
+}
+.future {
+  font-size: 13px;
+}
+header {
+  border-bottom: 1px solid #20383d;
+  padding-bottom: 18px;
+}
+@media (max-width: 700px) {
+  aside {
+    position: static;
+    height: auto;
+  }
+  nav {
+    gap: 3px;
+    padding: 9px 5px;
+  }
+  nav button {
+    padding: 8px 5px;
+    font-size: 11px;
+    text-align: center;
+    flex: 1;
+  }
+  nav .future {
+    font-size: 9px;
+  }
+  nav .desktop-only {
+    display: none;
+  }
+  .mobile-add {
+    display: block;
+    flex: 0 0 46px;
+    border-radius: 50%;
+    font-size: 27px;
+    background: #17534c;
+  }
+  .hero {
+    margin-top: 10px;
+  }
+  .card {
+    margin: 8px 0;
+  }
+  .grid {
+    gap: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  .vehicle-hero {
+    min-height: 320px;
+    padding-top: 40px;
+    padding-right: 58%;
+  }
+  .vehicle-hero figure {
+    position: absolute;
+    right: 20px;
+    top: 25px;
+    width: 55%;
+  }
+  .vehicle-hero .vehicle-art {
+    height: 230px;
+  }
+  .vehicle-hero h2 {
+    margin-top: 0;
+  }
+}
+@media (max-width: 700px) {
+  .vehicle-hero + .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .vehicle-hero + .grid .card {
+    padding: 16px;
+  }
+  .vehicle-hero + .grid .card:last-child {
+    grid-column: 1/-1;
+  }
+  .vehicle-hero + .grid h3 {
+    font-size: 16px;
+  }
+}
+summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 10px 0;
+}

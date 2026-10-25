@@ -1,0 +1,3 @@
+# Asset credits
+The AutoLog A mark and six generic body-style SVGs were authored in this repository. PNG install icons are rasterizations of the original mark. No manufacturer badges or third-party car photographs are bundled. These silhouettes are explicitly labeled generic, not exact model depictions. User photos stay in IndexedDB and take precedence over silhouettes. System fonts require no font downloads and support Macedonian Cyrillic.
+User-supplied concept images were inspected in the conversation as visual references. Their original binaries were not available in the workspace; they have not been copied or misrepresented as bundled assets.

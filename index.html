@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><meta name="theme-color" content="#070e12" /><link
+    rel="manifest"
+    href="manifest.webmanifest"
+  /><link rel="stylesheet" href="src/style.css" /><title>AutoLog</title>
+  <body>
+    <a class="skip" href="#app">AutoLog ↓</a>
+    <aside>
+      <h1>
+        <img src="assets/icon.svg" alt="" width="36" height="36" /> Auto<span
+          >Log</span
+        >
+      </h1>
+      <nav aria-label="AutoLog">
+        <button data-view="garage" class="desktop-only">Garage</button
+        ><button data-view="dashboard">Dashboard</button
+        ><button disabled class="future" id="services-nav">
+          Services · Phase 2</button
+        ><button id="quick-add" class="mobile-add" aria-label="Add vehicle">
+          +</button
+        ><button disabled class="future" id="fuel-nav">Fuel · Phase 3</button
+        ><button data-view="more">More</button>
+      </nav>
+      <p>Local-first · Offline PWA</p>
+    </aside>
+    <main>
+      <header>
+        <small>Your vehicle’s digital companion</small
+        ><button id="language">MK</button>
+      </header>
+      <div id="app" tabindex="-1"></div>
+    </main>
+    <dialog id="editor">
+      <form id="vehicle">
+        <h2 id="form-title"></h2>
+        <input name="id" type="hidden" /><label
+          >Make / Производител<input
+            name="make"
+            list="makes"
+            required
+            maxlength="80" /></label
+        ><datalist id="makes">
+          <option>Fiat</option>
+          <option>Ford</option>
+          <option>Volkswagen</option>
+          <option>Audi</option>
+          <option>Mercedes-Benz</option>
+          <option>BMW</option>
+          <option>Peugeot</option></datalist
+        ><label
+          >Model / Модел<input
+            name="model"
+            list="models"
+            required
+            maxlength="80"
+            placeholder="Sedici"
+        /></label>
+        <p id="custom"></p>
+        <datalist id="models"></datalist
+        ><label
+          >Year / Година<input
+            name="year"
+            type="number"
+            min="1886"
+            max="2100"
+            required /></label
+        ><label
+          >Engine, fuel, drivetrain / Мотор, гориво, погон<input
+            name="variant"
+            maxlength="150"
+            placeholder="2.0 MultiJet · Diesel · 4x4" /></label
+        ><label
+          >Odometer (km) / Километража<input
+            name="odometer"
+            type="number"
+            min="0"
+            step="1"
+            required /></label
+        ><label
+          >Photo<input
+            name="photo"
+            type="file"
+            accept="image/jpeg,image/png,image/webp" /></label
+        ><label
+          >Body style<select name="bodyStyle">
+            <option
+              value="crossover"
+              data-en="Crossover / SUV"
+              data-mk="Кросовер / СУВ"
+            >
+              Crossover / SUV
+            </option>
+            <option value="hatchback" data-en="Hatchback" data-mk="Хечбек">
+              Hatchback
+            </option>
+            <option value="sedan" data-en="Sedan" data-mk="Лимузина">
+              Sedan
+            </option>
+            <option value="coupe" data-en="Coupe" data-mk="Купе">Coupe</option>
+            <option value="van" data-en="Van" data-mk="Комбе">Van</option>
+            <option value="motorcycle" data-en="Motorcycle" data-mk="Мотоцикл">
+              Motorcycle
+            </option>
+          </select></label
+        ><label>Nickname<input name="nickname" maxlength="80" /></label
+        ><label>License plate<input name="plate" maxlength="30" /></label
+        ><label>Notes<textarea name="notes" maxlength="2000"></textarea></label
+        ><label
+          >Distance unit<select name="unit">
+            <option value="km" data-en="Kilometers" data-mk="Километри">
+              Kilometers
+            </option>
+            <option value="mi" data-en="Miles" data-mk="Милји">Miles</option>
+          </select></label
+        ><label
+          >Fuel type<select name="fuel">
+            <option value="petrol" data-en="Petrol" data-mk="Бензин">
+              Petrol
+            </option>
+            <option value="diesel" data-en="Diesel" data-mk="Дизел">
+              Diesel
+            </option>
+            <option value="electric" data-en="Electric" data-mk="Електрично">
+              Electric
+            </option>
+            <option value="hybrid" data-en="Hybrid" data-mk="Хибрид">
+              Hybrid
+            </option>
+            <option value="other" data-en="Other" data-mk="Друго">Other</option>
+          </select></label
+        ><label
+          >Purchase date<input
+            name="purchaseDate"
+            type="date"
+            maxlength="50" /></label
+        ><label
+          >Purchase price<input
+            name="purchasePrice"
+            type="number"
+            maxlength="50"
+            min="0"
+            step="0.01" /></label
+        ><label
+          >Currency<input name="currency" type="text" maxlength="50" /></label
+        ><label>Color<input name="color" type="text" maxlength="50" /></label
+        ><label class="checkbox"
+          ><input type="checkbox" name="removePhoto" /><span
+            id="remove-photo-text"
+          ></span
+        ></label>
+        <footer>
+          <button type="button" id="cancel">Cancel / Откажи</button
+          ><button type="submit">Save / Зачувај</button>
+        </footer>
+        <p id="error" role="alert"></p>
+      </form>
+    </dialog>
+    <script type="module" src="src/boot.js"></script>
+  </body>
+</html>
