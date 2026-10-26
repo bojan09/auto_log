@@ -1,3 +1,5 @@
+import { list, dueStatus, compareDue } from "./maintenance.js";
+import { maintenancePanel } from "./maintenance-ui.js";
 import { openDatabase, saveVehicle } from "./storage.js";
 import { messages } from "./i18n.js";
 
@@ -20,6 +22,8 @@ let language =
     (navigator.language.startsWith("mk") ? "mk" : "en"),
   view = "garage",
   vehicles = [],
+  schedules = [],
+  records = [],
   selected = preferences.getItem("selected");
 const app = document.querySelector("#app"),
   dialog = document.querySelector("dialog"),
@@ -36,6 +40,10 @@ async function load() {
     r.onsuccess = () => resolve(r.result);
     r.onerror = () => reject(r.error);
   });
+  [schedules, records] = await Promise.all([
+    list(db, "serviceSchedules"),
+    list(db, "serviceRecords"),
+  ]);
   render();
 }
 function node(tag, text, cls) {
@@ -114,6 +122,26 @@ function render() {
     app.append(c);
     return;
   }
+  const panel = (summary = false) =>
+    maintenancePanel({
+      db,
+      vehicle: current,
+      vehicles,
+      schedules,
+      records,
+      language,
+      onChange: load,
+      onSelect: (id) => {
+        selected = id;
+        preferences.setItem("selected", id);
+        render();
+      },
+      summary,
+    });
+  if (view === "services") {
+    app.append(panel());
+    return;
+  }
   if (view === "dashboard" && current) {
     const hero = node("section", undefined, "hero vehicle-hero");
     hero.append(
@@ -146,14 +174,27 @@ function render() {
           " " +
           (current.unit || "km"),
       ],
-      [t("next"), t("none")],
+      [
+        t("next"),
+        schedules
+          .filter((s) => s.vehicleId === current.id)
+          .map((s) => ({ s, d: dueStatus(s, current, records) }))
+          .sort(compareDue)[0]?.s.title || t("none"),
+      ],
       [t("care"), t("insufficient")],
     ]) {
       const c = node("section", undefined, "card");
       c.append(node("h3", title), node("p", value));
+      if (title === t("next"))
+        c.append(
+          button(t("services"), () => {
+            view = "services";
+            render();
+          }),
+        );
       grid.append(c);
     }
-    app.append(grid);
+    app.append(grid, panel(true));
     const history = node("details", undefined, "card");
     history.append(node("summary", t("mileageHistory")));
     for (const entry of current.odometerHistory || []) {
@@ -202,8 +243,20 @@ function render() {
       button(t("ui4"), async () => {
         if (!confirm(t("ui5"))) return;
         await new Promise((resolve, reject) => {
-          const tx = db.transaction("vehicles", "readwrite");
+          const related = [
+            "serviceSchedules",
+            "serviceRecords",
+            "odometerEntries",
+          ];
+          const tx = db.transaction(["vehicles", ...related], "readwrite");
           tx.objectStore("vehicles").delete(v.id);
+          for (const name of related) {
+            const request = tx.objectStore(name).getAll();
+            request.onsuccess = () =>
+              request.result
+                .filter((row) => row.vehicleId === v.id)
+                .forEach((row) => tx.objectStore(name).delete(row.id));
+          }
           tx.oncomplete = resolve;
           tx.onerror = () => reject(tx.error);
         });
@@ -336,7 +389,7 @@ function art(v) {
   return figure;
 }
 function localize() {
-  document.querySelector("#services-nav").textContent = t("ui13");
+  document.querySelector("#services-nav").textContent = t("services");
   document.querySelector("#fuel-nav").textContent = t("ui14");
   document.querySelector("#quick-add").setAttribute("aria-label", t("add"));
   const labels =

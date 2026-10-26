@@ -1,3 +1,17 @@
+# Phase 2 validation
+
+- `npm run check`: syntax checks passed, including maintenance logic and UI modules.
+- `npm test`: 9 tests passed across storage, localization and maintenance.
+- `npm run test:browser`: Phase 1 acceptance and accessibility regressions passed; Phase 2 acceptance passed after narrowing a navigation locator that also matched the new dashboard shortcut.
+- `node tests/maintenance-browser.mjs`: final Phase 2 journey passed, including EN/MK accessibility scans of the page and schedule dialog.
+- Calendar/threshold tests also passed with `TZ=America/Los_Angeles` and `TZ=Pacific/Kiritimati` (2 selected tests per run).
+
+Phase 2 browser coverage: create a Sedici oil/filter schedule; complete and derive next occurrence; filter due states; edit cost; verify Golf isolation; persist across reload; switch languages; reopen and delete a record offline; confirm recurrence rolls back. Core tests cover month-end/leap-year arithmetic, either-threshold semantics, miles/kilometers, invalid intervals/dates/mileage, historical mileage order, atomic record writes, duplicate completion rejection, edit snapshots and schedule removal preserving history.
+
+Screenshots at 360×640, 390×844, 768×1024 and 1440×900 were produced in ignored test-results/. Mobile and desktop screenshots were visually reviewed against the supplied concepts for graphite/mint surfaces, status colors, card borders, timeline markers and responsive navigation. Long explanatory text was collapsed into an accessible disclosure to keep mobile actions visible. A final Macedonian mobile accessibility check exposed transient low contrast during card fade-in; the opacity fade was removed while preserving translation motion. The subsequent scans passed. No horizontal overflow or browser page errors occurred. No unexecuted physical-device, screen-reader or non-Chromium tests are claimed.
+
+Maintenance rules: due on the exact date or distance threshold, overdue after either threshold, due soon within user-configured day/distance warnings. Latest linked service after the schedule baseline determines recurrence; historical records remain stored. Deleting/editing a service never silently reduces the current vehicle odometer; deliberate corrections use Garage. Costs retain their original currency; no currency conversion or ledger totals are introduced here. Inline receipts and attachments remain planned for Documents.
+
 # Phase 1 validation
 
 Commands run in /workspace/auto_log:

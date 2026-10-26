@@ -222,7 +222,7 @@ header small {
   }
   @keyframes appear {
     from {
-      opacity: 0;
+      opacity: 1;
       transform: translateY(5px);
     }
     to {
@@ -418,4 +418,90 @@ summary {
   cursor: pointer;
   min-height: 44px;
   padding: 10px 0;
+}
+.maintenance {
+  margin-top: 24px;
+}
+.filters {
+  margin-top: 20px;
+}
+.filters [aria-pressed="true"] {
+  border-color: var(--mint);
+  color: var(--mint);
+}
+.service-card {
+  position: relative;
+  border-left: 3px solid var(--mint);
+}
+.service-card.overdue {
+  border-left-color: #e86774;
+}
+.service-card.due,
+.service-card.soon {
+  border-left-color: #efb44f;
+}
+.status {
+  display: inline-block;
+  border-radius: 7px;
+  padding: 5px 9px;
+  background: #163c3b;
+  color: #7aeee0;
+}
+.status.overdue {
+  background: #4a252d;
+  color: #ffb5bf;
+}
+.status.soon,
+.status.due {
+  background: #46351e;
+  color: #ffd98e;
+}
+.service-timeline {
+  border-left: 1px solid #28424a;
+  padding-left: 20px;
+}
+.service-timeline .card:before {
+  content: "";
+  position: absolute;
+  left: -29px;
+  top: 30px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 0 4px #070e12;
+}
+.service-card h4 {
+  margin: 0 0 12px;
+}
+.service-card p {
+  overflow-wrap: anywhere;
+}
+.maintenance select {
+  max-width: 100%;
+}
+.maintenance-help {
+  font-size: 14px;
+  margin: 8px 0 16px;
+}
+.maintenance-help summary {
+  color: #98aeb5;
+}
+.maintenance-help p {
+  max-width: 75ch;
+}
+.service-card .actions {
+  margin-top: 14px;
+}
+.service-card p {
+  margin: 10px 0;
+}
+.maintenance > .muted {
+  font-size: 13px;
+  max-width: 80ch;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .service-timeline .card {
+    animation: appear 0.25s ease-out;
+  }
 }
