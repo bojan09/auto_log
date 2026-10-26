@@ -1,8 +1,10 @@
+import { financePanel } from "./finance-ui.js";
 import { list, dueStatus, compareDue } from "./maintenance.js";
 import { maintenancePanel } from "./maintenance-ui.js";
 import { openDatabase, saveVehicle } from "./storage.js";
 import { messages } from "./i18n.js";
 
+const financeStates = {};
 const preferences = {
   getItem(key) {
     try {
@@ -24,6 +26,8 @@ let language =
   vehicles = [],
   schedules = [],
   records = [],
+  fuel = [],
+  expenses = [],
   selected = preferences.getItem("selected");
 const app = document.querySelector("#app"),
   dialog = document.querySelector("dialog"),
@@ -40,9 +44,11 @@ async function load() {
     r.onsuccess = () => resolve(r.result);
     r.onerror = () => reject(r.error);
   });
-  [schedules, records] = await Promise.all([
+  [schedules, records, fuel, expenses] = await Promise.all([
     list(db, "serviceSchedules"),
     list(db, "serviceRecords"),
+    list(db, "fuelEntries"),
+    list(db, "expenseEntries"),
   ]);
   render();
 }
@@ -138,6 +144,32 @@ function render() {
       },
       summary,
     });
+  const finance = (summary = false) =>
+    financePanel({
+      db,
+      vehicle: current,
+      vehicles,
+      fuel,
+      expenses,
+      services: records,
+      language,
+      onChange: load,
+      onSelect: (id) => {
+        selected = id;
+        preferences.setItem("selected", id);
+        render();
+      },
+      onServices: () => {
+        view = "services";
+        render();
+      },
+      summary,
+      state: (financeStates[current?.id] ??= {}),
+    });
+  if (view === "fuel") {
+    app.append(finance());
+    return;
+  }
   if (view === "services") {
     app.append(panel());
     return;
@@ -194,7 +226,7 @@ function render() {
         );
       grid.append(c);
     }
-    app.append(grid, panel(true));
+    app.append(grid, finance(true), panel(true));
     const history = node("details", undefined, "card");
     history.append(node("summary", t("mileageHistory")));
     for (const entry of current.odometerHistory || []) {
@@ -247,6 +279,8 @@ function render() {
             "serviceSchedules",
             "serviceRecords",
             "odometerEntries",
+            "fuelEntries",
+            "expenseEntries",
           ];
           const tx = db.transaction(["vehicles", ...related], "readwrite");
           tx.objectStore("vehicles").delete(v.id);
@@ -390,7 +424,7 @@ function art(v) {
 }
 function localize() {
   document.querySelector("#services-nav").textContent = t("services");
-  document.querySelector("#fuel-nav").textContent = t("ui14");
+  document.querySelector("#fuel-nav").textContent = t("fuel");
   document.querySelector("#quick-add").setAttribute("aria-label", t("add"));
   const labels =
     language === "en"
@@ -430,7 +464,7 @@ function localize() {
           "Валута (на пр. MKD или EUR)",
           "Боја (незадолжително)",
         ];
-  document.querySelectorAll("form label:not(.checkbox)").forEach((label, i) => {
+  document.querySelectorAll("#vehicle label:not(.checkbox)").forEach((label, i) => {
     if (labels[i]) label.firstChild.textContent = labels[i];
   });
   form

@@ -1,5 +1,6 @@
 export const messages = {
   en: {
+    fuel: "Fuel & expenses",
     services: "Services",
     actionFailed:
       "Could not update local records. Check available browser storage and try again.",
@@ -46,6 +47,7 @@ export const messages = {
     ui21: "Install AutoLog",
   },
   mk: {
+    fuel: "Гориво и трошоци",
     services: "Сервиси",
     actionFailed:
       "Локалните записи не може да се ажурираат. Провери го просторот во прелистувачот и обиди се повторно.",

@@ -1,3 +1,11 @@
+# Phase 3 validation
+
+`npm test`: 19 tests passed, including 10 finance tests covering partial/full/missed fills, weighted consumption, volume/distance conversions, currency isolation, source-derived totals, observed-distance coverage, previous periods, validation, persistence/edit audit and 10,000 fill-ups. The large dataset calculation completed in under the 5-second test budget.
+
+`node tests/finance-browser.mjs`: creation of three fills and an expense, 10 L/100km calculation, 8,100 MKD reconciliation, category chart filtering, EN/MK accessibility, offline persistence and four viewport overflow checks passed. Screenshots at 360×640, 390×844, 768×1024 and 1440×900 were generated. Desktop screenshot reviewed for graphite cards, teal bars/line, donut and ledger hierarchy. Phase 1/2 browser regressions also passed.
+
+Consumption requires complete full-to-full intervals entirely within the selected dates; missed fills break the chain. Actual totals remain authoritative over volume × price. Fuel and service costs are read once from their source records; manual expenses cannot use those two categories. Currency totals remain separate. Cost/km is explicitly limited to observed mileage dates; vehicle comparisons display that coverage. Receipts are resized local image previews, not PDF editing. Physical-device and non-Chromium testing remain unverified.
+
 # Phase 2 validation
 
 - `npm run check`: syntax checks passed, including maintenance logic and UI modules.
