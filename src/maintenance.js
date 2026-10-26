@@ -224,10 +224,19 @@ export function saveRecord(db, record) {
 export function removeItem(db, store, id) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction(
-      [store, "odometerEntries", "serviceRecords"],
+      [store, "odometerEntries", "serviceRecords", "attachments"],
       "readwrite",
     );
     tx.objectStore(store).delete(id);
+    const linked = tx.objectStore("attachments").getAll();
+    linked.onsuccess = () =>
+      linked.result
+        .filter((d) => d.recordStore === store && d.recordId === id)
+        .forEach((d) =>
+          tx
+            .objectStore("attachments")
+            .put({ ...d, recordId: "", recordStore: "" }),
+        );
     if (store === "serviceRecords")
       tx.objectStore("odometerEntries").delete(id);
     if (store === "serviceSchedules") {

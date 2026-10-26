@@ -256,8 +256,20 @@ export function saveFinance(db, kind, e) {
 export function deleteFinance(db, kind, id) {
   return new Promise((resolve, reject) => {
     const store = kind === "fuel" ? "fuelEntries" : "expenseEntries",
-      tx = db.transaction([store, "odometerEntries"], "readwrite");
+      tx = db.transaction(
+        [store, "odometerEntries", "attachments"],
+        "readwrite",
+      );
     tx.objectStore(store).delete(id);
+    const linked = tx.objectStore("attachments").getAll();
+    linked.onsuccess = () =>
+      linked.result
+        .filter((d) => d.recordStore === store && d.recordId === id)
+        .forEach((d) =>
+          tx
+            .objectStore("attachments")
+            .put({ ...d, recordId: "", recordStore: "" }),
+        );
     if (kind === "fuel") tx.objectStore("odometerEntries").delete(id);
     tx.oncomplete = resolve;
     tx.onabort = tx.onerror = () => reject(tx.error || Error("invalid"));

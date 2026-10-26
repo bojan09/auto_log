@@ -20,5 +20,12 @@ Implemented the latest navy/blue reference direction: compact horizontal desktop
 
 Engine/fluid, wheel/brake and battery buttons open actual vehicle-specific service records. The maintenance compliance gauge explains configured schedules, current counts, due-soon treatment and its limits. Reduced/balanced/enhanced motion preferences persist; OS reduced-motion and low CPU-core counts override animation, and hidden tabs pause it. Existing finance infographics retain real per-vehicle data.
 
+## Phase 5 — Documents, recovery, reports and settings
+Implemented a local document vault with PNG/JPEG/WebP/PDF uploads (5 MiB each), image previews, browser-dependent sandboxed PDF previews and downloads. Documents can link to service, fuel or expense records. Removing a source record keeps its file as a vehicle document; deleting a vehicle removes its documents and checklists.
+
+Versioned full JSON backups include every IndexedDB store, photos, embedded receipts/documents and preferences. Import validates structure, values, relationships, image data types and duplicate IDs before a confirmed atomic replacement; there is no merge. Maximum import/export size is 50 MiB, with visible size/privacy guidance. CSV history exports protect against spreadsheet formula execution. A printable vehicle history report keeps currencies separate and supports browser Save as PDF. No XLSX or server-generated PDF is claimed.
+
+Editable trip checklists retain completion state and reminder dates. ICS exports include dated maintenance schedules and trip reminders; distance-only schedules are omitted and background notifications are not promised. Settings cover language, dark/light/system theme, blue/mint actions, motion, default vehicle units/currency/fuel/body, fuel volume/consumption display, report date format, storage estimates/persistence and install/update guidance. Existing record units and currencies are never rewritten.
+
 ## Next
-Phase 5: document vault, backup/export, reports and full settings. Phase 6: final hardening and delivery. Physical-device verification remains outstanding.
+Phase 6: final integration, performance and release hardening, browser/device checks and delivery documentation. Physical-device installation and non-Chromium verification remain outstanding.

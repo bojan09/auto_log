@@ -131,6 +131,12 @@ await page
   .getByRole("button", { name: "More", exact: true })
   .click();
 await page.getByLabel("Motion", { exact: true }).selectOption("enhanced");
+await page.getByRole("button", { name: "Save", exact: true }).click();
+await page.waitForFunction(() => localStorage.getItem("motion") === "enhanced");
+assert.equal(
+  await page.evaluate(() => localStorage.getItem("motion")),
+  "enhanced",
+);
 await page.emulateMedia({ reducedMotion: "reduce" });
 await page.waitForFunction(
   () => document.documentElement.dataset.motion === "reduced",

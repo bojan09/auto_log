@@ -16,6 +16,7 @@ import {
 import { chart } from "./finance-charts.js";
 export function financePanel({
   db,
+  preferences = {},
   vehicle,
   vehicles,
   fuel,
@@ -40,7 +41,7 @@ export function financePanel({
   state.from ??= today().slice(0, 4) + "-01-01";
   state.to ??= today();
   state.currency ??= (vehicle?.currency || "MKD").toUpperCase();
-  state.format ??= "L100";
+  state.format ??= preferences.consumption || "L100";
   state.limit ??= 20;
   state.category ??= "all";
   function el(tag, text, cls) {
@@ -261,18 +262,16 @@ export function financePanel({
       [
         "line",
         "trend",
-        cycles
-          .slice(-24)
-          .map((c) => ({
-            value: efficiency(c.l100, state.format),
-            label:
-              date(c.end) +
-              " · " +
-              n(efficiency(c.l100, state.format)) +
-              " " +
-              unitLabel(),
-            record: c.entryId,
-          })),
+        cycles.slice(-24).map((c) => ({
+          value: efficiency(c.l100, state.format),
+          label:
+            date(c.end) +
+            " · " +
+            n(efficiency(c.l100, state.format)) +
+            " " +
+            unitLabel(),
+          record: c.entryId,
+        })),
       ],
       [
         "donut",
@@ -480,11 +479,17 @@ export function financePanel({
         ["mi", "mi"],
       ]);
       field(form, "volume", "number", existing.volume);
-      field(form, "volumeUnit", "select", existing.volumeUnit || "L", [
-        ["L", t("volumeL")],
-        ["USgal", t("volumeUS")],
-        ["UKgal", t("volumeUK")],
-      ]);
+      field(
+        form,
+        "volumeUnit",
+        "select",
+        existing.volumeUnit || preferences.volume || "L",
+        [
+          ["L", t("volumeL")],
+          ["USgal", t("volumeUS")],
+          ["UKgal", t("volumeUK")],
+        ],
+      );
       field(form, "unitPrice", "number", existing.unitPrice);
       field(form, "totalPaid", "number", existing.total);
       const preview = el("p");

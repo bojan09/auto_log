@@ -1,0 +1,664 @@
+import { vaultMessages } from "./vault-i18n.js";
+import {
+  preferenceOptions,
+  readPreferences,
+  snapshot,
+  parseBackup,
+  restore,
+  MAX_BACKUP,
+  documentData,
+  validateAttachment,
+  writeRow,
+  removeRow,
+  validateChecklist,
+  csv,
+  calendar,
+  reminderEvents,
+} from "./vault.js";
+import { list } from "./maintenance.js";
+import { maintenanceMessages } from "./maintenance-i18n.js";
+import { financeMessages } from "./finance-i18n.js";
+export function applyAppearance(preferences) {
+  const p = readPreferences(preferences);
+  document.documentElement.dataset.theme =
+    p.theme === "system"
+      ? matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark"
+      : p.theme;
+  document.documentElement.dataset.accent = p.accent;
+}
+const el = (tag, text, cls) => {
+  const e = document.createElement(tag);
+  if (text !== undefined) e.textContent = text;
+  if (cls) e.className = cls;
+  return e;
+};
+export function downloadFile(content, name, type) {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const a = el("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+export function morePanel({
+  db,
+  vehicles,
+  services,
+  fuel,
+  expenses,
+  schedules,
+  language,
+  preferences,
+  onChange,
+  onPreferences,
+  state,
+}) {
+  const t = (k) => vaultMessages[language][k] || k;
+  const root = el("section", undefined, "vault");
+  const notice = el("p");
+  notice.setAttribute("role", "status");
+  const nav = el("div", undefined, "vault-tabs");
+  nav.setAttribute("aria-label", t("settings"));
+  const content = el("div");
+  root.append(nav, notice, content);
+  const message = (key, error = false) => {
+    notice.setAttribute("role", error ? "alert" : "status");
+    notice.textContent = t(key);
+  };
+  const action = (label, fn) => {
+    const b = el("button", label);
+    b.type = "button";
+    b.onclick = async () => {
+      b.disabled = true;
+      try {
+        await fn();
+      } catch {
+        message("error", true);
+      } finally {
+        b.disabled = false;
+      }
+    };
+    return b;
+  };
+  const field = (parent, key, type = "text", value = "", options) => {
+    const label = el("label", t(key));
+    const input = el(options ? "select" : "input");
+    input.name = key;
+    input.setAttribute("aria-label", t(key));
+    if (options) {
+      for (const [v, name] of options) {
+        const o = el("option", name);
+        o.value = v;
+        input.append(o);
+      }
+    } else input.type = type;
+    input.value = value;
+    label.append(input);
+    parent.append(label);
+    return input;
+  };
+  const modal = (title) => {
+    const d = el("dialog");
+    d.setAttribute("aria-label", title);
+    d.append(el("h2", title));
+    d.onclose = () => d.remove();
+    document.body.append(d);
+    return d;
+  };
+  const vehicleSelect = () => {
+    const v =
+      vehicles.find((v) => v.id === state.vehicleId) ||
+      vehicles.find((v) => !v.archived) ||
+      vehicles[0];
+    if (!v) {
+      content.append(el("p", t("noVehicle")));
+      return null;
+    }
+    state.vehicleId = v.id;
+    const select = field(
+      content,
+      "vehicle",
+      "",
+      v.id,
+      vehicles.map((v) => [v.id, v.make + " " + v.model]),
+    );
+    select.onchange = () => {
+      state.vehicleId = select.value;
+      draw();
+    };
+    return v;
+  };
+  const rowsFor = (v) => ({
+    serviceRecords: services.filter((r) => r.vehicleId === v.id),
+    fuelEntries: fuel.filter((r) => r.vehicleId === v.id),
+    expenseEntries: expenses.filter((r) => r.vehicleId === v.id),
+  });
+  const columns = {
+    serviceRecords: [
+      "date",
+      "title",
+      "odometer",
+      "unit",
+      "cost",
+      "currency",
+      "provider",
+      "notes",
+    ],
+    fuelEntries: [
+      "date",
+      "odometer",
+      "unit",
+      "volume",
+      "volumeUnit",
+      "total",
+      "currency",
+      "station",
+      "full",
+    ],
+    expenseEntries: [
+      "date",
+      "title",
+      "category",
+      "amount",
+      "currency",
+      "notes",
+    ],
+  };
+  const labelFor = (k) =>
+    t(
+      {
+        date: "dateColumn",
+        currency: "recordCurrency",
+        volume: "volumeColumn",
+        amount: "cost",
+      }[k] || k,
+    );
+  const mappedRows = (kind, rows) =>
+    rows.map((r) => ({
+      ...r,
+      category:
+        financeMessages[language][r.category] ||
+        maintenanceMessages[language][r.category] ||
+        r.category,
+      full: r.full ? t("yes") : t("no"),
+    }));
+  const checklistForm = (vehicle, old) => {
+    const d = modal(old ? t("edit") : t("addTrip"));
+    const f = el("form");
+    d.append(f);
+    const title = field(f, "title", "text", old?.title || "");
+    title.required = true;
+    title.maxLength = 120;
+    const date = field(f, "date", "date", old?.date || "");
+    const label = el("label", t("items"));
+    const input = el("textarea");
+    input.setAttribute("aria-label", t("items"));
+    input.value = (old?.items || []).map((i) => i.text).join("\n");
+    input.maxLength = 20000;
+    label.append(input);
+    f.append(label);
+    const submit = el("button", t("save"));
+    submit.type = "submit";
+    const error = el("p");
+    error.setAttribute("role", "alert");
+    f.append(
+      submit,
+      action(t("cancel"), () => d.close()),
+      error,
+    );
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      try {
+        const items = input.value
+          .split("\n")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map((text, index) => ({
+            text,
+            done:
+              old?.items[index]?.text === text ? old.items[index].done : false,
+          }));
+        const row = {
+          id: old?.id || crypto.randomUUID(),
+          vehicleId: vehicle.id,
+          title: title.value.trim(),
+          date: date.value,
+          items,
+        };
+        validateChecklist(row);
+        await writeRow(db, "checklists", row);
+        d.close();
+        await draw();
+      } catch {
+        error.textContent = t("error");
+      } finally {
+        submit.disabled = false;
+      }
+    };
+    d.showModal();
+  };
+  async function documents(vehicle) {
+    const requestGeneration = generation;
+    content.append(el("p", t("fileHelp"), "muted"));
+    const f = el("form", undefined, "card vault-form");
+    content.append(f);
+    const file = field(f, "file", "file");
+    file.accept = "image/png,image/jpeg,image/webp,application/pdf";
+    file.required = true;
+    const options = [["", t("unlinked")]];
+    for (const [kind, rows] of Object.entries(rowsFor(vehicle)))
+      for (const r of rows)
+        options.push([
+          kind + ":" + r.id,
+          t(kind) + " · " + r.date + " · " + (r.title || r.station || r.total),
+        ]);
+    const link = field(f, "link", "", "", options);
+    const submit = el("button", t("upload"));
+    submit.type = "submit";
+    f.append(submit);
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      try {
+        const picked = file.files[0];
+        const data = await documentData(picked);
+        const estimate = await navigator.storage?.estimate?.();
+        if (
+          estimate?.quota &&
+          estimate.quota - estimate.usage < picked.size * 2
+        )
+          throw Error("quota");
+        const separator = link.value.indexOf(":");
+        const recordStore = separator < 0 ? "" : link.value.slice(0, separator);
+        const recordId = separator < 0 ? "" : link.value.slice(separator + 1);
+        const row = {
+          id: crypto.randomUUID(),
+          vehicleId: vehicle.id,
+          name: picked.name,
+          type: picked.type,
+          size: picked.size,
+          data,
+          recordStore: recordStore || "",
+          recordId: recordId || "",
+        };
+        validateAttachment(row);
+        await writeRow(db, "attachments", row);
+        await draw();
+      } catch {
+        message("fileError", true);
+      } finally {
+        submit.disabled = false;
+      }
+    };
+    const docs = (await list(db, "attachments")).filter(
+      (r) => r.vehicleId === vehicle.id,
+    );
+    if (requestGeneration !== generation) return;
+    if (!docs.length) content.append(el("p", t("empty")));
+    const grid = el("div", undefined, "grid");
+    content.append(grid);
+    for (const doc of docs) {
+      const card = el("article", undefined, "card");
+      card.append(
+        el("h3", doc.name),
+        el("p", (doc.size / 1024).toFixed(1) + " KiB"),
+      );
+      const record = rowsFor(vehicle)[doc.recordStore]?.find(
+        (r) => r.id === doc.recordId,
+      );
+      card.append(
+        el(
+          "p",
+          record
+            ? t(doc.recordStore) +
+                " · " +
+                record.date +
+                " · " +
+                (record.title || record.station || "")
+            : t("unlinked"),
+          "muted",
+        ),
+      );
+      card.append(
+        action(t("preview"), () => {
+          const d = modal(doc.name);
+          if (doc.type.startsWith("image/")) {
+            const img = el("img");
+            img.src = doc.data;
+            img.alt = doc.name;
+            img.className = "document-preview";
+            d.append(img);
+          } else {
+            const iframe = el("iframe");
+            iframe.title = doc.name;
+            iframe.setAttribute("sandbox", "");
+            iframe.src = doc.data;
+            iframe.className = "document-preview";
+            d.append(iframe, el("p", t("fileHelp")));
+          }
+          const a = el("a", t("download"));
+          a.href = doc.data;
+          a.download = doc.name;
+          d.append(
+            a,
+            action(t("close"), () => d.close()),
+          );
+          d.showModal();
+          d.querySelector("button").focus();
+        }),
+        action(t("remove"), async () => {
+          if (confirm(t("deleteConfirm"))) {
+            await removeRow(db, "attachments", doc.id);
+            await draw();
+          }
+        }),
+      );
+      grid.append(card);
+    }
+  }
+  async function trips(vehicle) {
+    const requestGeneration = generation;
+    content.append(el("p", t("calendarHelp"), "muted"));
+    const rows = (await list(db, "checklists")).filter(
+      (r) => r.vehicleId === vehicle.id,
+    );
+    if (requestGeneration !== generation) return;
+    content.append(
+      action(t("addTrip"), () => checklistForm(vehicle)),
+      action(t("exportCalendar"), () =>
+        downloadFile(
+          calendar(reminderEvents(vehicle, schedules, services, rows)),
+          "autolog-calendar.ics",
+          "text/calendar;charset=utf-8",
+        ),
+      ),
+    );
+    if (!rows.length) content.append(el("p", t("empty")));
+    for (const row of rows) {
+      const card = el("article", undefined, "card");
+      card.append(
+        el("h3", row.title),
+        el("p", row.date || ""),
+        el("p", row.items.filter((i) => !i.done).length + " " + t("remaining")),
+      );
+      for (const [index, item] of row.items.entries()) {
+        const label = el("label", undefined, "check-item");
+        const box = el("input");
+        box.type = "checkbox";
+        box.checked = item.done;
+        box.onchange = async () => {
+          box.disabled = true;
+          try {
+            const next = {
+              ...row,
+              items: row.items.map((i, n) =>
+                n === index ? { ...i, done: box.checked } : i,
+              ),
+            };
+            await writeRow(db, "checklists", next);
+            await draw();
+          } catch {
+            box.checked = item.done;
+            box.disabled = false;
+            message("error", true);
+          }
+        };
+        label.append(box, el("span", item.text));
+        card.append(label);
+      }
+      card.append(
+        action(t("edit"), () => checklistForm(vehicle, row)),
+        action(t("remove"), async () => {
+          if (confirm(t("deleteConfirm"))) {
+            await removeRow(db, "checklists", row.id);
+            await draw();
+          }
+        }),
+      );
+      content.append(card);
+    }
+  }
+  function reports(vehicle) {
+    content.append(el("p", t("reportHelp"), "muted"));
+    for (const [kind, rows] of Object.entries(rowsFor(vehicle))) {
+      const card = el("article", undefined, "card");
+      card.append(
+        el("h3", t(kind)),
+        el("p", rows.length + " " + t("records")),
+        action(t("csv"), () =>
+          downloadFile(
+            csv(
+              mappedRows(kind, rows),
+              columns[kind].map((key) => ({ key, label: labelFor(key) })),
+            ),
+            "autolog-" + kind + ".csv",
+            "text/csv;charset=utf-8",
+          ),
+        ),
+      );
+      content.append(card);
+    }
+    content.append(
+      action(t("report"), () => {
+        const d = modal(t("summary"));
+        d.className = "report-dialog";
+        d.append(
+          el("h3", vehicle.make + " " + vehicle.model + " · " + vehicle.year),
+        );
+        const prefs = readPreferences(preferences);
+        for (const [kind, rows] of Object.entries(rowsFor(vehicle))) {
+          d.append(el("h3", t(kind)));
+          const table = el("table");
+          const head = el("thead");
+          const hr = el("tr");
+          for (const key of columns[kind]) hr.append(el("th", labelFor(key)));
+          head.append(hr);
+          table.append(head);
+          const body = el("tbody");
+          for (const r of mappedRows(kind, rows).sort((a, b) =>
+            a.date.localeCompare(b.date),
+          )) {
+            const tr = el("tr");
+            for (const key of columns[kind]) {
+              let value = r[key] ?? "";
+              if (key === "date" && prefs.dateFormat === "locale")
+                value = new Intl.DateTimeFormat(
+                  language === "mk" ? "mk-MK" : "en",
+                  { timeZone: "UTC" },
+                ).format(new Date(value + "T00:00:00Z"));
+              tr.append(el("td", value));
+            }
+            body.append(tr);
+          }
+          table.append(body);
+          const wrap = el("div", undefined, "table-scroll");
+          wrap.append(table);
+          d.append(wrap);
+          const sums = Object.create(null);
+          for (const r of rows)
+            sums[r.currency] =
+              (sums[r.currency] || 0) + (r.cost ?? r.total ?? r.amount ?? 0);
+          for (const [currency, total] of Object.entries(sums))
+            d.append(
+              el("p", t("total") + ": " + total.toFixed(2) + " " + currency),
+            );
+        }
+        d.append(
+          action(t("print"), () => window.print()),
+          action(t("close"), () => d.close()),
+        );
+        d.showModal();
+      }),
+    );
+  }
+  async function backup() {
+    content.append(el("p", t("backupHelp")));
+    content.append(
+      action(t("exportBackup"), async () => {
+        const data = JSON.stringify(
+          await snapshot(db, readPreferences(preferences)),
+        );
+        const size = new Blob([data]).size;
+        if (size > MAX_BACKUP) {
+          message("exportTooLarge", true);
+          return;
+        }
+        notice.textContent =
+          t("backupSize") +
+          ": " +
+          (size / 1024 / 1024).toFixed(2) +
+          " MiB" +
+          (size > 10 * 1024 * 1024 ? " · " + t("large") : "");
+        downloadFile(
+          data,
+          "autolog-backup-" + new Date().toISOString().slice(0, 10) + ".json",
+          "application/json",
+        );
+      }),
+    );
+    const file = field(content, "importBackup", "file");
+    file.accept = ".json,application/json";
+    const preview = el("section", undefined, "card");
+    content.append(preview);
+    file.onchange = async () => {
+      preview.replaceChildren();
+      try {
+        const selected = file.files[0];
+        if (!selected || selected.size > MAX_BACKUP) throw Error("size");
+        const data = parseBackup(await selected.text());
+        preview.append(
+          el("h3", t("backupReady")),
+          el(
+            "p",
+            data.stores.vehicles.length +
+              " " +
+              t("vehicles") +
+              " · " +
+              Object.values(data.stores).reduce(
+                (n, rows) => n + rows.length,
+                0,
+              ) +
+              " " +
+              t("records"),
+          ),
+          action(t("restore"), async () => {
+            if (!confirm(t("restoreConfirm"))) return;
+            await restore(db, data);
+            const prefs = data.stores.settings[0]?.values || {};
+            state.flash = "restored";
+            await onPreferences(prefs, true);
+            await onChange();
+          }),
+        );
+      } catch {
+        message("invalidBackup", true);
+      }
+    };
+  }
+  async function settings() {
+    const f = el("form", undefined, "card settings-grid");
+    const prefs = readPreferences(preferences);
+    for (const [key, values] of Object.entries(preferenceOptions))
+      field(
+        f,
+        key,
+        "",
+        prefs[key],
+        values.map((v) => [
+          v,
+          v === "en" ? "English" : v === "mk" ? "Македонски" : t(v),
+        ]),
+      );
+    const submit = el("button", t("save"));
+    submit.type = "submit";
+    f.append(submit);
+    content.append(el("p", t("settingsHelp"), "muted"), f);
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      submit.disabled = true;
+      try {
+        const values = Object.fromEntries(new FormData(f));
+        await writeRow(db, "settings", { id: "preferences", values });
+        state.flash = "saved";
+        await onPreferences(values);
+      } catch {
+        message("error", true);
+      } finally {
+        submit.disabled = false;
+      }
+    };
+    const privacy = el("section", undefined, "card");
+    privacy.append(el("h3", t("privacy")), el("p", t("privacyHelp")));
+    content.append(privacy);
+    try {
+      const estimate = await navigator.storage?.estimate?.();
+      privacy.append(
+        el(
+          "p",
+          estimate
+            ? t("storage") +
+                ": " +
+                (estimate.usage / 1024 / 1024).toFixed(1) +
+                " MiB / " +
+                (estimate.quota / 1024 / 1024).toFixed(1) +
+                " MiB"
+            : t("unavailable"),
+        ),
+      );
+    } catch {
+      privacy.append(el("p", t("unavailable")));
+    }
+    privacy.append(
+      action(t("persist"), async () =>
+        message(
+          (await navigator.storage?.persist?.())
+            ? "persistent"
+            : "notPersistent",
+        ),
+      ),
+      el("p", t("installHelp")),
+      el("p", t("updateHelp")),
+      action(t("update"), async () => {
+        const reg = await navigator.serviceWorker?.getRegistration();
+        if (!reg) {
+          message("unavailable");
+          return;
+        }
+        await reg.update();
+        message("updateChecked");
+      }),
+    );
+  }
+  let generation = 0;
+  async function draw() {
+    generation++;
+    content.replaceChildren();
+    notice.textContent = state.flash ? t(state.flash) : "";
+    delete state.flash;
+    for (const b of nav.children)
+      b.setAttribute("aria-pressed", String(b.dataset.tab === state.tab));
+    if (state.tab === "backup") await backup();
+    else if (state.tab === "settings") await settings();
+    else {
+      const vehicle = vehicleSelect();
+      if (!vehicle) return;
+      if (state.tab === "documents") await documents(vehicle);
+      else if (state.tab === "reports") reports(vehicle);
+      else await trips(vehicle);
+    }
+  }
+  state.tab ||= "settings";
+  for (const key of ["settings", "documents", "reports", "trips", "backup"]) {
+    const b = action(t(key), async () => {
+      state.tab = key;
+      await draw();
+    });
+    b.dataset.tab = key;
+    nav.append(b);
+  }
+  draw().catch(() => message("error", true));
+  return root;
+}

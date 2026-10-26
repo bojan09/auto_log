@@ -1,9 +1,10 @@
+import { morePanel, applyAppearance } from "./vault-ui.js";
+import { readPreferences, defaults } from "./vault.js";
 import {
   visualAsset,
   careCard,
   hotspots,
   setupMotion,
-  visualText,
 } from "./visuals.js";
 import { financePanel } from "./finance-ui.js";
 import { list, dueStatus, compareDue } from "./maintenance.js";
@@ -12,6 +13,7 @@ import { openDatabase, saveVehicle } from "./storage.js";
 import { messages } from "./i18n.js";
 
 const financeStates = {};
+const moreState = {};
 const preferences = {
   getItem(key) {
     try {
@@ -27,6 +29,10 @@ const preferences = {
   },
 };
 const applyMotion = setupMotion(preferences);
+applyAppearance(preferences);
+matchMedia("(prefers-color-scheme: light)").addEventListener("change", () =>
+  applyAppearance(preferences),
+);
 let language =
     preferences.getItem("language") ||
     (navigator.language.startsWith("mk") ? "mk" : "en"),
@@ -42,6 +48,7 @@ const app = document.querySelector("#app"),
   form = document.querySelector("form");
 const t = (k) => messages[language][k];
 if (!messages[language]) language = "en";
+preferences.setItem("language", language);
 const db = await openDatabase();
 function store(value) {
   return saveVehicle(db, value);
@@ -85,9 +92,12 @@ function edit(v = {}) {
     if (el.name && el.type !== "file" && el.type !== "checkbox")
       el.value =
         v[el.name] ??
-        ({ bodyStyle: "crossover", unit: "km", fuel: "other", currency: "MKD" }[
-          el.name
-        ] ||
+        ({
+          bodyStyle: readPreferences(preferences).defaultBody,
+          unit: readPreferences(preferences).distance,
+          fuel: readPreferences(preferences).defaultFuel,
+          currency: readPreferences(preferences).currency,
+        }[el.name] ||
           "");
   document.querySelector("#form-title").textContent = v.id
     ? t("edit")
@@ -128,33 +138,32 @@ function render() {
   );
   app.append(heading);
   if (view === "more") {
-    const panel = node("section", undefined, "card");
-    panel.append(
-      node("h3", t("ui2")),
-      node("p", t("ui3")),
-      button(t("garage"), () => {
-        view = "garage";
-        render();
+    app.append(
+      morePanel({
+        db,
+        vehicles,
+        services: records,
+        fuel,
+        expenses,
+        schedules,
+        language,
+        preferences,
+        state: moreState,
+        onChange: load,
+        onPreferences: async (values, replace = false) => {
+          for (const [key, value] of Object.entries(
+            replace ? { ...defaults, ...values } : values,
+          ))
+            preferences.setItem(key, value);
+          language = preferences.getItem("language") || "en";
+          applyMotion();
+          applyAppearance(preferences);
+          for (const key of Object.keys(financeStates))
+            delete financeStates[key];
+          if (!replace) render();
+        },
       }),
     );
-    const motionLabel = node("label", visualText[language].motion);
-    const motion = node("select");
-    motion.id = "motion-preference";
-    motionLabel.htmlFor = motion.id;
-    motion.setAttribute("aria-label", visualText[language].motion);
-    for (const key of ["reduced", "balanced", "enhanced"]) {
-      const option = node("option", visualText[language][key]);
-      option.value = key;
-      motion.append(option);
-    }
-    motion.value = preferences.getItem("motion") || "balanced";
-    motion.onchange = () => {
-      preferences.setItem("motion", motion.value);
-      applyMotion();
-    };
-    motionLabel.append(motion);
-    panel.append(motionLabel);
-    app.append(panel);
     return;
   }
   const current =
@@ -190,6 +199,7 @@ function render() {
   const finance = (summary = false) =>
     financePanel({
       db,
+      preferences: readPreferences(preferences),
       vehicle: current,
       vehicles,
       fuel,
@@ -333,6 +343,8 @@ function render() {
             "odometerEntries",
             "fuelEntries",
             "expenseEntries",
+            "attachments",
+            "checklists",
           ];
           const tx = db.transaction(["vehicles", ...related], "readwrite");
           tx.objectStore("vehicles").delete(v.id);
