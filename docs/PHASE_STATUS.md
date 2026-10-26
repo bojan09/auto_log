@@ -15,5 +15,10 @@ English/Macedonian screens, offline cache updates, responsive colored timeline, 
 ## Phase 3 — Fuel and expenses
 Implemented full/partial fuel entries, missed-fill markers, receipt images, unit/currency handling, editable independent expenses, source-derived ledger, weighted full-to-full consumption, monthly bars, consumption lines, category donut, date/currency filters, category drill-down, previous-period totals, observed cost/km and contextual vehicle comparisons. Charts show at most 24 recent points while totals cover the full selected period. Pagination bounds displayed history. Data stays local and works offline.
 
+## Phase 4 — Vehicle visuals and design refresh
+Implemented the latest navy/blue reference direction: compact horizontal desktop icon navigation, alpine road hero, original realistic body-style illustrations, bounded garage cards, mobile bottom navigation and two-column metrics/actions. Owner photos take priority; generic illustrations are explicitly labeled. Body-style selection covers the requested makes without claiming exact-model photography.
+
+Engine/fluid, wheel/brake and battery buttons open actual vehicle-specific service records. The maintenance compliance gauge explains configured schedules, current counts, due-soon treatment and its limits. Reduced/balanced/enhanced motion preferences persist; OS reduced-motion and low CPU-core counts override animation, and hidden tabs pause it. Existing finance infographics retain real per-vehicle data.
+
 ## Next
-Phase 4: vehicle visualization and motion. Phases 4–6 remain unimplemented. Phase 4 adds richer model imagery, hotspots and motion. Phase 5 adds full settings, backup/export and document management.
+Phase 5: document vault, backup/export, reports and full settings. Phase 6: final hardening and delivery. Physical-device verification remains outstanding.

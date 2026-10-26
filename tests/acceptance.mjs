@@ -55,7 +55,7 @@ for (const [width, height] of [
     animations: "disabled",
   });
 }
-await page.getByRole("button", { name: "Garage", exact: true }).click();
+await page.locator("nav").getByRole("button", { name: "Garage", exact: true }).click();
 await page
   .getByRole("button", { name: "Archive", exact: true })
   .first()

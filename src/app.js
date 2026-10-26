@@ -1,3 +1,10 @@
+import {
+  visualAsset,
+  careCard,
+  hotspots,
+  setupMotion,
+  visualText,
+} from "./visuals.js";
 import { financePanel } from "./finance-ui.js";
 import { list, dueStatus, compareDue } from "./maintenance.js";
 import { maintenancePanel } from "./maintenance-ui.js";
@@ -19,6 +26,7 @@ const preferences = {
     } catch {}
   },
 };
+const applyMotion = setupMotion(preferences);
 let language =
     preferences.getItem("language") ||
     (navigator.language.startsWith("mk") ? "mk" : "en"),
@@ -87,11 +95,29 @@ function edit(v = {}) {
   dialog.showModal();
 }
 function render() {
+  document.body.dataset.view = view;
   localize();
   document.documentElement.lang = language === "mk" ? "mk" : "en";
   document.querySelector("#language").textContent = t("ui1");
-  document.querySelectorAll("[data-view]").forEach((b) => {
+  document.querySelectorAll("nav [data-view]").forEach((b) => {
     b.textContent = t(b.dataset.view);
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.classList.add("nav-icon");
+    const path = document.createElementNS(svg.namespaceURI, "path");
+    path.setAttribute(
+      "d",
+      {
+        dashboard: "M3 11 12 3 21 11 M5 10v11h14V10 M10 21v-7h4v7",
+        garage: "M3 15h18l-2-7H5z M5 15v5 M19 15v5 M6 11h12",
+        services: "M14 3a6 6 0 0 0-7 7L2 18l4 4 8-8a6 6 0 0 0 7-7l-4 4-4-4z",
+        fuel: "M4 21V3h10v18 M4 9h10 M14 12h3v6h3V7l-3-3",
+        more: "M4 12h2 M11 12h2 M18 12h2",
+      }[b.dataset.view],
+    );
+    svg.append(path);
+    b.prepend(svg);
     b.setAttribute("aria-current", view === b.dataset.view ? "page" : "false");
   });
   app.replaceChildren();
@@ -111,6 +137,23 @@ function render() {
         render();
       }),
     );
+    const motionLabel = node("label", visualText[language].motion);
+    const motion = node("select");
+    motion.id = "motion-preference";
+    motionLabel.htmlFor = motion.id;
+    motion.setAttribute("aria-label", visualText[language].motion);
+    for (const key of ["reduced", "balanced", "enhanced"]) {
+      const option = node("option", visualText[language][key]);
+      option.value = key;
+      motion.append(option);
+    }
+    motion.value = preferences.getItem("motion") || "balanced";
+    motion.onchange = () => {
+      preferences.setItem("motion", motion.value);
+      applyMotion();
+    };
+    motionLabel.append(motion);
+    panel.append(motionLabel);
     app.append(panel);
     return;
   }
@@ -180,6 +223,7 @@ function render() {
       node("h2", current.make + " " + current.model),
       node("p", current.year + " · " + current.variant),
       art(current),
+      hotspots(current, records, language),
       button(t("edit"), () => edit(current)),
     );
     const switcher = node("select");
@@ -213,7 +257,6 @@ function render() {
           .map((s) => ({ s, d: dueStatus(s, current, records) }))
           .sort(compareDue)[0]?.s.title || t("none"),
       ],
-      [t("care"), t("insufficient")],
     ]) {
       const c = node("section", undefined, "card");
       c.append(node("h3", title), node("p", value));
@@ -226,7 +269,16 @@ function render() {
         );
       grid.append(c);
     }
-    app.append(grid, finance(true), panel(true));
+    grid.append(careCard(current, schedules, records, language));
+    const shortcuts = node("div", undefined, "dashboard-shortcuts");
+    for (const key of ["fuel", "services", "garage"])
+      shortcuts.append(
+        button(t(key), () => {
+          view = key;
+          render();
+        }),
+      );
+    app.append(shortcuts, grid, finance(true), panel(true));
     const history = node("details", undefined, "card");
     history.append(node("summary", t("mileageHistory")));
     for (const entry of current.odometerHistory || []) {
@@ -379,7 +431,7 @@ document.querySelector("#language").onclick = () => {
   preferences.setItem("language", language);
   render();
 };
-document.querySelectorAll("[data-view]").forEach(
+document.querySelectorAll("nav [data-view]").forEach(
   (b) =>
     (b.onclick = () => {
       view = b.dataset.view;
@@ -414,8 +466,7 @@ if ("serviceWorker" in navigator)
 function art(v) {
   const figure = node("figure");
   const img = node("img");
-  img.src =
-    v.photo || "assets/vehicle-" + (v.bodyStyle || "crossover") + ".svg";
+  img.src = visualAsset(v);
   img.alt = v.photo ? v.make + " " + v.model : t("ui11");
   img.className = "vehicle-art";
   figure.append(img);
@@ -464,9 +515,11 @@ function localize() {
           "Валута (на пр. MKD или EUR)",
           "Боја (незадолжително)",
         ];
-  document.querySelectorAll("#vehicle label:not(.checkbox)").forEach((label, i) => {
-    if (labels[i]) label.firstChild.textContent = labels[i];
-  });
+  document
+    .querySelectorAll("#vehicle label:not(.checkbox)")
+    .forEach((label, i) => {
+      if (labels[i]) label.firstChild.textContent = labels[i];
+    });
   form
     .querySelectorAll("[data-en]")
     .forEach((el) => (el.textContent = el.dataset[language]));

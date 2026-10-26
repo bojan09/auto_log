@@ -1,3 +1,11 @@
+# Phase 4 validation
+
+`npm run check` passed; `npm test` passed all 22 tests. Phase 1–3 browser regression suites passed: garage CRUD/photo/offline, EN/MK accessibility, maintenance recurrence/isolation and finance totals/filtering/offline. The additional visuals browser suite passed distinct Sedici/Golf artwork, actual linked service history, empty hotspot history, Escape dismissal, four viewport overflow checks, desktop EN and mobile MK WCAG A/AA scans, persisted motion preference, OS reduced-motion override and simulated two-core fallback. The motion media-query assertion waits for the browser change event.
+
+Screenshots generated at 360×640, 390×844, 768×1024 and 1440×900. Desktop and mobile images were visually reviewed for cinematic hero, car silhouette, navy/blue palette, icon navigation, card density and bottom navigation. The interface preserves honest empty states and visible illustration captions. Tablet review exposed a missing absolute-position rule for the vehicle image; this was fixed and the four-width suite rerun with an artwork-width regression assertion. No horizontal overflow or page errors were observed.
+
+Chromium DevTools 4× CPU slowdown: dashboard navigation/render readiness measured 388 ms against a 10-second regression budget on this runner. This is a local cached interaction measurement, not a mobile hardware or network benchmark. Four original PNGs add approximately 7.8 MiB to initial offline caching. Physical-device install, Safari/Firefox, full screen-reader review and slow-network field performance remain unverified.
+
 # Phase 3 validation
 
 `npm test`: 19 tests passed, including 10 finance tests covering partial/full/missed fills, weighted consumption, volume/distance conversions, currency isolation, source-derived totals, observed-distance coverage, previous periods, validation, persistence/edit audit and 10,000 fill-ups. The large dataset calculation completed in under the 5-second test budget.

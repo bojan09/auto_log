@@ -615,3 +615,496 @@ summary {
     }
   }
 }
+/* Phase 4: cinematic navy / electric-blue reference. */
+:root {
+  --mint: #40caff;
+  background: #06111e;
+  color: #edf5ff;
+}
+body {
+  display: block;
+  background:
+    radial-gradient(ellipse at 80% 0, #16456966, transparent 55%), #06111e;
+}
+aside {
+  position: sticky;
+  top: 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  width: calc(100% - 32px);
+  height: auto;
+  margin: 12px 16px;
+  padding: 10px 22px;
+  border: 1px solid #48678277;
+  border-radius: 18px;
+  background: #06182bef;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 35px #0006;
+}
+aside h1 {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 25px;
+}
+aside nav {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+aside nav button {
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+  white-space: nowrap;
+  padding: 12px;
+}
+aside nav button[aria-current="page"] {
+  background: linear-gradient(135deg, #087bf1, #0556b8);
+  color: white;
+  border: 1px solid #2b9bff;
+}
+aside p {
+  display: none;
+}
+main {
+  max-width: 1560px;
+  padding: 20px 30px;
+  margin: auto;
+}
+header {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-color: #54728a44;
+}
+header small {
+  color: #a8c1d8;
+}
+h2 {
+  font-size: 28px;
+}
+.heading {
+  margin: 12px 0 18px;
+}
+.heading h2 {
+  margin: 0;
+}
+.card {
+  background: linear-gradient(135deg, #142a3de8, #0b1c2bea);
+  border: 1px solid #344f65;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 12px 30px #0002;
+}
+button {
+  background: #173047;
+  border-color: #3b5971;
+  color: #f1f8ff;
+  border-radius: 11px;
+  font-size: 14px;
+}
+button:hover {
+  background: #1d4264;
+  border-color: #55c7ff;
+}
+.heading > button,
+.dashboard-shortcuts button {
+  background: linear-gradient(135deg, #087cff, #0856b9);
+  border-color: #3097ed;
+}
+.muted {
+  color: #a7bdd0;
+}
+body[data-view="garage"] #app > .grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 350px));
+  align-items: start;
+  gap: 20px;
+}
+body[data-view="garage"] .vehicle-art {
+  height: 190px;
+}
+body[data-view="garage"] .card h3 {
+  font-size: 21px;
+}
+body[data-view="garage"] .card {
+  margin: 0;
+  padding: 18px;
+}
+body[data-view="garage"] .card figure {
+  background: radial-gradient(ellipse at center, #2d6786aa, #132a3c);
+  border-radius: 10px;
+  margin: 0 0 18px;
+}
+.vehicle-hero {
+  min-height: 360px;
+  padding: 38px 58% 30px 30px;
+  background:
+    linear-gradient(90deg, #07192de8, #0a2a4277),
+    radial-gradient(ellipse at 90% 10%, #e6b16d, #264b6a 50%, #091e30);
+  border: 1px solid #4a6a80;
+  border-radius: 18px;
+}
+.vehicle-hero:before {
+  background: linear-gradient(
+    170deg,
+    transparent 60%,
+    #101b29 60.5%,
+    #32404c 62%,
+    #101b29 63%
+  );
+  opacity: 0.5;
+}
+.vehicle-hero figure {
+  position: absolute;
+  top: 24px;
+  width: 56%;
+  right: 14px;
+}
+.vehicle-hero .vehicle-art {
+  height: 270px;
+  max-height: 270px;
+  filter: drop-shadow(0 18px 18px #0008);
+}
+.vehicle-hero h2 {
+  font-size: 34px;
+}
+.vehicle-hotspots {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+.hotspot {
+  font-size: 11px;
+  padding: 8px;
+  border-color: #6f9bb6;
+  background: #102d44;
+}
+.dashboard-shortcuts {
+  display: flex;
+  gap: 12px;
+  margin: 18px 0;
+}
+.dashboard-shortcuts button {
+  min-width: 150px;
+  min-height: 50px;
+}
+body[data-view="dashboard"] #app > .grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+body[data-view="dashboard"] #app > .grid > .card {
+  margin: 0;
+}
+.finance-metrics .card {
+  margin: 10px 0;
+}
+.finance-graphs .card {
+  margin: 4px 0;
+}
+.finance-metrics .metric {
+  font-size: 24px;
+}
+.care-gauge {
+  width: 95px;
+  height: 95px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background:
+    radial-gradient(closest-side, #102639 77%, transparent 80%),
+    conic-gradient(#31c9ff calc(var(--score) * 1%), #28445a 0);
+  font-size: 25px;
+  font-weight: 700;
+}
+.care-card summary {
+  font-size: 12px;
+}
+.care-card details p {
+  font-size: 13px;
+}
+.finance-filters label {
+  font-size: 12px;
+}
+select,
+input,
+textarea {
+  background: #0a1c2d;
+  border-color: #38566c;
+}
+.chart-points button {
+  background: #0d2538;
+}
+.service-card {
+  border-left-color: #29b9ff;
+}
+nav [data-view]:before {
+  display: inline-block;
+  margin-right: 7px;
+  font-size: 17px;
+}
+nav [data-view="dashboard"]:before {
+  content: "⌂";
+}
+nav [data-view="garage"]:before {
+  content: "▤";
+}
+nav [data-view="services"]:before {
+  content: "⚒";
+}
+nav [data-view="fuel"]:before {
+  content: "◧";
+}
+nav [data-view="more"]:before {
+  content: "⋯";
+}
+html[data-motion="reduced"] *,
+html[data-motion="reduced"] *:before {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+html[data-hidden="true"] * {
+  animation-play-state: paused !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@media (min-width: 701px) {
+  .mobile-add {
+    display: none !important;
+  }
+}
+@media (max-width: 1000px) {
+  aside {
+    gap: 10px;
+    padding: 10px;
+  }
+  aside h1 {
+    font-size: 21px;
+  }
+  aside nav button {
+    font-size: 11px;
+    padding: 9px;
+  }
+  nav [data-view]:before {
+    margin-right: 4px;
+  }
+  .vehicle-hero {
+    padding-right: 48%;
+  }
+  .vehicle-hero figure {
+    width: 48%;
+  }
+  .vehicle-hero h2 {
+    font-size: 27px;
+  }
+}
+@media (max-width: 700px) {
+  aside {
+    position: relative;
+    top: 0;
+    margin: 0;
+    width: 100%;
+    padding: 16px 18px;
+    border: 0;
+    border-radius: 0;
+    background: #07182c;
+    backdrop-filter: none;
+  }
+  aside h1 {
+    font-size: 25px;
+  }
+  aside nav {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 7px 4px;
+    background: #07182cf5;
+    border-top: 1px solid #3c5970;
+    border-radius: 0;
+    gap: 2px;
+  }
+  aside nav button {
+    font-size: 9px;
+    white-space: normal;
+    padding: 6px 3px;
+    min-width: 0;
+  }
+  nav [data-view]:before {
+    display: block;
+    font-size: 21px;
+    margin: 0 0 3px;
+  }
+  aside nav button[aria-current="page"] {
+    background: #10416a;
+    border: 0;
+    color: #7bddff;
+  }
+  .mobile-add {
+    display: block;
+    width: 47px;
+    height: 47px;
+    background: linear-gradient(135deg, #008fff, #004dda);
+    font-size: 28px !important;
+    align-self: center;
+  }
+  main {
+    padding: 14px 14px 100px;
+  }
+  header {
+    margin-bottom: 12px;
+  }
+  .heading h2 {
+    font-size: 24px;
+  }
+  .heading > button {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .vehicle-hero {
+    padding: 18px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .vehicle-hero figure {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    order: -1;
+    margin: 0;
+  }
+  .vehicle-hero .vehicle-art {
+    height: 200px;
+  }
+  .vehicle-hero h2 {
+    font-size: 25px;
+    margin: 14px 0 0;
+  }
+  .vehicle-hero p {
+    font-size: 13px;
+  }
+  .vehicle-hotspots button {
+    flex: 1;
+    font-size: 10px;
+  }
+  .dashboard-shortcuts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .dashboard-shortcuts button {
+    min-width: 0;
+    min-height: 46px;
+    font-size: 12px;
+  }
+  body[data-view="dashboard"] #app > .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  body[data-view="dashboard"] #app > .grid > .card {
+    padding: 14px;
+  }
+  body[data-view="dashboard"] #app > .grid > .care-card {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 100px;
+  }
+  .care-card details {
+    grid-column: 1/-1;
+  }
+  body[data-view="garage"] #app > .grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  .finance-graphs {
+    gap: 10px;
+  }
+  .finance-metrics {
+    grid-template-columns: 1fr 1fr;
+  }
+  .finance-metrics .card {
+    padding: 14px;
+  }
+  .finance-metrics .metric {
+    font-size: 18px;
+  }
+  .finance-filters {
+    gap: 8px;
+  }
+  .finance-filters label {
+    flex-basis: 120px;
+  }
+  .card h4 {
+    font-size: 14px;
+  }
+}
+.vehicle-hero {
+  background:
+    linear-gradient(90deg, #061629ed 0%, #081c3599 45%, #07172a22 100%),
+    url("../assets/alpine-road.png") center 55% / cover;
+}
+.vehicle-hero:before {
+  background: linear-gradient(0deg, #05111ca8, transparent 55%);
+  opacity: 1;
+}
+body[data-view="garage"] .card figure {
+  background:
+    linear-gradient(0deg, #091c2c77, #0d273c22),
+    url("../assets/alpine-road.png") center/cover;
+}
+.vehicle-hero figcaption {
+  color: #d1e5f4;
+  text-shadow: 0 1px 5px #000;
+}
+.vehicle-hero .vehicle-art {
+  height: 290px;
+  max-height: 290px;
+  object-fit: contain;
+}
+.vehicle-hero .vehicle-hotspots {
+  z-index: 1;
+}
+html[data-motion="enhanced"] .vehicle-hero figure:hover {
+  transform: translateY(-4px);
+}
+html[data-motion="balanced"] .vehicle-hero figure,
+html[data-motion="enhanced"] .vehicle-hero figure {
+  transition: transform 0.25s ease-out;
+}
+@media (max-width: 700px) {
+  .vehicle-hero .vehicle-art {
+    height: 210px;
+  }
+}
+nav [data-view]:before {
+  display: none;
+}
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 7px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (max-width: 700px) {
+  .nav-icon {
+    display: block;
+    margin: 0 auto 4px;
+    width: 22px;
+    height: 22px;
+  }
+}
