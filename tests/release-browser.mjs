@@ -10,6 +10,7 @@ const types = {
   ".js": "text/javascript",
   ".css": "text/css",
   ".webp": "image/webp",
+  ".woff2": "font/woff2",
   ".png": "image/png",
   ".svg": "image/svg+xml",
   ".webmanifest": "application/manifest+json",
@@ -30,8 +31,8 @@ const server = createServer(async (req, res) => {
         body
           .toString()
           .replace(
-            "autolog-v15",
-            version === "old" ? "autolog-release-old" : "autolog-v15",
+            "autolog-v16",
+            version === "old" ? "autolog-release-old" : "autolog-v16",
           ),
       );
     res.writeHead(200, {
@@ -129,7 +130,7 @@ try {
           await worker.evaluate(async () => {
             const keys = await caches.keys();
             return (
-              keys.includes("autolog-v15") &&
+              keys.includes("autolog-v16") &&
               !keys.includes("autolog-release-old")
             );
           })
@@ -211,6 +212,11 @@ try {
       await img.decode();
       return img.naturalWidth > 0;
     }),
+  );
+  await project.evaluate(() => document.fonts.ready);
+  assert(
+    await project.evaluate(() => document.fonts.check("12px Manrope")),
+    "Local brand typography must load from the offline artifact",
   );
   await staged.close();
   const files = [

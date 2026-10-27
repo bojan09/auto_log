@@ -1,3 +1,4 @@
+let chartSequence = 0;
 const NS = "http://www.w3.org/2000/svg";
 export function chart(kind, points, label, onSelect) {
   const wrap = document.createElement("div");
@@ -26,19 +27,55 @@ export function chart(kind, points, label, onSelect) {
     svg.append(n);
     return n;
   }
+  const chartId = "chart-fill-" + ++chartSequence;
+  const defs = document.createElementNS(NS, "defs");
+  const gradient = document.createElementNS(NS, "linearGradient");
+  gradient.id = chartId;
+  gradient.setAttribute("x1", "0");
+  gradient.setAttribute("y1", "0");
+  gradient.setAttribute("x2", "0");
+  gradient.setAttribute("y2", "1");
+  for (const [offset, opacity] of [
+    ["0%", ".32"],
+    ["100%", "0"],
+  ]) {
+    const stop = document.createElementNS(NS, "stop");
+    stop.setAttribute("offset", offset);
+    stop.setAttribute("stop-color", kind === "line" ? "#5caeff" : "#a68ae4");
+    stop.setAttribute("stop-opacity", opacity);
+    gradient.append(stop);
+  }
+  defs.append(gradient);
+  svg.append(defs);
+  if (kind !== "donut")
+    for (const y of [35, 75, 115, 155])
+      shape("line", {
+        x1: 15,
+        y1: y,
+        x2: 305,
+        y2: y,
+        stroke: "currentColor",
+        "stroke-opacity": 0.08,
+        "stroke-width": 1,
+      });
   if (kind === "line" && points.length) {
     const coords = points.map((p, i) => [
       20 + (i * 280) / Math.max(1, points.length - 1),
       155 - (p.value / max) * 125,
     ]);
+    if (coords.length > 1)
+      shape("polygon", {
+        points: `${coords[0][0]},160 ${coords.map((p) => p.join(",")).join(" ")} ${coords.at(-1)[0]},160`,
+        fill: `url(#${chartId})`,
+      });
     shape("polyline", {
       points: coords.map((p) => p.join(",")).join(" "),
       fill: "none",
-      stroke: "#34e5ce",
+      stroke: "#6bb8ff",
       "stroke-width": 3,
     });
     coords.forEach(([cx, cy], i) => {
-      const dot = shape("circle", { cx, cy, r: 5, fill: "#bafff3" });
+      const dot = shape("circle", { cx, cy, r: 3.5, fill: "#b9dcff" });
       const title = document.createElementNS(NS, "title");
       title.textContent = points[i].label;
       dot.append(title);
@@ -52,7 +89,7 @@ export function chart(kind, points, label, onSelect) {
         width: Math.max(1, 260 / points.length),
         height: (p.value / max) * 130,
         rx: 3,
-        fill: "#34e5ce",
+        fill: "#a78ae3",
       }),
     );
   if (kind === "donut" && sum > 0) {

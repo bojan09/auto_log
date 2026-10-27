@@ -59,16 +59,20 @@ await page
   .locator("nav")
   .getByRole("button", { name: "Garage", exact: true })
   .click();
+await page.locator(".vehicle-menu summary").first().click();
 await page
   .getByRole("button", { name: "Archive", exact: true })
   .first()
   .click();
+await page.locator(".vehicle-menu summary").first().click();
 await page.getByRole("button", { name: "Restore", exact: true }).waitFor();
 await page.getByRole("button", { name: "Restore", exact: true }).click();
+await page.locator(".vehicle-menu summary").first().click();
 await page
   .getByRole("button", { name: "Archive", exact: true })
   .first()
   .waitFor();
+await page.keyboard.press("Escape");
 await page.getByRole("button", { name: "Edit", exact: true }).first().click();
 await page.locator("[name=photo]").setInputFiles({
   name: "photo.png",
@@ -80,7 +84,7 @@ await page.locator("dialog").waitFor({ state: "hidden" });
 await page.reload();
 await page.getByRole("heading", { name: "Fiat Sedici", exact: true }).waitFor();
 assert.equal(await page.locator(".card").count(), 2);
-assert.equal(await page.locator('img[src^="data:image/"]').count(), 1);
+assert.equal(await page.locator('.card img[src^="data:image/"]').count(), 1);
 await mkdir("test-results", { recursive: true });
 for (const [width, height] of [
   [360, 640],
@@ -112,9 +116,12 @@ assert((await fiat.textContent()).includes("119,000"));
 const golf = page.locator(".card").filter({
   has: page.getByRole("heading", { name: "Volkswagen Golf", exact: true }),
 });
+await golf.locator(".vehicle-menu summary").click();
 page.once("dialog", (dialog) => dialog.dismiss());
 await golf.getByRole("button", { name: "Delete", exact: true }).click();
 assert.equal(await golf.count(), 1);
+await page.keyboard.press("Escape");
+await golf.locator(".vehicle-menu summary").click();
 page.once("dialog", (dialog) => dialog.accept());
 await golf.getByRole("button", { name: "Delete", exact: true }).click();
 await page

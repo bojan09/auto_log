@@ -43,3 +43,10 @@ The reference's weather, personal identity, fuel-level percentage, remaining ran
 Latest language requirement: the application is English-only. The header language switch and language setting are removed. Browser locale and legacy saved/backup preferences cannot enable Macedonian.
 
 Phase 6 review: the compact approved layout is retained in English only. Optimized WebP scenery/vehicles replace runtime PNGs without changing component proportions; source originals remain for provenance. Desktop/mobile screenshots were reviewed for the floating dock, slim Vehicles/Tools header, compact actions, readable data and generic-art labels. No invented profile, weather, range, fuel level or financial data is shipped.
+
+## 1.1 interface and branding redesign
+The user's visual criticism supersedes the earlier claims of design completeness. The new direction is a restrained automotive workspace: original gauge emblem and lowercase wordmark, locally hosted Manrope typography, graphite surfaces, blue primary actions, quieter secondary controls, and deliberately spaced vehicle/metric groups. The floating dock and dropdown header remain on all device sizes; no sidebar is introduced.
+
+The header uses actual line icons and vehicle thumbnails. Garage cards have one primary Open dashboard action, a quiet Edit action and an accessible overflow menu for Archive/Restore/Delete. A designed first-use screen replaces the diamond placeholder. Hero controls, small gradient charts and recent activity with separately aligned amounts improve hierarchy. All screens remain English-only.
+
+Desktop, tablet and mobile screenshots were inspected, including the empty garage and populated garage; they use isolated test data. Native dropdown/modal keyboard paths and light/dark contrast remain checked. User requested Vercel publication initially, then explicitly deferred it; no production deployment was attempted. Visual approval remains the user's judgment rather than an inference from passing tests.

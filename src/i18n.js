@@ -35,7 +35,7 @@ export const messages = {
     ui9: "An update is ready. Close all AutoLog tabs and reopen to use it.",
     ui10: "Offline caching is unavailable in this browser session.",
     ui11: "Generic vehicle illustration",
-    ui12: "Illustrated body-style fallback",
+    ui12: "Body-style illustration",
     ui13: "Services · Soon",
     ui14: "Fuel · Soon",
     ui15: "Remove saved photo",

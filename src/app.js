@@ -221,13 +221,25 @@ function render() {
     return;
   }
   if (!vehicles.length) {
-    const c = node("section", undefined, "hero");
-    c.append(
-      node("div", "◇", "car"),
-      node("h2", t("empty")),
-      node("p", t("intro")),
-      node("p", t("custom"), "muted"),
+    const c = node("section", undefined, "hero empty-garage");
+    const copy = node("div", undefined, "empty-copy");
+    copy.append(
+      node("p", "MORE ROAD. LESS WORRY.", "eyebrow"),
+      node("h2", "A good journey starts here."),
+      node(
+        "p",
+        "Every service, fill-up and mile. A clear history for the vehicles you care about.",
+        "empty-description",
+      ),
+      button("Add your first vehicle", () => edit(), "primary"),
+      node("p", "Private by design. Saved on this device.", "empty-privacy"),
     );
+    const illustration = node("figure", undefined, "empty-art");
+    const img = node("img");
+    img.src = "assets/crossover-studio.webp";
+    img.alt = "Generic crossover illustration";
+    illustration.append(img, node("figcaption", "Body-style illustration"));
+    c.append(copy, illustration);
     app.append(c);
     return;
   }
@@ -284,12 +296,21 @@ function render() {
   }
   if (view === "dashboard" && current) {
     const hero = node("section", undefined, "hero vehicle-hero");
-    hero.append(
+    const copy = node("div", undefined, "hero-copy");
+    copy.append(
+      node("p", "YOUR ACTIVE VEHICLE", "eyebrow"),
       node("h2", current.make + " " + current.model),
-      node("p", current.year + " · " + current.variant),
+      node(
+        "p",
+        current.year + " · " + current.variant,
+        "vehicle-specification",
+      ),
+    );
+    hero.append(
+      copy,
       art(current),
       hotspots(current, records, language),
-      button(t("edit"), () => edit(current), "primary"),
+      button("Manage vehicle", () => edit(current), "primary"),
     );
     const switcher = node("select");
     switcher.setAttribute("aria-label", t("switchVehicle"));
@@ -349,7 +370,7 @@ function render() {
       }
       if (title === t("next"))
         c.append(
-          button(t("services"), () => {
+          button("View maintenance", () => {
             view = "services";
             render();
           }),
@@ -429,14 +450,20 @@ function render() {
       node("p", v.archived ? t("archived") : ""),
     );
     const a = node("div", undefined, "actions");
-    a.append(
-      button(t("edit"), () => edit(v)),
+    a.append(button(t("edit"), () => edit(v), "quiet"));
+    const menu = node("details", undefined, "vehicle-menu");
+    const trigger = node("summary", "•••");
+    trigger.setAttribute("aria-label", "Vehicle actions");
+    const options = node("div", undefined, "dropdown-panel");
+    menu.append(trigger, options);
+    a.append(menu);
+    options.append(
       button(v.archived ? t("restore") : t("archive"), async () => {
         await store({ ...v, archived: !v.archived });
         await load();
       }),
     );
-    a.append(
+    options.append(
       button(
         t("ui4"),
         async () => {
@@ -634,7 +661,7 @@ function localize() {
   document.querySelector("#custom").textContent = t("ui16");
   document.querySelector("#cancel").textContent = t("ui17");
   form.querySelector("[type=submit]").textContent = t("ui18");
-  document.querySelector("header small").textContent = t("ui19");
+  document.querySelector(".app-context").textContent = t("ui19");
 }
 const catalog = {
   Fiat: [

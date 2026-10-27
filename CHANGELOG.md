@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 — 2026-10-27
+
+- Replaced the A mark with an original gauge emblem, wordmark and matching app icons.
+- Added locally hosted Manrope with its OFL license.
+- Redesigned buttons, dropdowns, floating dock, vehicle cards, first-use screen and dashboard hierarchy across desktop/tablet/mobile.
+- Moved secondary vehicle operations into a keyboard-accessible menu.
+- Added chart fills/gridlines and clearer recent-activity amounts.
+- Vercel publication deferred by the user.
+
 ## 1.0.0 — 2026-10-27
 
 - English-only local vehicle garage, maintenance schedules/history, fuel and expenses.

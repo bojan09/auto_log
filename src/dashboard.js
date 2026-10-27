@@ -14,7 +14,7 @@ export const layoutText = {
     vehicles: "Vehicles",
     tools: "Tools",
     theme: "Toggle theme",
-    overview: "Your vehicle, at a glance",
+    overview: "A little care. A lot more road.",
     addFuel: "Add fuel",
     addService: "Add service",
     addExpense: "Add expense",
@@ -209,10 +209,14 @@ export function dashboardOverview({
     icon.append(actionIcon(r.source));
     const description = el("div");
     description.append(
-      el("strong", r.title || r.station || t[r.source]),
-      el("p", r.date + " · " + num(r.amount) + " " + r.currency),
+      el("strong", r.source === "fuel" ? t.fuel : r.title || t[r.source]),
+      el("p", r.date),
     );
-    row.append(icon, description);
+    row.append(
+      icon,
+      description,
+      el("strong", num(r.amount) + " " + r.currency, "activity-amount"),
+    );
     activity.append(row);
   }
   root.append(group, activity);

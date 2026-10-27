@@ -2,7 +2,7 @@ import { maintenanceMessages } from "./maintenance-i18n.js";
 import { dueStatus } from "./maintenance.js";
 export const visualText = {
   en: {
-    score: "Maintenance compliance",
+    score: "Maintenance",
     explain:
       "Share of your configured schedules that are not due or overdue. Due-soon schedules count as current. This reflects your records, not vehicle safety or mechanical health.",
     empty: "Add schedules to calculate compliance.",

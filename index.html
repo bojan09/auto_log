@@ -9,13 +9,23 @@
   /><meta name="theme-color" content="#070e12" /><link
     rel="manifest"
     href="manifest.webmanifest"
-  /><link rel="stylesheet" href="src/reference.css" /><title>AutoLog</title>
+  /><link
+    rel="preload"
+    href="assets/fonts/manrope-latin.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  /><link rel="icon" href="assets/icon.svg" type="image/svg+xml" /><link
+    rel="stylesheet"
+    href="src/reference.css"
+  /><title>AutoLog</title>
   <body>
     <a class="skip" href="#app">AutoLog ↓</a>
     <header class="app-bar">
-      <h1>
-        <img src="assets/icon.svg" alt="" width="36" height="36" /> Auto<span
-          >Log</span
+      <h1 class="brand" aria-label="AutoLog">
+        <img src="assets/icon.svg" alt="" width="38" height="38" /><span
+          class="brand-type"
+          >auto<span>log</span><small>VEHICLE JOURNAL</small></span
         >
       </h1>
       <small class="app-context"></small>

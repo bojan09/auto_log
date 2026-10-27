@@ -139,7 +139,7 @@ assert.equal(
   await page
     .locator("#app .heading>button")
     .evaluate((e) => getComputedStyle(e).borderRadius),
-  "8px",
+  "10px",
 );
 assert.deepEqual(errors, []);
 console.log(

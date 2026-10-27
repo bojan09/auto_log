@@ -1,6 +1,6 @@
 # AutoLog
 
-An English-only, local-first vehicle maintenance PWA. Track vehicles, mileage, service schedules/history, fuel consumption, expenses, documents and trip checklists without an account or backend. The compact interface uses a top bar with dropdowns and a floating bottom dock on desktop, tablet and mobile.
+An English-only, local-first vehicle maintenance PWA. Track vehicles, mileage, service schedules/history, fuel consumption, expenses, documents and trip checklists without an account or backend. The compact interface uses a top bar with dropdowns and a floating bottom dock on desktop, tablet and mobile. Version 1.1 introduces a new gauge identity, self-hosted Manrope typography, quieter surfaces and a consistent button hierarchy.
 
 ## Develop
 
@@ -36,6 +36,6 @@ Fuel economy uses complete full-to-full intervals; partial/missed fills and unit
 
 ## Release evidence
 
-All six implementation phases are complete within the verified Chromium scope. Thirty unit tests and nine browser suites pass, including offline recovery, update activation, accessibility, compact layouts and failure handling. Runtime artwork is 94.4% smaller than the source PNGs; the staged release totals 671,935 bytes. Original PNGs remain in source control for provenance and are excluded from `dist/` and offline caching.
+All six implementation phases are complete within the verified Chromium scope. Thirty unit tests and nine browser suites pass, including offline recovery, update activation, accessibility, compact layouts and failure handling. Runtime artwork is 94.4% smaller than the source PNGs; the current staged release totals 781,329 bytes. Original PNGs remain in source control for provenance and are excluded from `dist/` and offline caching.
 
 Firefox, WebKit, physical-device installation/notches and full screen-reader review remain unverified. See [test report](docs/TEST_REPORT.md), [release review](docs/RELEASE_REVIEW.md), [phase status](docs/PHASE_STATUS.md), [design](docs/DESIGN_SPEC.md), [credits](docs/ASSET_CREDITS.md) and [changelog](CHANGELOG.md).

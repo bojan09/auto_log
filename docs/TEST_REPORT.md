@@ -1,3 +1,13 @@
+# Version 1.1 branding and interface validation
+
+Syntax checks, 30 unit tests, all nine browser suites, and the runtime build passed. A targeted garage acceptance rerun passed after the final compact card-footer adjustment; a targeted release rerun verifies that the self-hosted font loads from the offline project-subpath artifact. The stage contains 38 runtime files (781,329 bytes), plus a zero-byte .nojekyll.
+
+Changes cover a new gauge/wordmark and install icons, Manrope typography, the desktop/tablet/mobile button hierarchy, card layout, native dropdown presentation, empty state, chart fills/gridlines, and activity amounts. Garage archive/restore/delete tests now open the overflow menu and retain both deletion cancel/confirm assertions; Escape closes the new menu. The test's owner-photo assertion is scoped to garage cards because header dropdowns now also show actual vehicle thumbnails.
+
+All existing data/finance/maintenance/document/backup/offline journeys still pass. Automated light/dark accessibility scans found and corrected one low-contrast light-theme disclosure label. Reference screenshots at 360/390/768/1440px and additional empty/populated garage previews were reviewed; compact touch targets, scroll clearance and keyboard paths remain covered. Preview files are in ignored test-results/previews/ and use isolated fixtures. Actual visual quality remains open to user feedback.
+
+Vercel publication was explicitly deferred by the user. No deployment was attempted; existing physical-device/Safari/Firefox/screen-reader verification limits remain.
+
 # Phase 6 — release validation (2026-10-27)
 
 `npm run check` passed. `npm test` passed 30 tests. All nine browser suites passed in Chromium; after extending the release suite, its targeted rerun also passed. `npm run build` stages 36 runtime files (671,935 bytes) in ignored dist/. `npm audit` reported zero known vulnerabilities.
