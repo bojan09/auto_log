@@ -54,6 +54,8 @@ export function morePanel({
   onChange,
   onPreferences,
   state,
+  onProfile,
+  onGarage,
 }) {
   const t = (k) => vaultMessages[language][k] || k;
   const root = el("section", undefined, "vault");
@@ -566,7 +568,9 @@ export function morePanel({
             async () => {
               if (!confirm(t("restoreConfirm"))) return;
               await restore(db, data);
-              const prefs = data.stores.settings[0]?.values || {};
+              const prefs =
+                data.stores.settings.find((row) => row.id === "preferences")
+                  ?.values || {};
               state.flash = "restored";
               await onPreferences(prefs, true);
               await onChange();
@@ -688,6 +692,8 @@ export function morePanel({
     b.dataset.tab = key;
     nav.append(b);
   }
+  if (onProfile) nav.append(action("Profile", onProfile));
+  if (onGarage) nav.append(action("Garage", onGarage));
   draw().catch(() => message("error", true));
   return root;
 }

@@ -217,10 +217,10 @@ button:disabled {
 .nav-label-mobile {
   display: none;
 }
-.app-bar nav {
+.floating-nav {
   align-items: center;
 }
-.app-bar nav button {
+.floating-nav button {
   display: inline-flex;
   gap: 8px;
   padding: 10px 12px;
@@ -232,16 +232,16 @@ button:disabled {
   white-space: nowrap;
   font-size: 12px;
 }
-.app-bar nav button:hover {
+.floating-nav button:hover {
   background: var(--button-hover);
   color: var(--button-ink);
 }
-.app-bar nav button[aria-current="page"] {
+.floating-nav button[aria-current="page"] {
   background: var(--action-soft);
   color: var(--action-text);
   border-color: transparent;
 }
-.app-bar nav .nav-icon {
+.floating-nav .nav-icon {
   margin: 0;
   width: 18px;
   height: 18px;
@@ -261,7 +261,7 @@ button:active:not(:disabled) {
   }
 }
 @media (max-width: 1100px) and (min-width: 701px) {
-  .app-bar nav button {
+  .floating-nav button {
     padding: 10px 7px;
     font-size: 11px;
     gap: 5px;
@@ -279,7 +279,7 @@ button:active:not(:disabled) {
     padding-top: calc(16px + env(safe-area-inset-top, 0px));
     backdrop-filter: none;
   }
-  .app-bar nav {
+  .floating-nav {
     position: fixed;
     top: auto;
     bottom: calc(12px + env(safe-area-inset-bottom, 0px));
@@ -301,10 +301,10 @@ button:active:not(:disabled) {
     -webkit-backdrop-filter: blur(18px);
     z-index: 30;
   }
-  .app-bar nav .desktop-only {
+  .floating-nav .desktop-only {
     display: none;
   }
-  .app-bar nav button {
+  .floating-nav button {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -321,23 +321,23 @@ button:active:not(:disabled) {
     font-weight: 600;
     white-space: nowrap;
   }
-  .app-bar nav .nav-label {
+  .floating-nav .nav-label {
     display: none;
   }
-  .app-bar nav .nav-label-mobile {
+  .floating-nav .nav-label-mobile {
     display: block;
     color: inherit;
   }
-  .app-bar nav .nav-icon {
+  .floating-nav .nav-icon {
     width: 21px;
     height: 21px;
     margin: 0;
   }
-  .app-bar nav button[aria-current="page"] {
+  .floating-nav button[aria-current="page"] {
     background: var(--action-soft);
     color: var(--action-text);
   }
-  .app-bar nav button:focus-visible {
+  .floating-nav button:focus-visible {
     outline-offset: 1px;
   }
   #quick-add {

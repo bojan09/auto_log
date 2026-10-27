@@ -647,19 +647,19 @@ body {
   white-space: nowrap;
   font-size: 25px;
 }
-.app-bar nav {
+.floating-nav {
   display: flex;
   gap: 6px;
   flex: 1;
 }
-.app-bar nav button {
+.floating-nav button {
   border: 0;
   background: transparent;
   font-size: 13px;
   white-space: nowrap;
   padding: 12px;
 }
-.app-bar nav button[aria-current="page"] {
+.floating-nav button[aria-current="page"] {
   background: linear-gradient(135deg, #087bf1, #0556b8);
   color: white;
   border: 1px solid #2b9bff;
@@ -882,7 +882,7 @@ html[data-hidden="true"] * {
   .app-bar h1 {
     font-size: 21px;
   }
-  .app-bar nav button {
+  .floating-nav button {
     font-size: 11px;
     padding: 9px;
   }
@@ -914,7 +914,7 @@ html[data-hidden="true"] * {
   .app-bar h1 {
     font-size: 25px;
   }
-  .app-bar nav {
+  .floating-nav {
     position: fixed;
     top: auto;
     bottom: 0;
@@ -926,7 +926,7 @@ html[data-hidden="true"] * {
     border-radius: 0;
     gap: 2px;
   }
-  .app-bar nav button {
+  .floating-nav button {
     font-size: 9px;
     white-space: normal;
     padding: 6px 3px;
@@ -937,7 +937,7 @@ html[data-hidden="true"] * {
     font-size: 21px;
     margin: 0 0 3px;
   }
-  .app-bar nav button[aria-current="page"] {
+  .floating-nav button[aria-current="page"] {
     background: #10416a;
     border: 0;
     color: #7bddff;
@@ -1212,7 +1212,7 @@ html[data-theme="light"] body {
 html[data-theme="light"] .card,
 html[data-theme="light"] dialog,
 html[data-theme="light"] .app-bar,
-html[data-theme="light"] .app-bar nav {
+html[data-theme="light"] .floating-nav {
   background: #fff;
   color: #102c43;
   border-color: #93aabc;

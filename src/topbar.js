@@ -1,3 +1,4 @@
+import { avatarButton } from "./profile.js";
 import { visualAsset } from "./visuals.js";
 import { layoutText } from "./dashboard.js";
 const el = (tag, text) => {
@@ -14,6 +15,8 @@ export function renderTopbar({
   onGarage,
   onTool,
   onTheme,
+  onProfile,
+  profile,
 }) {
   const t = layoutText[language],
     root = document.querySelector("#top-tools");
@@ -60,6 +63,7 @@ export function renderTopbar({
   }
   option(cars, t.vehicles + " →", onGarage);
   const tools = menu(t.tools);
+  option(tools, "Profile", onProfile);
   for (const key of ["settings", "documents", "reports", "trips", "backup"])
     option(tools, t[key], () => onTool(key));
   const theme = el("button");
@@ -69,7 +73,7 @@ export function renderTopbar({
   theme.title = t.theme;
   theme.append(menuIcon("theme"));
   theme.onclick = onTheme;
-  root.append(theme);
+  root.append(theme, avatarButton(profile, onProfile));
 }
 export function setupTopbar() {
   document.addEventListener("click", (event) => {

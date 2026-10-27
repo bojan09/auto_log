@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 — 2026-10-27
+
+- Added a separate Profile page with display name, bio, avatar upload/removal and initials fallback.
+- Included local profiles in backups while preserving restore compatibility with older backups.
+- Removed the top navigation bar on mobile and moved the bottom dock outside the desktop header.
+- Added a contextual mobile avatar, simpler vehicle picker, lighter quick actions and compact vehicle controls.
+- Kept Garage and Profile accessible through More on mobile.
+
 ## 1.1.0 — 2026-10-27
 
 - Replaced the A mark with an original gauge emblem, wordmark and matching app icons.

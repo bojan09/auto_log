@@ -46,6 +46,10 @@ async function fill(day, odo, volume, full) {
 await fill("01", 10000, 50, true);
 await fill("05", 10200, 20, false);
 await fill("10", 10500, 30, true);
+await page
+  .locator(".finance-metrics .metric")
+  .filter({ hasText: "10 L/100km" })
+  .waitFor();
 assert(
   (await page.locator(".finance-metrics").textContent()).includes("10 L/100km"),
 );
@@ -55,6 +59,10 @@ await d.locator("[name=title]").fill("Parking");
 await d.locator("[name=amount]").fill("100");
 await d.getByRole("button", { name: "Save", exact: true }).click();
 await d.waitFor({ state: "hidden" });
+await page
+  .locator(".finance-metrics .metric")
+  .filter({ hasText: "8,100 MKD" })
+  .waitFor();
 assert(
   (await page.locator(".finance-metrics").textContent()).includes("8,100 MKD"),
 );

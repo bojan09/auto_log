@@ -7,6 +7,7 @@ export const messages = {
     switchVehicle: "Select vehicle",
     mileageHistory: "Odometer history",
     more: "More",
+    profile: "Profile",
     garage: "Garage",
     dashboard: "Dashboard",
     add: "Add vehicle",

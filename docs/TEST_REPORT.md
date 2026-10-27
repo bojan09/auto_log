@@ -1,3 +1,13 @@
+# Version 1.2 profile and mobile validation
+
+Syntax checks, 32 unit tests, runtime packaging and all ten browser suites passed. A targeted profile rerun also verified the final crop-fixture assertion. The staged artifact is 39 runtime files / 801,432 bytes, plus .nojekyll.
+
+Profile coverage: separate Profile and app Settings pages; invalid image rejection; 320×320 centered crop from a wide image (pixel check discards outer stripes); name/bio/photo persistence; removal; full JSON backup export/confirmed restore retaining profile separately from preferences; old-backup compatibility; offline avatar decoding; desktop/mobile profile entry points; and no top header/tools on phone widths. Pure validation tests reject remote/executable/spoofed/oversized avatars and unsupported fields.
+
+Profile screenshots cover 320/360/390/768/1440px; dashboard screenshots cover the standard four widths. Reviewed phone and desktop images for the avatar/page header, removed mobile top bar, independent floating dock, smaller vehicle controls and readable form layout. Covered accessibility scans pass in both themes. Minimum dock touch targets, scroll clearance, no horizontal overflow and existing keyboard paths remain checked.
+
+Regression harness changes: the offline button-style locator now excludes the new hidden desktop/mobile avatar counterpart, and finance assertions wait for asynchronously refreshed totals after save. No finance assertions were removed; profile/settings reads are batched with other loaded data. No physical Safari/Firefox or screen-reader verification is claimed. Profile data stays local and does not create a cloud account. Deployment outcome is not claimed by these local checks.
+
 # Version 1.1 branding and interface validation
 
 Syntax checks, 30 unit tests, all nine browser suites, and the runtime build passed. A targeted garage acceptance rerun passed after the final compact card-footer adjustment; a targeted release rerun verifies that the self-hosted font loads from the offline project-subpath artifact. The stage contains 38 runtime files (781,329 bytes), plus a zero-byte .nojekyll.

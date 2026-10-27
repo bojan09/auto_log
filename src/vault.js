@@ -170,15 +170,19 @@ export function validateBackup(data) {
     }
   }
   for (const r of tables.checklists) validateChecklist(r);
-  if (tables.settings.length > 1) invalid();
-  for (const r of tables.settings) {
+  if (tables.settings.length > 2) invalid();
+  for (const row of tables.settings) {
+    if (row.id === "profile") {
+      validateProfile(row.values);
+      continue;
+    }
     if (
-      r.id !== "preferences" ||
-      !r.values ||
-      typeof r.values !== "object" ||
-      Array.isArray(r.values) ||
-      Object.keys(r.values).some(
-        (k) => !preferenceOptions[k]?.includes(r.values[k]),
+      row.id !== "preferences" ||
+      !row.values ||
+      typeof row.values !== "object" ||
+      Array.isArray(row.values) ||
+      Object.keys(row.values).some(
+        (key) => !preferenceOptions[key]?.includes(row.values[key]),
       )
     )
       invalid();
@@ -197,7 +201,10 @@ export async function snapshot(db, preferences) {
     tx.onabort = tx.onerror = () => reject(tx.error);
   });
   if (preferences)
-    tables.settings = [{ id: "preferences", values: preferences }];
+    tables.settings = [
+      ...tables.settings.filter((row) => row.id !== "preferences"),
+      { id: "preferences", values: preferences },
+    ];
   return validateBackup({
     format: "AutoLog",
     version: 1,
@@ -397,4 +404,35 @@ export function reminderEvents(vehicle, schedules, records, checklists) {
         date: c.date,
       })),
   ].filter((e) => validDate(e.date));
+}
+
+export function validateProfile(profile) {
+  if (
+    !profile ||
+    typeof profile !== "object" ||
+    Array.isArray(profile) ||
+    typeof profile.displayName !== "string" ||
+    profile.displayName.length > 60 ||
+    typeof profile.bio !== "string" ||
+    profile.bio.length > 200 ||
+    !safeImage(profile.avatar) ||
+    profile.avatar.length > 512 * 1024 ||
+    Object.keys(profile).some(
+      (k) => !["displayName", "bio", "avatar"].includes(k),
+    )
+  )
+    throw Error("Invalid profile");
+  if (profile.avatar) {
+    const parts = profile.avatar.split(",");
+    const type = parts[0].slice(5).split(";")[0];
+    if (
+      parts[1].length % 4 ||
+      !fileSignature(
+        type,
+        Uint8Array.from(atob(parts[1].slice(0, 16)), (c) => c.charCodeAt(0)),
+      )
+    )
+      throw Error("Invalid avatar");
+  }
+  return profile;
 }

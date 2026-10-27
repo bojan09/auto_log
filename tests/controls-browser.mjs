@@ -13,7 +13,7 @@ const page = await context.newPage();
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto("http://127.0.0.1:8080");
-await page.getByRole("button", { name: "+ Add vehicle", exact: true }).click();
+await page.locator("#quick-add").click();
 for (const [key, value] of Object.entries({
   make: "Fiat",
   model: "Sedici",
@@ -137,7 +137,7 @@ await context.setOffline(true);
 await page.reload();
 assert.equal(
   await page
-    .locator("#app .heading>button")
+    .locator("#app .heading>button:not(.mobile-profile)")
     .evaluate((e) => getComputedStyle(e).borderRadius),
   "10px",
 );

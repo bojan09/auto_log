@@ -172,12 +172,17 @@ for (const [width, height] of [
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   );
-  const bar = await page.locator(".app-bar").boundingBox();
-  assert(bar.height <= 64, "Top bar must remain compact");
-  await cars.locator("summary").click();
-  const dropdown = await cars.locator(".dropdown-panel").boundingBox();
-  assert(dropdown.x >= 0 && dropdown.x + dropdown.width <= width);
-  await page.keyboard.press("Escape");
+  if (width > 700) {
+    const bar = await page.locator(".app-bar").boundingBox();
+    assert(bar.height <= 64);
+    await cars.locator("summary").click();
+    const dropdown = await cars.locator(".dropdown-panel").boundingBox();
+    assert(dropdown.x >= 0 && dropdown.x + dropdown.width <= width);
+    await page.keyboard.press("Escape");
+  } else {
+    assert.equal(await page.locator(".app-bar").isVisible(), false);
+    assert.equal(await page.locator("#top-tools").isVisible(), false);
+  }
   const dock = await page.locator(".floating-nav").boundingBox();
   assert(height - dock.y - dock.height >= 11);
   assert(dock.x >= 11);

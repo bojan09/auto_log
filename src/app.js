@@ -1,3 +1,4 @@
+import { profilePanel, avatarButton } from "./profile.js";
 import { renderTopbar, setupTopbar } from "./topbar.js";
 import { layoutText, quickActions, dashboardOverview } from "./dashboard.js";
 import { morePanel, applyAppearance } from "./vault-ui.js";
@@ -42,6 +43,7 @@ let language = "en",
   records = [],
   fuel = [],
   expenses = [],
+  profile = {},
   selected = preferences.getItem("selected");
 const app = document.querySelector("#app"),
   dialog = document.querySelector("dialog"),
@@ -69,12 +71,15 @@ async function load() {
     r.onsuccess = () => resolve(r.result);
     r.onerror = () => reject(r.error);
   });
-  [schedules, records, fuel, expenses] = await Promise.all([
+  let settings;
+  [schedules, records, fuel, expenses, settings] = await Promise.all([
     list(db, "serviceSchedules"),
     list(db, "serviceRecords"),
     list(db, "fuelEntries"),
     list(db, "expenseEntries"),
+    list(db, "settings"),
   ]);
+  profile = settings.find((row) => row.id === "profile")?.values || {};
   render();
 }
 function node(tag, text, cls) {
@@ -156,7 +161,14 @@ function render() {
   const current =
     vehicles.find((v) => v.id === selected && !v.archived) ||
     vehicles.find((v) => !v.archived);
+  const openProfile = () => {
+    if (view === "profile") return;
+    view = "profile";
+    render();
+  };
   renderTopbar({
+    profile,
+    onProfile: openProfile,
     vehicles,
     current,
     viewLabel: t(view),
@@ -187,9 +199,27 @@ function render() {
   app.replaceChildren();
   const heading = node("div", undefined, "heading");
   heading.append(node("h2", t(view)));
-  if (view !== "dashboard")
+  if (!["dashboard", "profile"].includes(view))
     heading.append(button("+ " + t("add"), () => edit()));
+  heading.append(
+    avatarButton(profile, openProfile, "profile-trigger mobile-profile"),
+  );
   app.append(heading);
+  if (view === "profile") {
+    app.append(
+      profilePanel({
+        db,
+        profile,
+        onSave: load,
+        onSettings: () => {
+          view = "more";
+          moreState.tab = "settings";
+          render();
+        },
+      }),
+    );
+    return;
+  }
   if (view === "more") {
     app.append(
       morePanel({
@@ -202,6 +232,11 @@ function render() {
         language,
         preferences,
         state: moreState,
+        onProfile: openProfile,
+        onGarage: () => {
+          view = "garage";
+          render();
+        },
         onChange: load,
         onPreferences: async (values, replace = false) => {
           for (const [key, value] of Object.entries(
@@ -306,11 +341,28 @@ function render() {
         "vehicle-specification",
       ),
     );
+    const manage = button("Manage vehicle", () => edit(current), "primary");
+    manage.classList.add("manage-vehicle");
+    manage.setAttribute("aria-label", "Manage vehicle");
+    manage.title = "Manage vehicle";
+    const pencil = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    pencil.setAttribute("viewBox", "0 0 24 24");
+    pencil.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS(pencil.namespaceURI, "path");
+    path.setAttribute("d", "m15 5 4 4 M4 20l4-1 12-12a2.8 2.8 0 0 0-4-4L4 15z");
+    pencil.append(path);
+    manage.replaceChildren(
+      pencil,
+      node("span", "Manage vehicle", "manage-label"),
+    );
     hero.append(
       copy,
       art(current),
       hotspots(current, records, language),
-      button("Manage vehicle", () => edit(current), "primary"),
+      manage,
     );
     const switcher = node("select");
     switcher.setAttribute("aria-label", t("switchVehicle"));
