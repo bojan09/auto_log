@@ -1044,7 +1044,7 @@ html[data-hidden="true"] * {
 .vehicle-hero {
   background:
     linear-gradient(90deg, #061629ed 0%, #081c3599 45%, #07172a22 100%),
-    url("../assets/alpine-road.png") center 55% / cover;
+    url("../assets/alpine-road.webp") center 55% / cover;
 }
 .vehicle-hero:before {
   background: linear-gradient(0deg, #05111ca8, transparent 55%);
@@ -1053,7 +1053,7 @@ html[data-hidden="true"] * {
 body[data-view="garage"] .card figure {
   background:
     linear-gradient(0deg, #091c2c77, #0d273c22),
-    url("../assets/alpine-road.png") center/cover;
+    url("../assets/alpine-road.webp") center/cover;
 }
 .vehicle-hero figcaption {
   color: #d1e5f4;

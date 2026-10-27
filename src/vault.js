@@ -129,6 +129,13 @@ export function validateBackup(data) {
   ))
     for (const r of tables[name]) if (!cars.has(r.vehicleId)) invalid();
   for (const s of tables.serviceSchedules) validateSchedule(s);
+  const schedulesById = new Map(tables.serviceSchedules.map((s) => [s.id, s]));
+  const recordVehicles = Object.fromEntries(
+    ["serviceRecords", "fuelEntries", "expenseEntries"].map((name) => [
+      name,
+      new Map(tables[name].map((r) => [r.id, r.vehicleId])),
+    ]),
+  );
   for (const r of tables.serviceRecords) {
     if (
       !text(r.title) ||
@@ -143,7 +150,7 @@ export function validateBackup(data) {
     )
       invalid();
     // Removed schedules intentionally leave historical schedule IDs intact.
-    const s = tables.serviceSchedules.find((s) => s.id === r.scheduleId);
+    const s = schedulesById.get(r.scheduleId);
     if (s && s.vehicleId !== r.vehicleId) invalid();
   }
   for (const r of tables.fuelEntries) validateFinance("fuel", r);
@@ -157,9 +164,7 @@ export function validateBackup(data) {
         !["serviceRecords", "fuelEntries", "expenseEntries"].includes(
           r.recordStore,
         ) ||
-        !tables[r.recordStore].some(
-          (x) => x.id === r.recordId && x.vehicleId === r.vehicleId,
-        )
+        recordVehicles[r.recordStore].get(r.recordId) !== r.vehicleId
       )
         invalid();
     }
@@ -259,7 +264,7 @@ export function validateAttachment(r) {
     r.data.length > MAX_FILE * 1.34 + 100
   )
     invalid();
-  const encoded = r.data.split(",")[1];
+  const encoded = r.data.slice(("data:" + r.type + ";base64,").length);
   if (
     !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded) ||
     encoded.length % 4 ||
@@ -268,24 +273,29 @@ export function validateAttachment(r) {
       r.size
   )
     invalid();
+  const prefix = Uint8Array.from(atob(encoded.slice(0, 16)), (c) =>
+    c.charCodeAt(0),
+  );
+  if (!fileSignature(r.type, prefix)) invalid();
+}
+function fileSignature(type, bytes) {
+  const hex = Array.from(bytes.slice(0, 12), (b) =>
+    b.toString(16).padStart(2, "0"),
+  ).join("");
+  return type === "image/png"
+    ? hex.startsWith("89504e470d0a1a0a")
+    : type === "image/jpeg"
+      ? hex.startsWith("ffd8ff")
+      : type === "image/webp"
+        ? hex.startsWith("52494646") && hex.slice(16) === "57454250"
+        : type === "application/pdf"
+          ? new TextDecoder().decode(bytes.slice(0, 5)) === "%PDF-"
+          : false;
 }
 export async function documentData(file) {
   if (!file || file.size === 0 || file.size > MAX_FILE) throw Error("file");
   const bytes = new Uint8Array(await file.arrayBuffer());
-  const hex = Array.from(bytes.slice(0, 12), (b) =>
-    b.toString(16).padStart(2, "0"),
-  ).join("");
-  const valid =
-    file.type === "image/png"
-      ? hex.startsWith("89504e470d0a1a0a")
-      : file.type === "image/jpeg"
-        ? hex.startsWith("ffd8ff")
-        : file.type === "image/webp"
-          ? hex.startsWith("52494646") && hex.slice(16) === "57454250"
-          : file.type === "application/pdf"
-            ? new TextDecoder().decode(bytes.slice(0, 5)) === "%PDF-"
-            : false;
-  if (!valid) throw Error("file");
+  if (!fileSignature(file.type, bytes)) throw Error("file");
   let binary = "";
   for (let i = 0; i < bytes.length; i += 8192)
     binary += String.fromCharCode(...bytes.subarray(i, i + 8192));

@@ -144,13 +144,13 @@ await page.waitForFunction(
 assert.equal(await page.locator("html").getAttribute("data-motion"), "reduced");
 await page.reload();
 assert.equal(await page.locator("html").getAttribute("data-motion"), "reduced");
-await page.getByRole("button", { name: "MK", exact: true }).click();
+
 await page
   .locator("nav")
-  .getByRole("button", { name: "Преглед", exact: true })
+  .getByRole("button", { name: "Dashboard", exact: true })
   .click();
 await page
-  .getByRole("button", { name: "Мотор и течности", exact: true })
+  .getByRole("button", { name: "Engine & fluids", exact: true })
   .click();
 await page
   .getByRole("dialog")
@@ -170,7 +170,7 @@ const started = performance.now();
 await page.reload();
 await page
   .locator("nav")
-  .getByRole("button", { name: "Преглед", exact: true })
+  .getByRole("button", { name: "Dashboard", exact: true })
   .click();
 await page.locator(".vehicle-hero img").waitFor();
 const elapsed = performance.now() - started;
@@ -185,6 +185,6 @@ await page.reload();
 assert.equal(await page.locator("html").getAttribute("data-motion"), "reduced");
 assert.deepEqual(errors, []);
 console.log(
-  "PASS distinct vehicle artwork, linked hotspots, four screenshots, accessibility, EN/MK, persisted preference and system reduced motion",
+  "PASS distinct vehicle artwork, linked hotspots, four screenshots, accessibility, English, persisted preference and system reduced motion",
 );
 await browser.close();

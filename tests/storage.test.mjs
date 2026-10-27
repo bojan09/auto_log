@@ -33,12 +33,9 @@ test("schema and persisted vehicle edits preserve identity and independent vehic
   db.close();
 });
 
-test("English and Macedonian catalogs have equivalent nonempty keys", async () => {
+test("Only English strings ship and are nonempty", async () => {
   const { messages } = await import("../src/i18n.js");
-  assert.deepEqual(
-    Object.keys(messages.en).sort(),
-    Object.keys(messages.mk).sort(),
-  );
+  assert.deepEqual(Object.keys(messages), ["en"]);
   for (const catalog of Object.values(messages))
     for (const text of Object.values(catalog))
       assert.equal(typeof text === "string" && text.trim().length > 0, true);

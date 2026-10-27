@@ -137,9 +137,9 @@ assert.deepEqual(
   })),
   [],
 );
-await page.getByRole("button", { name: "MK", exact: true }).click();
+
 await page
-  .getByRole("heading", { name: "Историја на сервиси", exact: true })
+  .getByRole("heading", { name: "Service history", exact: true })
   .waitFor();
 await page.setViewportSize({ width: 360, height: 640 });
 assert(
@@ -157,10 +157,10 @@ assert.deepEqual(
   })),
   [],
 );
-await page.getByRole("button", { name: "+ Додај распоред" }).click();
+await page.getByRole("button", { name: "+ Add schedule" }).click();
 await page
-  .getByRole("dialog", { name: "Додај распоред" })
-  .getByLabel("Име на сервисот")
+  .getByRole("dialog", { name: "Add schedule" })
+  .getByLabel("Service name")
   .waitFor();
 assert.deepEqual(
   (
@@ -177,21 +177,21 @@ assert.deepEqual(
 await page.keyboard.press("Escape");
 await page.evaluate(() => navigator.serviceWorker.ready);
 await page.reload();
-await page.getByRole("button", { name: "Сервиси", exact: true }).click();
+await page.getByRole("button", { name: "Services", exact: true }).click();
 await page.locator(".service-timeline article").waitFor();
 await context.setOffline(true);
 await page.reload();
-await page.getByRole("button", { name: "Сервиси", exact: true }).click();
+await page.getByRole("button", { name: "Services", exact: true }).click();
 await page.locator(".service-timeline article").waitFor();
 page.once("dialog", (d) => d.accept());
 await page
   .locator(".service-timeline")
-  .getByRole("button", { name: "Избриши", exact: true })
+  .getByRole("button", { name: "Delete", exact: true })
   .click();
 await page.locator(".service-card.overdue").waitFor();
 assert.equal(await page.locator(".service-timeline article").count(), 0);
 assert.deepEqual(errors, []);
 console.log(
-  "PASS Phase 2: completion, recurrence, filters, edits/deletion, car separation, EN/MK, offline, four viewports and axe",
+  "PASS Phase 2: completion, recurrence, filters, edits/deletion, car separation, English, offline, four viewports and axe",
 );
 await browser.close();

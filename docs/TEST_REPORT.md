@@ -1,3 +1,17 @@
+# Phase 6 — release validation (2026-10-27)
+
+`npm run check` passed. `npm test` passed 30 tests. All nine browser suites passed in Chromium; after extending the release suite, its targeted rerun also passed. `npm run build` stages 36 runtime files (671,935 bytes) in ignored dist/. `npm audit` reported zero known vulnerabilities.
+
+English-only tests now cover English pages/forms even with a Macedonian browser locale or legacy preference, and both light/dark themes. Removed unused UI translation catalogs while retaining legacy backup preference compatibility. Existing data, catalog body-style mappings and user-entered Unicode remain supported.
+
+Runtime artwork was compressed from 8,117,319 bytes to 455,346 bytes (94.4% smaller). Source PNGs remain for provenance but are not loaded, precached or packaged. Fresh screenshots at 360/390/768/1440px cover garage, dashboard, service, finance, document and settings journeys. Mobile and desktop compressed-artwork screenshots were reviewed against the approved compact reference; the top dropdowns, no-sidebar layout, floating dock, compact buttons and chart hierarchy remain. No broken image, page-error or overflow regressions were observed in the covered journeys. The new release suite also decodes a WebP offline from the packaged project subpath.
+
+Release-specific browser checks: worker installation, old-controller retention during update, waiting worker, update notice, activation after tabs close, obsolete cache deletion and offline refresh; inert HTML-like vehicle text; simulated quota failure with no saved document; blocked IndexedDB recovery message/disabled navigation; saved preference recovery when localStorage is denied; packaged /auto_log/ subpath and offline assets. A registration timing race could miss an already-waiting update notice; registration now checks existing waiting/installing workers as well as future events, and the extended update journey passes.
+
+New unit coverage rejects forged attachment types/trailing base64 content and validates 10,000 linked service records within 3 seconds (about 46 ms observed). Indexed relationship lookups avoid quadratic validation. Existing transaction-abort recovery, CSV formula defense, ICS injection/UTF-8 folding, large fuel datasets, financial reconciliation and full backup relationships pass. Content policy restricts executable scripts/connections to the app origin; document frames remain sandboxed.
+
+Final automated accessibility checks cover the English forms/pages, both themes, keyboard dropdown Escape/modal behavior, dock touch targets and reduced-motion preferences. The 4× CPU dashboard measurement was 315 ms on this runner. Full screen-reader review, real slow networks, physical device install/notch behavior and Safari/Firefox remain unverified; Firefox/WebKit executables are absent. No production publication or manual GitHub Pages workflow run is claimed. See RELEASE_REVIEW.md and DEPLOYMENT.md for release limits and manual hosting steps.
+
 # Compact reference layout validation
 
 `npm run check`, all 28 unit tests, and all eight browser suites passed. Existing garage, maintenance, finance, documents, backups, motion and offline workflows remain covered.

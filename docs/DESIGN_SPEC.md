@@ -41,3 +41,5 @@ The dashboard now follows the reference's dense composition: panoramic vehicle h
 The reference's weather, personal identity, fuel-level percentage, remaining range and trip-map examples are not fabricated. The app displays actual saved records, date/distance schedule calculations and explicitly labeled original body-style illustrations. Screenshots were compared at 360/390/768/1440px; desktop and mobile emphasize the same navy/blue palette, scenery, icon actions and card hierarchy. This design refinement does not mark Phase 6 complete.
 
 Latest language requirement: the application is English-only. The header language switch and language setting are removed. Browser locale and legacy saved/backup preferences cannot enable Macedonian.
+
+Phase 6 review: the compact approved layout is retained in English only. Optimized WebP scenery/vehicles replace runtime PNGs without changing component proportions; source originals remain for provenance. Desktop/mobile screenshots were reviewed for the floating dock, slim Vehicles/Tools header, compact actions, readable data and generic-art labels. No invented profile, weather, range, fuel level or financial data is shipped.

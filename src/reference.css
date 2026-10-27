@@ -10,7 +10,7 @@ body {
 body[data-view="dashboard"] {
   background:
     linear-gradient(180deg, #07142355, #071423e8 340px, #06111e 620px),
-    url("../assets/alpine-road.png") center top/100% auto no-repeat fixed;
+    url("../assets/alpine-road.webp") center top/100% auto no-repeat fixed;
 }
 :root[data-theme="light"] body {
   background: #edf3f8;

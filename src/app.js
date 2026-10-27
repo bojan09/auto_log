@@ -13,18 +13,21 @@ const financeStates = {};
 const moreState = {};
 let pendingEditor = null;
 setupTopbar();
+const transientPreferences = new Map();
 const preferences = {
   getItem(key) {
     try {
       return localStorage.getItem(key);
     } catch {
-      return null;
+      return transientPreferences.get(key) ?? null;
     }
   },
   setItem(key, value) {
     try {
       localStorage.setItem(key, value);
-    } catch {}
+    } catch {
+      transientPreferences.set(key, value);
+    }
   },
 };
 const applyMotion = setupMotion(preferences);
@@ -44,9 +47,19 @@ const app = document.querySelector("#app"),
   dialog = document.querySelector("dialog"),
   form = document.querySelector("form");
 const t = (k) => messages[language][k];
-if (!messages[language]) language = "en";
+
 preferences.setItem("language", language);
 const db = await openDatabase();
+// IndexedDB also retains preferences when browser policy blocks localStorage.
+const retained = (await list(db, "settings")).find(
+  (row) => row.id === "preferences",
+)?.values;
+if (retained)
+  for (const key of Object.keys(defaults))
+    if (preferences.getItem(key) === null && typeof retained[key] === "string")
+      preferences.setItem(key, retained[key]);
+applyAppearance(preferences);
+applyMotion();
 function store(value) {
   return saveVehicle(db, value);
 }
@@ -113,7 +126,6 @@ function render() {
     b.append(node("span", t(b.dataset.view), "nav-label"));
     const short = {
       en: { dashboard: "Home", fuel: "Fuel" },
-      mk: { dashboard: "Дома", fuel: "Гориво" },
     };
     const compact = node(
       "span",
@@ -549,19 +561,28 @@ if ("serviceWorker" in navigator)
   navigator.serviceWorker
     .register("./sw.js")
     .then((reg) => {
-      reg.addEventListener("updatefound", () => {
-        const worker = reg.installing;
-        worker.addEventListener("statechange", () => {
-          if (
-            worker.state === "installed" &&
-            navigator.serviceWorker.controller
-          ) {
-            const notice = node("p", t("ui9"));
-            notice.setAttribute("role", "status");
-            app.prepend(notice);
-          }
-        });
-      });
+      const notify = () => {
+        if (
+          !navigator.serviceWorker.controller ||
+          document.querySelector("#update-ready")
+        )
+          return;
+        const notice = node("p", t("ui9"));
+        notice.id = "update-ready";
+        notice.setAttribute("role", "status");
+        app.prepend(notice);
+      };
+      const watch = (worker) => {
+        if (!worker) return;
+        const check = () => {
+          if (worker.state === "installed") notify();
+        };
+        worker.addEventListener("statechange", check);
+        check();
+      };
+      reg.addEventListener("updatefound", () => watch(reg.installing));
+      watch(reg.installing);
+      if (reg.waiting) notify();
     })
     .catch(() => {
       const notice = node("p", t("ui10"));
@@ -583,44 +604,24 @@ function localize() {
   document.querySelector("#services-nav").textContent = t("services");
   document.querySelector("#fuel-nav").textContent = t("fuel");
   document.querySelector("#quick-add").setAttribute("aria-label", t("add"));
-  const labels =
-    language === "en"
-      ? [
-          "Make",
-          "Model",
-          "Year",
-          "Engine, fuel and drivetrain",
-          "Odometer",
-          "Vehicle photo (JPEG, PNG or WebP; up to 5 MB)",
-          "Body style",
-          "Nickname",
-          "License plate (optional)",
-          "Notes",
-          "Distance unit",
-          "Fuel type",
-          "Purchase date (optional)",
-          "Purchase price (optional)",
-          "Currency (e.g. MKD or EUR)",
-          "Color (optional)",
-        ]
-      : [
-          "Производител",
-          "Модел",
-          "Година",
-          "Мотор, гориво и погон",
-          "Километража",
-          "Фотографија (JPEG, PNG или WebP; до 5 MB)",
-          "Каросерија",
-          "Прекар",
-          "Регистарска табличка (незадолжително)",
-          "Белешки",
-          "Единица за растојание",
-          "Вид гориво",
-          "Датум на купување (незадолжително)",
-          "Куповна цена (незадолжително)",
-          "Валута (на пр. MKD или EUR)",
-          "Боја (незадолжително)",
-        ];
+  const labels = [
+    "Make",
+    "Model",
+    "Year",
+    "Engine, fuel and drivetrain",
+    "Odometer",
+    "Vehicle photo (JPEG, PNG or WebP; up to 5 MB)",
+    "Body style",
+    "Nickname",
+    "License plate (optional)",
+    "Notes",
+    "Distance unit",
+    "Fuel type",
+    "Purchase date (optional)",
+    "Purchase price (optional)",
+    "Currency (e.g. MKD or EUR)",
+    "Color (optional)",
+  ];
   document
     .querySelectorAll("#vehicle label:not(.checkbox)")
     .forEach((label, i) => {

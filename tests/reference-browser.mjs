@@ -202,7 +202,7 @@ for (const [width, height] of [
 }
 await page.getByRole("button", { name: "Toggle theme", exact: true }).click();
 assert.equal(await page.locator("html").getAttribute("data-theme"), "light");
-await page.getByRole("button", { name: "MK", exact: true }).click();
+
 await page.setViewportSize({ width: 390, height: 844 });
 assert.deepEqual(
   (
@@ -224,12 +224,12 @@ await context.setOffline(true);
 await page.reload();
 await page
   .locator("nav")
-  .getByRole("button", { name: "Преглед", exact: true })
+  .getByRole("button", { name: "Dashboard", exact: true })
   .click();
 await page.locator(".recent-activity").waitFor();
 assert.equal(await page.locator("aside").count(), 0);
 assert.deepEqual(errors, []);
 console.log(
-  "PASS compact reference dashboard, exact totals and vehicle isolation, quick-entry forms, dropdown navigation/Escape, floating dock at four widths, EN/MK themes and offline",
+  "PASS compact reference dashboard, exact totals and vehicle isolation, quick-entry forms, dropdown navigation/Escape, floating dock at four widths, English themes and offline",
 );
 await browser.close();

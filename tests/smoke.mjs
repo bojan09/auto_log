@@ -19,8 +19,8 @@ await page.getByRole("button", { name: "Save" }).click();
 await page.getByRole("heading", { name: "Fiat Sedici" }).waitFor();
 await page.reload();
 await page.getByRole("heading", { name: "Fiat Sedici" }).waitFor();
-await page.getByRole("button", { name: "MK", exact: true }).click();
-await page.getByRole("heading", { name: "Гаража", exact: true }).waitFor();
+
+await page.getByRole("heading", { name: "Garage", exact: true }).waitFor();
 await page.evaluate(() => navigator.serviceWorker.ready);
 await page.reload();
 await page.context().setOffline(true);

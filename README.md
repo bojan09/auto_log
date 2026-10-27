@@ -1,29 +1,41 @@
 # AutoLog
 
-A free, local-first vehicle garage and offline PWA built with HTML, CSS and vanilla JavaScript. Phases 1–5 provide English/Macedonian screens, custom vehicles (including Fiat Sedici 2010), photos, body-style illustrations, vehicle switching, edit/archive/restore/delete, mileage history and offline persistence. Maintenance adds time/distance schedules, due filters, recurring service completion, cost/provider/notes history and vehicle-specific reminders.
+An English-only, local-first vehicle maintenance PWA. Track vehicles, mileage, service schedules/history, fuel consumption, expenses, documents and trip checklists without an account or backend. The compact interface uses a top bar with dropdowns and a floating bottom dock on desktop, tablet and mobile.
 
-## Run
-Requires Node 24+ for development checks and Python 3 for the static server.
+## Develop
+
+Requires Node 24+, npm, Python 3 and Chromium for browser tests.
 
 ```sh
 npm ci
 npm start
 ```
 
-The server uses port 8080. Production deployment requires HTTPS; localhost is supported for development. Publish the repository's app assets to static HTTPS hosting with relative paths preserved. No build, backend, account, paid API or runtime package dependency is required. Do not publish node_modules, test-results or developer tests.
-
-## Check
-With the server running:
+Open http://localhost:8080. In another terminal:
 
 ```sh
 npm run check
 npm test
 npm run test:browser
+npm run build
 ```
 
-Browser tests default to `/usr/bin/chromium`; set `CHROMIUM_PATH` for another installed Chromium executable. Screenshots go to ignored test-results/.
+Browser tests use `/usr/bin/chromium` unless `CHROMIUM_PATH` is set. Tests create isolated browser data and screenshots/PDFs in ignored `test-results/`. The release build copies only runtime files into ignored `dist/`; no bundler or runtime package dependency is required.
 
-## Storage and limitations
-Vehicle records and resized photos stay in IndexedDB. Small preferences use localStorage. The service worker caches the app shell and original assets after an initial successful online load. Clearing site data removes records; export a full JSON backup from More → Backup & restore before clearing site data. Backups contain private, unencrypted data. Restore replaces all local data after validation and confirmation; it does not merge. Install controls appear only when the browser supports its install event; other browsers may offer installation through their menus. Updates activate after all old tabs close. No scheduled background notifications or cloud synchronization are promised.
+## Deploy
 
-Phases 1–5 are implemented. Fuel logs, expenses and charts are available. The compact navy/blue interface includes a top bar with vehicle/tools dropdowns, a floating bottom dock on every screen size, original vehicle illustrations, direct-entry actions, recent activity, service-zone history, an explained maintenance compliance gauge and motion preferences. More includes Documents, trip checklists, settings, CSV exports, printable history and JSON backup/restore. Documents accept PNG/JPEG/WebP/PDF up to 5 MiB each; backups are limited to 50 MiB. PDF preview depends on the browser and always includes a download link. Calendar export includes date-based reminders, not background notifications. Phase 6 release hardening remains. See docs/PHASE_STATUS.md, docs/TEST_REPORT.md, docs/DESIGN_SPEC.md and docs/ASSET_CREDITS.md.
+See [deployment instructions](docs/DEPLOYMENT.md). The manual GitHub Pages workflow publishes `dist/` from `master` only when explicitly started. It has not been run by Codex. HTTPS is required for installation and offline caching outside localhost.
+
+## Data and recovery
+
+Records, document files and resized owner photos stay in IndexedDB. Preferences use localStorage with an IndexedDB fallback. No analytics, account, paid API or cloud synchronization is included. Back up through Tools → Backup & restore before clearing browser data, uninstalling or moving to another origin/browser. Backups are unencrypted private files.
+
+Full JSON restore validates schema, records, relationships and encoded documents, then replaces all local data in one transaction after confirmation. It does not merge. Files are limited to 5 MiB each and full backups to 50 MiB. Document types: PNG/JPEG/WebP/PDF. Image previews work offline; native PDF rendering depends on the browser, with download available. CSV and browser print/Save as PDF are supported; XLSX and server-generated PDFs are not.
+
+Fuel economy uses complete full-to-full intervals; partial/missed fills and unit conversions are handled explicitly. Totals remain separate by currency. Maintenance compliance measures recorded schedules and does not diagnose mechanical health. Car artwork is labeled generic; owner photos take priority. Trip preparation provides checklists and dated calendar exports, not GPS tracking. Closed-app background reminders are not promised.
+
+## Release evidence
+
+All six implementation phases are complete within the verified Chromium scope. Thirty unit tests and nine browser suites pass, including offline recovery, update activation, accessibility, compact layouts and failure handling. Runtime artwork is 94.4% smaller than the source PNGs; the staged release totals 671,935 bytes. Original PNGs remain in source control for provenance and are excluded from `dist/` and offline caching.
+
+Firefox, WebKit, physical-device installation/notches and full screen-reader review remain unverified. See [test report](docs/TEST_REPORT.md), [release review](docs/RELEASE_REVIEW.md), [phase status](docs/PHASE_STATUS.md), [design](docs/DESIGN_SPEC.md), [credits](docs/ASSET_CREDITS.md) and [changelog](CHANGELOG.md).

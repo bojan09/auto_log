@@ -1,13 +1,14 @@
 {
   "name": "autolog",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 8080",
     "test": "node --test tests/*.test.mjs",
-    "test:browser": "node tests/acceptance.mjs && node tests/a11y.mjs && node tests/maintenance-browser.mjs && node tests/finance-browser.mjs && node tests/visuals-browser.mjs && node tests/vault-browser.mjs && node tests/controls-browser.mjs && node tests/reference-browser.mjs",
-    "check": "node --check src/app.js && node --check src/storage.js && node --check src/maintenance.js && node --check src/maintenance-ui.js && node --check sw.js && node --check src/finance.js && node --check src/finance-ui.js && node --check src/finance-charts.js && node --check src/visuals.js && node --check src/vault.js && node --check src/vault-ui.js && node --check src/vault-i18n.js && node --check src/dashboard.js && node --check src/topbar.js"
+    "test:browser": "node tests/acceptance.mjs && node tests/a11y.mjs && node tests/maintenance-browser.mjs && node tests/finance-browser.mjs && node tests/visuals-browser.mjs && node tests/vault-browser.mjs && node tests/controls-browser.mjs && node tests/reference-browser.mjs && node tests/release-browser.mjs",
+    "check": "node --check src/app.js && node --check src/storage.js && node --check src/maintenance.js && node --check src/maintenance-ui.js && node --check sw.js && node --check src/finance.js && node --check src/finance-ui.js && node --check src/finance-charts.js && node --check src/visuals.js && node --check src/vault.js && node --check src/vault-ui.js && node --check src/vault-i18n.js && node --check src/dashboard.js && node --check src/topbar.js",
+    "build": "node scripts/package-release.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

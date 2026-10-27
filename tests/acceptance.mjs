@@ -55,7 +55,10 @@ for (const [width, height] of [
     animations: "disabled",
   });
 }
-await page.locator("nav").getByRole("button", { name: "Garage", exact: true }).click();
+await page
+  .locator("nav")
+  .getByRole("button", { name: "Garage", exact: true })
+  .click();
 await page
   .getByRole("button", { name: "Archive", exact: true })
   .first()
@@ -97,22 +100,18 @@ for (const [width, height] of [
     animations: "disabled",
   });
 }
-const fiat = page
-  .locator(".card")
-  .filter({
-    has: page.getByRole("heading", { name: "Fiat Sedici", exact: true }),
-  });
+const fiat = page.locator(".card").filter({
+  has: page.getByRole("heading", { name: "Fiat Sedici", exact: true }),
+});
 await fiat.getByRole("button", { name: "Edit", exact: true }).click();
 await page.locator("[name=odometer]").fill("119000");
 page.once("dialog", (dialog) => dialog.accept());
 await page.getByRole("button", { name: "Save", exact: true }).click();
 await page.locator("dialog").waitFor({ state: "hidden" });
 assert((await fiat.textContent()).includes("119,000"));
-const golf = page
-  .locator(".card")
-  .filter({
-    has: page.getByRole("heading", { name: "Volkswagen Golf", exact: true }),
-  });
+const golf = page.locator(".card").filter({
+  has: page.getByRole("heading", { name: "Volkswagen Golf", exact: true }),
+});
 page.once("dialog", (dialog) => dialog.dismiss());
 await golf.getByRole("button", { name: "Delete", exact: true }).click();
 assert.equal(await golf.count(), 1);
@@ -121,10 +120,10 @@ await golf.getByRole("button", { name: "Delete", exact: true }).click();
 await page
   .getByRole("heading", { name: "Volkswagen Golf", exact: true })
   .waitFor({ state: "hidden" });
-await page.getByRole("button", { name: "MK", exact: true }).click();
-await page.getByRole("button", { name: "+ Додај возило" }).click();
-await page.getByLabel("Производител", { exact: true }).waitFor();
-await page.getByRole("button", { name: "Откажи", exact: true }).click();
+
+await page.getByRole("button", { name: "+ Add vehicle" }).click();
+await page.getByLabel("Make", { exact: true }).waitFor();
+await page.getByRole("button", { name: "Cancel", exact: true }).click();
 await page.evaluate(() => navigator.serviceWorker.ready);
 await page.reload();
 await page.context().setOffline(true);

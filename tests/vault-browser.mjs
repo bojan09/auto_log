@@ -89,13 +89,11 @@ await page
   .click();
 await page.getByRole("dialog", { name: "invoice.pdf" }).waitFor();
 await page.keyboard.press("Escape");
-await page
-  .getByLabel("Document file", { exact: true })
-  .setInputFiles({
-    name: "receipt.png",
-    mimeType: "image/png",
-    buffer: await page.screenshot(),
-  });
+await page.getByLabel("Document file", { exact: true }).setInputFiles({
+  name: "receipt.png",
+  mimeType: "image/png",
+  buffer: await page.screenshot(),
+});
 await page.getByRole("button", { name: "Save document", exact: true }).click();
 await page.getByRole("heading", { name: "receipt.png" }).waitFor();
 await tab("Trip preparation");
@@ -278,9 +276,9 @@ assert((await readFile("test-results/phase5-report.pdf")).length > 1000);
 await page.keyboard.press("Escape");
 await tab("Settings");
 await page.getByLabel("Theme", { exact: true }).selectOption("dark");
-await page.getByLabel("Language", { exact: true }).selectOption("mk");
+assert.equal(await page.locator("select[name=language]").count(), 0);
 await page.getByRole("button", { name: "Save", exact: true }).click();
-await page.getByLabel("Јазик", { exact: true }).waitFor();
+await page.getByLabel("Theme", { exact: true }).waitFor();
 await scan();
 for (const [width, height] of [
   [360, 640],
@@ -300,7 +298,7 @@ for (const [width, height] of [
     animations: "disabled",
   });
 }
-await tab("Документи");
+await tab("Documents");
 await page.getByRole("heading", { name: "invoice.pdf" }).waitFor();
 await scan();
 await page
@@ -308,7 +306,7 @@ await page
   .filter({
     has: page.getByRole("heading", { name: "invoice.pdf", exact: true }),
   })
-  .getByRole("button", { name: "Прегледај", exact: true })
+  .getByRole("button", { name: "Preview", exact: true })
   .click();
 await scan();
 await page.keyboard.press("Escape");
@@ -328,6 +326,6 @@ await page.screenshot({
 });
 assert.deepEqual(errors, []);
 console.log(
-  "PASS Phase 5: linked document, checklist/calendar, persisted defaults, confirmed backup recovery, offline preview/CSV/PDF, EN/MK accessibility, four viewports",
+  "PASS Phase 5: linked document, checklist/calendar, persisted defaults, confirmed backup recovery, offline preview/CSV/PDF, English accessibility, four viewports",
 );
 await browser.close();

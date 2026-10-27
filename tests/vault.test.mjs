@@ -222,10 +222,36 @@ test("CSV safely quotes formulas, commas and multiline values; ICS escapes and f
     0,
   );
 });
-test("vault English and Macedonian keys are complete", () => {
-  assert.deepEqual(
-    Object.keys(vaultMessages.en).sort(),
-    Object.keys(vaultMessages.mk).sort(),
+test("vault English strings are complete", () => {
+  assert.deepEqual(Object.keys(vaultMessages), ["en"]);
+  assert(Object.values(vaultMessages.en).every(Boolean));
+});
+
+test("backup import rejects forged document types and trailing encoded data", () => {
+  const base = {
+    id: "d",
+    vehicleId: "sedici",
+    name: "invoice.pdf",
+    type: "application/pdf",
+    size: 8,
+    data: "data:application/pdf;base64," + btoa("<script>"),
+  };
+  assert.throws(() => validateAttachment(base));
+  assert.throws(() =>
+    validateAttachment({
+      ...base,
+      size: 8,
+      data: "data:application/pdf;base64," + btoa("%PDF-1.4") + ",junk",
+    }),
   );
-  assert(Object.values(vaultMessages.mk).every(Boolean));
+});
+test("large linked-history backups validate within a practical time budget", () => {
+  const data = fixture();
+  data.stores.serviceRecords = Array.from({ length: 10000 }, (_, i) => ({
+    ...data.stores.serviceRecords[0],
+    id: "service" + i,
+  }));
+  const started = performance.now();
+  assert.doesNotThrow(() => validateBackup(data));
+  assert(performance.now() - started < 3000);
 });

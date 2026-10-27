@@ -160,11 +160,8 @@ test("record completion, correction and deletion recalculate recurrence; cars re
   assert.equal((await list(db, "odometerEntries")).length, 0);
   db.close();
 });
-test("maintenance translations have equivalent nonempty keys", () => {
-  assert.deepEqual(
-    Object.keys(maintenanceMessages.en).sort(),
-    Object.keys(maintenanceMessages.mk).sort(),
-  );
+test("maintenance ships a nonempty English catalog", () => {
+  assert.deepEqual(Object.keys(maintenanceMessages), ["en"]);
   for (const lang of Object.values(maintenanceMessages))
     for (const value of Object.values(lang)) assert(value.length);
 });

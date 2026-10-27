@@ -239,11 +239,8 @@ test("10,000 fill-ups calculate accurately within a practical time budget", () =
   );
   assert(performance.now() - start < 5000);
 });
-test("finance catalogs contain matching English/Macedonian strings", () => {
-  assert.deepEqual(
-    Object.keys(financeMessages.en).sort(),
-    Object.keys(financeMessages.mk).sort(),
-  );
+test("finance ships a nonempty English catalog", () => {
+  assert.deepEqual(Object.keys(financeMessages), ["en"]);
   for (const catalog of Object.values(financeMessages))
     for (const text of Object.values(catalog)) assert(text.length);
 });

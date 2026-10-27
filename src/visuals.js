@@ -20,25 +20,6 @@ export const visualText = {
     current: "Current schedules",
     recent: "Recent activity",
   },
-  mk: {
-    score: "Исполнување на одржувањето",
-    explain:
-      "Удел на твоите распореди што не се доспеани или задоцнети. Распоредите што доспеваат наскоро се сметаат за тековни. Ова ги одразува записите, а не безбедноста или механичката состојба.",
-    empty: "Додај распореди за пресметка.",
-    zones: "Сервисни зони",
-    engine: "Мотор и течности",
-    wheels: "Тркала и сопирачки",
-    battery: "Акумулатор",
-    none: "Нема соодветни сервисни записи.",
-    illustration: "Илустративна замена за каросеријата",
-    motion: "Движење",
-    reduced: "Намалено",
-    balanced: "Умерено",
-    enhanced: "Засилено",
-    close: "Затвори",
-    current: "Тековни распореди",
-    recent: "Последни активности",
-  },
 };
 export function compliance(vehicle, schedules, records, date) {
   const own = schedules.filter((s) => s.vehicleId === vehicle.id);
@@ -72,7 +53,7 @@ export function visualAsset(v) {
   if (v.photo) return v.photo;
   const style = bodyStyle(v);
   return ["crossover", "hatchback", "sedan"].includes(style)
-    ? "assets/" + style + "-studio.png"
+    ? "assets/" + style + "-studio.webp"
     : "assets/vehicle-" + style + ".svg";
 }
 export function effectiveMotion(preference, systemReduced, limited = false) {

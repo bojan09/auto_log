@@ -1,4 +1,4 @@
-const CACHE = "autolog-v14";
+const CACHE = "autolog-v15";
 const ASSETS = [
   "./",
   "./index.html",
@@ -7,10 +7,10 @@ const ASSETS = [
   "./src/vault.js",
   "./src/vault-ui.js",
   "./src/vault-i18n.js",
-  "./assets/alpine-road.png",
-  "./assets/crossover-studio.png",
-  "./assets/hatchback-studio.png",
-  "./assets/sedan-studio.png",
+  "./assets/alpine-road.webp",
+  "./assets/crossover-studio.webp",
+  "./assets/hatchback-studio.webp",
+  "./assets/sedan-studio.webp",
   "./src/finance.js",
   "./src/finance-ui.js",
   "./src/finance-i18n.js",

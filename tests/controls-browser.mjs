@@ -49,7 +49,7 @@ for (const theme of ["dark", "light"])
     await page
       .locator("nav")
       .getByRole("button", {
-        name: language === "en" ? "More" : "Повеќе",
+        name: "More",
         exact: true,
       })
       .click();
@@ -123,7 +123,7 @@ for (const theme of ["dark", "light"])
 await page.setViewportSize({ width: 1440, height: 900 });
 await page.evaluate(() => {
   localStorage.setItem("theme", "dark");
-  localStorage.setItem("language", "en");
+  localStorage.setItem("language", "mk");
 });
 await page.reload();
 await page.screenshot({
@@ -143,6 +143,6 @@ assert.equal(
 );
 assert.deepEqual(errors, []);
 console.log(
-  "PASS floating dock geometry, touch targets, scroll clearance, keyboard add, EN/MK light/dark accessibility, desktop and offline controls",
+  "PASS floating dock geometry, touch targets, scroll clearance, keyboard add, English light/dark accessibility, desktop and offline controls",
 );
 await browser.close();

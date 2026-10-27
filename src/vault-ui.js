@@ -590,10 +590,7 @@ export function morePanel({
         key,
         "",
         prefs[key],
-        values.map((v) => [
-          v,
-          v === "en" ? "English" : v === "mk" ? "Македонски" : t(v),
-        ]),
+        values.map((v) => [v, t(v)]),
       );
     const submit = el("button", t("save"));
     submit.type = "submit";

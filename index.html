@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
   <meta charset="utf-8" /><meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src data: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; connect-src 'self'"
+  /><meta
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
   /><meta name="theme-color" content="#070e12" /><link
@@ -36,11 +39,7 @@
       <form id="vehicle">
         <h2 id="form-title"></h2>
         <input name="id" type="hidden" /><label
-          >Make / Производител<input
-            name="make"
-            list="makes"
-            required
-            maxlength="80" /></label
+          >Make<input name="make" list="makes" required maxlength="80" /></label
         ><datalist id="makes">
           <option>Fiat</option>
           <option>Ford</option>
@@ -50,7 +49,7 @@
           <option>BMW</option>
           <option>Peugeot</option></datalist
         ><label
-          >Model / Модел<input
+          >Model<input
             name="model"
             list="models"
             required
@@ -60,19 +59,19 @@
         <p id="custom"></p>
         <datalist id="models"></datalist
         ><label
-          >Year / Година<input
+          >Year<input
             name="year"
             type="number"
             min="1886"
             max="2100"
             required /></label
         ><label
-          >Engine, fuel, drivetrain / Мотор, гориво, погон<input
+          >Engine, fuel, drivetrain<input
             name="variant"
             maxlength="150"
             placeholder="2.0 MultiJet · Diesel · 4x4" /></label
         ><label
-          >Odometer (km) / Километража<input
+          >Odometer (km)<input
             name="odometer"
             type="number"
             min="0"
@@ -85,50 +84,30 @@
             accept="image/jpeg,image/png,image/webp" /></label
         ><label
           >Body style<select name="bodyStyle">
-            <option
-              value="crossover"
-              data-en="Crossover / SUV"
-              data-mk="Кросовер / СУВ"
-            >
+            <option value="crossover" data-en="Crossover / SUV">
               Crossover / SUV
             </option>
-            <option value="hatchback" data-en="Hatchback" data-mk="Хечбек">
-              Hatchback
-            </option>
-            <option value="sedan" data-en="Sedan" data-mk="Лимузина">
-              Sedan
-            </option>
-            <option value="coupe" data-en="Coupe" data-mk="Купе">Coupe</option>
-            <option value="van" data-en="Van" data-mk="Комбе">Van</option>
-            <option value="motorcycle" data-en="Motorcycle" data-mk="Мотоцикл">
-              Motorcycle
-            </option>
+            <option value="hatchback" data-en="Hatchback">Hatchback</option>
+            <option value="sedan" data-en="Sedan">Sedan</option>
+            <option value="coupe" data-en="Coupe">Coupe</option>
+            <option value="van" data-en="Van">Van</option>
+            <option value="motorcycle" data-en="Motorcycle">Motorcycle</option>
           </select></label
         ><label>Nickname<input name="nickname" maxlength="80" /></label
         ><label>License plate<input name="plate" maxlength="30" /></label
         ><label>Notes<textarea name="notes" maxlength="2000"></textarea></label
         ><label
           >Distance unit<select name="unit">
-            <option value="km" data-en="Kilometers" data-mk="Километри">
-              Kilometers
-            </option>
-            <option value="mi" data-en="Miles" data-mk="Милји">Miles</option>
+            <option value="km" data-en="Kilometers">Kilometers</option>
+            <option value="mi" data-en="Miles">Miles</option>
           </select></label
         ><label
           >Fuel type<select name="fuel">
-            <option value="petrol" data-en="Petrol" data-mk="Бензин">
-              Petrol
-            </option>
-            <option value="diesel" data-en="Diesel" data-mk="Дизел">
-              Diesel
-            </option>
-            <option value="electric" data-en="Electric" data-mk="Електрично">
-              Electric
-            </option>
-            <option value="hybrid" data-en="Hybrid" data-mk="Хибрид">
-              Hybrid
-            </option>
-            <option value="other" data-en="Other" data-mk="Друго">Other</option>
+            <option value="petrol" data-en="Petrol">Petrol</option>
+            <option value="diesel" data-en="Diesel">Diesel</option>
+            <option value="electric" data-en="Electric">Electric</option>
+            <option value="hybrid" data-en="Hybrid">Hybrid</option>
+            <option value="other" data-en="Other">Other</option>
           </select></label
         ><label
           >Purchase date<input
@@ -151,8 +130,8 @@
           ></span
         ></label>
         <footer>
-          <button type="button" id="cancel">Cancel / Откажи</button
-          ><button type="submit">Save / Зачувај</button>
+          <button type="button" id="cancel">Cancel</button
+          ><button type="submit">Save</button>
         </footer>
         <p id="error" role="alert"></p>
       </form>

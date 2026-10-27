@@ -27,5 +27,7 @@ Versioned full JSON backups include every IndexedDB store, photos, embedded rece
 
 Editable trip checklists retain completion state and reminder dates. ICS exports include dated maintenance schedules and trip reminders; distance-only schedules are omitted and background notifications are not promised. Settings cover language, dark/light/system theme, blue/mint actions, motion, default vehicle units/currency/fuel/body, fuel volume/consumption display, report date format, storage estimates/persistence and install/update guidance. Existing record units and currencies are never rewritten.
 
-## Next
-Phase 6: final integration, performance and release hardening, browser/device checks and delivery documentation. Physical-device installation and non-Chromium verification remain outstanding.
+## Phase 6 — Release readiness
+Completed English-only regression updates, removed unused interface translations, compressed runtime artwork by 94.4%, added runtime-only release packaging, and reviewed keyboard/accessibility/design behavior. Hardened imported-document signatures and large-backup lookups; verified quota/blocked-storage handling and preference recovery without localStorage. Worker install/update/waiting/activation/cache cleanup and offline subpath deployment have browser coverage.
+
+Validation: 30 unit tests, nine browser suites, syntax checks, runtime build and dependency audit passed. Release and deployment documentation distinguish verified Chromium behavior from outstanding physical-device, screen-reader, Firefox/WebKit and real-hosting checks. All six implementation phases are complete within that scope. Publication is a separate manual action using the provided master-only workflow.

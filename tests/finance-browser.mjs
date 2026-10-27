@@ -91,8 +91,8 @@ assert.deepEqual(
   ).violations.map((v) => ({ id: v.id, nodes: v.nodes.map((n) => n.target) })),
   [],
 );
-await page.getByRole("button", { name: "MK", exact: true }).click();
-await page.getByRole("button", { name: "+ Додај полнење" }).click();
+
+await page.getByRole("button", { name: "+ Add fill-up" }).click();
 assert.deepEqual(
   (
     await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze()
@@ -106,12 +106,12 @@ await context.setOffline(true);
 await page.reload();
 await page
   .locator("nav")
-  .getByRole("button", { name: "Гориво и трошоци", exact: true })
+  .getByRole("button", { name: "Fuel & expenses", exact: true })
   .click();
 await page.locator(".finance-entry").first().waitFor();
 assert.equal(await page.locator(".finance-entry").count(), 3);
 assert.deepEqual(errors, []);
 console.log(
-  "PASS finance creation, full/partial consumption, totals, chart filtering, four viewports, EN/MK accessibility and offline persistence",
+  "PASS finance creation, full/partial consumption, totals, chart filtering, four viewports, English accessibility and offline persistence",
 );
 await browser.close();

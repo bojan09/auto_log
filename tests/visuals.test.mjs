@@ -58,8 +58,5 @@ test("system reduced-motion and resource constraints override enhanced motion", 
   assert.equal(effectiveMotion("enhanced", true), "reduced");
   assert.equal(effectiveMotion("enhanced", false, true), "reduced");
   assert.equal(effectiveMotion("enhanced", false), "enhanced");
-  assert.deepEqual(
-    Object.keys(visualText.en).sort(),
-    Object.keys(visualText.mk).sort(),
-  );
+  assert.deepEqual(Object.keys(visualText), ["en"]);
 });
