@@ -27,3 +27,8 @@ Phase 4 review: desktop/mobile screenshots now show the latest navy/blue directi
 
 ## Phase 5 screens
 More uses five compact section buttons for settings, documents, reports, trips and backups. The settings grid follows the navy/blue card layout and stacks on mobile. Light and system themes add explicit readable surfaces and colors; blue/mint preferences affect primary actions. Documents use bounded cards and native dialogs, checklist rows use labeled checkboxes, and printable reports remove navigation and actions while retaining table headings and currency totals. Settings defaults never fabricate vehicle statistics.
+
+## Button and floating navigation refinement
+Primary save/add/open actions use compact blue or mint fills; secondary actions use quiet outlined surfaces, cancellation/language actions are understated, and destructive actions use a distinct red tone. Shared controls live in `src/controls.css`, with existing screen styles imported into a lower CSS cascade layer. Hover/press/focus/disabled states remain visible in both themes without animating text contrast.
+
+Mobile navigation is a rounded floating dock with side/bottom clearance, safe-area insets, a central add button, short EN/MK labels and 44px-or-larger touch targets. Full accessible navigation names remain intact. Bottom content padding lets page actions scroll above the dock. Desktop keeps compact horizontal navigation. The requested UI/UX skill was not available in the cloud or executor catalogs or local skill directories; the design work was implemented directly.

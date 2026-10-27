@@ -50,8 +50,9 @@ export function financePanel({
     if (cls) v.className = cls;
     return v;
   }
-  function button(text, action) {
+  function button(text, action, tone = "secondary") {
     const b = el("button", text);
+    b.dataset.tone = tone;
     b.type = "button";
     b.onclick = () =>
       Promise.resolve()
@@ -136,7 +137,7 @@ export function financePanel({
       select.onchange = () => onSelect(select.value);
       const actions = el("div", undefined, "actions");
       actions.append(
-        button("+ " + t("addFuel"), () => editor("fuel")),
+        button("+ " + t("addFuel"), () => editor("fuel"), "primary"),
         button("+ " + t("addExpense"), () => editor("expense")),
       );
       root.append(actions);
@@ -350,7 +351,7 @@ export function financePanel({
       const actions = el("div", undefined, "actions");
       actions.append(
         button(t("edit"), () => editor("fuel", e)),
-        button(t("remove"), () => remove("fuel", e)),
+        button(t("remove"), () => remove("fuel", e), "danger"),
       );
       card.append(actions);
       root.append(card);
@@ -385,7 +386,7 @@ export function financePanel({
       if (e.source === "expense") {
         actions.append(
           button(t("edit"), () => editor("expense", e)),
-          button(t("remove"), () => remove("expense", e)),
+          button(t("remove"), () => remove("expense", e), "danger"),
         );
       } else
         actions.append(
@@ -533,7 +534,7 @@ export function financePanel({
       save = el("button", t("save"));
     save.type = "submit";
     actions.append(
-      button(t("cancel"), () => modal.close()),
+      button(t("cancel"), () => modal.close(), "quiet"),
       save,
     );
     form.append(actions, error);

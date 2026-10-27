@@ -1,3 +1,9 @@
+# Button and floating navigation refinement
+
+Syntax checks and all 28 unit tests passed. All six existing browser suites passed, followed by the new controls browser suite. New checks cover floating dock clearance at 320/360/390px, at least 44px touch targets, no horizontal overflow, bottom actions scrolling clear of the dock, keyboard add/escape, EN/MK light/dark WCAG A/AA scans, desktop navigation and offline stylesheet availability. The offline style assertion waits for database-backed rendering.
+
+Mobile/desktop garage and dashboard screenshots and light/dark EN/MK settings screenshots were generated and visually reviewed for button hierarchy, destructive styling, floating dock shape, label fit and readable states. Safe-area CSS is included; real notched-device rendering remains unverified. This is a requested design refinement, not completion of Phase 6.
+
 # Phase 5 validation
 
 `npm run check` passed. `npm test` passed all 28 tests. `npm run test:browser` passed all six suites (garage, accessibility, maintenance, finance, visuals and vault). No browser page errors were observed.

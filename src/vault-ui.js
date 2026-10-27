@@ -67,8 +67,9 @@ export function morePanel({
     notice.setAttribute("role", error ? "alert" : "status");
     notice.textContent = t(key);
   };
-  const action = (label, fn) => {
+  const action = (label, fn, tone = "secondary") => {
     const b = el("button", label);
+    b.dataset.tone = tone;
     b.type = "button";
     b.onclick = async () => {
       b.disabled = true;
@@ -205,7 +206,7 @@ export function morePanel({
     error.setAttribute("role", "alert");
     f.append(
       submit,
-      action(t("cancel"), () => d.close()),
+      action(t("cancel"), () => d.close(), "quiet"),
       error,
     );
     f.onsubmit = async (e) => {
@@ -344,17 +345,21 @@ export function morePanel({
           a.download = doc.name;
           d.append(
             a,
-            action(t("close"), () => d.close()),
+            action(t("close"), () => d.close(), "quiet"),
           );
           d.showModal();
           d.querySelector("button").focus();
         }),
-        action(t("remove"), async () => {
-          if (confirm(t("deleteConfirm"))) {
-            await removeRow(db, "attachments", doc.id);
-            await draw();
-          }
-        }),
+        action(
+          t("remove"),
+          async () => {
+            if (confirm(t("deleteConfirm"))) {
+              await removeRow(db, "attachments", doc.id);
+              await draw();
+            }
+          },
+          "danger",
+        ),
       );
       grid.append(card);
     }
@@ -367,7 +372,7 @@ export function morePanel({
     );
     if (requestGeneration !== generation) return;
     content.append(
-      action(t("addTrip"), () => checklistForm(vehicle)),
+      action(t("addTrip"), () => checklistForm(vehicle), "primary"),
       action(t("exportCalendar"), () =>
         downloadFile(
           calendar(reminderEvents(vehicle, schedules, services, rows)),
@@ -411,12 +416,16 @@ export function morePanel({
       }
       card.append(
         action(t("edit"), () => checklistForm(vehicle, row)),
-        action(t("remove"), async () => {
-          if (confirm(t("deleteConfirm"))) {
-            await removeRow(db, "checklists", row.id);
-            await draw();
-          }
-        }),
+        action(
+          t("remove"),
+          async () => {
+            if (confirm(t("deleteConfirm"))) {
+              await removeRow(db, "checklists", row.id);
+              await draw();
+            }
+          },
+          "danger",
+        ),
       );
       content.append(card);
     }
@@ -442,82 +451,90 @@ export function morePanel({
       content.append(card);
     }
     content.append(
-      action(t("report"), () => {
-        const d = modal(t("summary"));
-        d.className = "report-dialog";
-        d.append(
-          el("h3", vehicle.make + " " + vehicle.model + " · " + vehicle.year),
-        );
-        const prefs = readPreferences(preferences);
-        for (const [kind, rows] of Object.entries(rowsFor(vehicle))) {
-          d.append(el("h3", t(kind)));
-          const table = el("table");
-          const head = el("thead");
-          const hr = el("tr");
-          for (const key of columns[kind]) hr.append(el("th", labelFor(key)));
-          head.append(hr);
-          table.append(head);
-          const body = el("tbody");
-          for (const r of mappedRows(kind, rows).sort((a, b) =>
-            a.date.localeCompare(b.date),
-          )) {
-            const tr = el("tr");
-            for (const key of columns[kind]) {
-              let value = r[key] ?? "";
-              if (key === "date" && prefs.dateFormat === "locale")
-                value = new Intl.DateTimeFormat(
-                  language === "mk" ? "mk-MK" : "en",
-                  { timeZone: "UTC" },
-                ).format(new Date(value + "T00:00:00Z"));
-              tr.append(el("td", value));
+      action(
+        t("report"),
+        () => {
+          const d = modal(t("summary"));
+          d.className = "report-dialog";
+          d.append(
+            el("h3", vehicle.make + " " + vehicle.model + " · " + vehicle.year),
+          );
+          const prefs = readPreferences(preferences);
+          for (const [kind, rows] of Object.entries(rowsFor(vehicle))) {
+            d.append(el("h3", t(kind)));
+            const table = el("table");
+            const head = el("thead");
+            const hr = el("tr");
+            for (const key of columns[kind]) hr.append(el("th", labelFor(key)));
+            head.append(hr);
+            table.append(head);
+            const body = el("tbody");
+            for (const r of mappedRows(kind, rows).sort((a, b) =>
+              a.date.localeCompare(b.date),
+            )) {
+              const tr = el("tr");
+              for (const key of columns[kind]) {
+                let value = r[key] ?? "";
+                if (key === "date" && prefs.dateFormat === "locale")
+                  value = new Intl.DateTimeFormat(
+                    language === "mk" ? "mk-MK" : "en",
+                    { timeZone: "UTC" },
+                  ).format(new Date(value + "T00:00:00Z"));
+                tr.append(el("td", value));
+              }
+              body.append(tr);
             }
-            body.append(tr);
+            table.append(body);
+            const wrap = el("div", undefined, "table-scroll");
+            wrap.append(table);
+            d.append(wrap);
+            const sums = Object.create(null);
+            for (const r of rows)
+              sums[r.currency] =
+                (sums[r.currency] || 0) + (r.cost ?? r.total ?? r.amount ?? 0);
+            for (const [currency, total] of Object.entries(sums))
+              d.append(
+                el("p", t("total") + ": " + total.toFixed(2) + " " + currency),
+              );
           }
-          table.append(body);
-          const wrap = el("div", undefined, "table-scroll");
-          wrap.append(table);
-          d.append(wrap);
-          const sums = Object.create(null);
-          for (const r of rows)
-            sums[r.currency] =
-              (sums[r.currency] || 0) + (r.cost ?? r.total ?? r.amount ?? 0);
-          for (const [currency, total] of Object.entries(sums))
-            d.append(
-              el("p", t("total") + ": " + total.toFixed(2) + " " + currency),
-            );
-        }
-        d.append(
-          action(t("print"), () => window.print()),
-          action(t("close"), () => d.close()),
-        );
-        d.showModal();
-      }),
+          d.append(
+            action(t("print"), () => window.print()),
+            action(t("close"), () => d.close(), "quiet"),
+          );
+          d.showModal();
+        },
+        "primary",
+      ),
     );
   }
   async function backup() {
     content.append(el("p", t("backupHelp")));
     content.append(
-      action(t("exportBackup"), async () => {
-        const data = JSON.stringify(
-          await snapshot(db, readPreferences(preferences)),
-        );
-        const size = new Blob([data]).size;
-        if (size > MAX_BACKUP) {
-          message("exportTooLarge", true);
-          return;
-        }
-        notice.textContent =
-          t("backupSize") +
-          ": " +
-          (size / 1024 / 1024).toFixed(2) +
-          " MiB" +
-          (size > 10 * 1024 * 1024 ? " · " + t("large") : "");
-        downloadFile(
-          data,
-          "autolog-backup-" + new Date().toISOString().slice(0, 10) + ".json",
-          "application/json",
-        );
-      }),
+      action(
+        t("exportBackup"),
+        async () => {
+          const data = JSON.stringify(
+            await snapshot(db, readPreferences(preferences)),
+          );
+          const size = new Blob([data]).size;
+          if (size > MAX_BACKUP) {
+            message("exportTooLarge", true);
+            return;
+          }
+          notice.textContent =
+            t("backupSize") +
+            ": " +
+            (size / 1024 / 1024).toFixed(2) +
+            " MiB" +
+            (size > 10 * 1024 * 1024 ? " · " + t("large") : "");
+          downloadFile(
+            data,
+            "autolog-backup-" + new Date().toISOString().slice(0, 10) + ".json",
+            "application/json",
+          );
+        },
+        "primary",
+      ),
     );
     const file = field(content, "importBackup", "file");
     file.accept = ".json,application/json";
@@ -544,14 +561,18 @@ export function morePanel({
               " " +
               t("records"),
           ),
-          action(t("restore"), async () => {
-            if (!confirm(t("restoreConfirm"))) return;
-            await restore(db, data);
-            const prefs = data.stores.settings[0]?.values || {};
-            state.flash = "restored";
-            await onPreferences(prefs, true);
-            await onChange();
-          }),
+          action(
+            t("restore"),
+            async () => {
+              if (!confirm(t("restoreConfirm"))) return;
+              await restore(db, data);
+              const prefs = data.stores.settings[0]?.values || {};
+              state.flash = "restored";
+              await onPreferences(prefs, true);
+              await onChange();
+            },
+            "danger",
+          ),
         );
       } catch {
         message("invalidBackup", true);

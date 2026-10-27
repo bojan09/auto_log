@@ -29,8 +29,9 @@ export function maintenancePanel({
     if (cls) n.className = cls;
     return n;
   }
-  function button(text, action) {
+  function button(text, action, tone = "secondary") {
     const b = el("button", text);
+    b.dataset.tone = tone;
     b.type = "button";
     b.onclick = () =>
       Promise.resolve()
@@ -76,7 +77,7 @@ export function maintenancePanel({
       root.append(select, help);
       const actions = el("div", undefined, "actions");
       actions.append(
-        button("+ " + t("newSchedule"), () => editor("schedule")),
+        button("+ " + t("newSchedule"), () => editor("schedule"), "primary"),
         button("+ " + t("newRecord"), () => editor("record")),
       );
       root.append(actions);
@@ -124,14 +125,18 @@ export function maintenancePanel({
       );
       const actions = el("div", undefined, "actions");
       actions.append(
-        button(t("complete"), () => editor("record", {}, s)),
+        button(t("complete"), () => editor("record", {}, s), "primary"),
         button(t("edit"), () => editor("schedule", s)),
-        button(t("remove"), async () => {
-          if (confirm(t("confirm"))) {
-            await removeItem(db, "serviceSchedules", s.id);
-            await onChange();
-          }
-        }),
+        button(
+          t("remove"),
+          async () => {
+            if (confirm(t("confirm"))) {
+              await removeItem(db, "serviceSchedules", s.id);
+              await onChange();
+            }
+          },
+          "danger",
+        ),
       );
       card.append(actions);
       root.append(card);
@@ -153,12 +158,16 @@ export function maintenancePanel({
       const actions = el("div", undefined, "actions");
       actions.append(
         button(t("edit"), () => editor("record", r)),
-        button(t("remove"), async () => {
-          if (confirm(t("confirm"))) {
-            await removeItem(db, "serviceRecords", r.id);
-            await onChange();
-          }
-        }),
+        button(
+          t("remove"),
+          async () => {
+            if (confirm(t("confirm"))) {
+              await removeItem(db, "serviceRecords", r.id);
+              await onChange();
+            }
+          },
+          "danger",
+        ),
       );
       card.append(actions);
       if (r.revisions?.length) {
@@ -274,7 +283,7 @@ export function maintenancePanel({
     const save = el("button", t("save"));
     save.type = "submit";
     actions.append(
-      button(t("cancel"), () => modal.close()),
+      button(t("cancel"), () => modal.close(), "quiet"),
       save,
     );
     form.append(actions, error);

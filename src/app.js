@@ -1,11 +1,6 @@
 import { morePanel, applyAppearance } from "./vault-ui.js";
 import { readPreferences, defaults } from "./vault.js";
-import {
-  visualAsset,
-  careCard,
-  hotspots,
-  setupMotion,
-} from "./visuals.js";
+import { visualAsset, careCard, hotspots, setupMotion } from "./visuals.js";
 import { financePanel } from "./finance-ui.js";
 import { list, dueStatus, compareDue } from "./maintenance.js";
 import { maintenancePanel } from "./maintenance-ui.js";
@@ -73,8 +68,9 @@ function node(tag, text, cls) {
   if (cls) n.className = cls;
   return n;
 }
-function button(text, action) {
+function button(text, action, tone = "secondary") {
   const b = node("button", text);
+  b.dataset.tone = tone;
   b.onclick = (event) =>
     Promise.resolve()
       .then(() => action(event))
@@ -110,7 +106,20 @@ function render() {
   document.documentElement.lang = language === "mk" ? "mk" : "en";
   document.querySelector("#language").textContent = t("ui1");
   document.querySelectorAll("nav [data-view]").forEach((b) => {
-    b.textContent = t(b.dataset.view);
+    b.replaceChildren();
+    b.setAttribute("aria-label", t(b.dataset.view));
+    b.append(node("span", t(b.dataset.view), "nav-label"));
+    const short = {
+      en: { dashboard: "Home", fuel: "Fuel" },
+      mk: { dashboard: "Дома", fuel: "Гориво" },
+    };
+    const compact = node(
+      "span",
+      short[language][b.dataset.view] || t(b.dataset.view),
+      "nav-label-mobile",
+    );
+    compact.setAttribute("aria-hidden", "true");
+    b.append(compact);
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("viewBox", "0 0 24 24");
     svg.setAttribute("aria-hidden", "true");
@@ -334,41 +343,49 @@ function render() {
       }),
     );
     a.append(
-      button(t("ui4"), async () => {
-        if (!confirm(t("ui5"))) return;
-        await new Promise((resolve, reject) => {
-          const related = [
-            "serviceSchedules",
-            "serviceRecords",
-            "odometerEntries",
-            "fuelEntries",
-            "expenseEntries",
-            "attachments",
-            "checklists",
-          ];
-          const tx = db.transaction(["vehicles", ...related], "readwrite");
-          tx.objectStore("vehicles").delete(v.id);
-          for (const name of related) {
-            const request = tx.objectStore(name).getAll();
-            request.onsuccess = () =>
-              request.result
-                .filter((row) => row.vehicleId === v.id)
-                .forEach((row) => tx.objectStore(name).delete(row.id));
-          }
-          tx.oncomplete = resolve;
-          tx.onerror = () => reject(tx.error);
-        });
-        await load();
-      }),
+      button(
+        t("ui4"),
+        async () => {
+          if (!confirm(t("ui5"))) return;
+          await new Promise((resolve, reject) => {
+            const related = [
+              "serviceSchedules",
+              "serviceRecords",
+              "odometerEntries",
+              "fuelEntries",
+              "expenseEntries",
+              "attachments",
+              "checklists",
+            ];
+            const tx = db.transaction(["vehicles", ...related], "readwrite");
+            tx.objectStore("vehicles").delete(v.id);
+            for (const name of related) {
+              const request = tx.objectStore(name).getAll();
+              request.onsuccess = () =>
+                request.result
+                  .filter((row) => row.vehicleId === v.id)
+                  .forEach((row) => tx.objectStore(name).delete(row.id));
+            }
+            tx.oncomplete = resolve;
+            tx.onerror = () => reject(tx.error);
+          });
+          await load();
+        },
+        "danger",
+      ),
     );
     if (!v.archived)
       a.append(
-        button(t("select"), () => {
-          selected = v.id;
-          preferences.setItem("selected", selected);
-          view = "dashboard";
-          render();
-        }),
+        button(
+          t("select"),
+          () => {
+            selected = v.id;
+            preferences.setItem("selected", selected);
+            view = "dashboard";
+            render();
+          },
+          "primary",
+        ),
       );
     c.append(a);
     grid.append(c);
