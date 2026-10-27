@@ -17,6 +17,7 @@ export function renderTopbar({
   onTheme,
   onProfile,
   profile,
+  onDestination,
 }) {
   const t = layoutText[language],
     root = document.querySelector("#top-tools");
@@ -51,6 +52,8 @@ export function renderTopbar({
     menu.p.append(b);
     return b;
   }
+  const destinations=el("div");destinations.className="workspace-links";
+  for(const [key,label] of [["expenses","Expenses"],["trips","Trips"],["reports","Statistics"],["reminders","Reminders"]]){const b=el("button",label);b.type="button";b.onclick=()=>onDestination(key);destinations.append(b);}root.append(destinations);
   const cars = menu(t.vehicles);
   for (const v of vehicles.filter((v) => !v.archived)) {
     const b = option(cars, v.make + " " + v.model, () => onSelect(v.id));
@@ -64,6 +67,8 @@ export function renderTopbar({
   option(cars, t.vehicles + " →", onGarage);
   const tools = menu(t.tools);
   option(tools, "Profile", onProfile);
+  option(tools, "Expenses", () => onDestination("expenses"));
+  option(tools, "Reminders", () => onDestination("reminders"));
   for (const key of ["settings", "documents", "reports", "trips", "backup"])
     option(tools, t[key], () => onTool(key));
   const theme = el("button");

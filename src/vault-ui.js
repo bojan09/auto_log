@@ -1,3 +1,4 @@
+import { fuelSpendingPanel } from "./fuel-spending.js";
 import { vaultMessages } from "./vault-i18n.js";
 import {
   preferenceOptions,
@@ -432,6 +433,7 @@ export function morePanel({
     }
   }
   function reports(vehicle) {
+    content.append(fuelSpendingPanel({fuel,vehicles,vehicle}));
     content.append(el("p", t("reportHelp"), "muted"));
     for (const [kind, rows] of Object.entries(rowsFor(vehicle))) {
       const card = el("article", undefined, "card");
@@ -585,16 +587,8 @@ export function morePanel({
   async function settings() {
     const f = el("form", undefined, "card settings-grid");
     const prefs = readPreferences(preferences);
-    for (const [key, values] of Object.entries(preferenceOptions).filter(
-      ([key]) => key !== "language",
-    ))
-      field(
-        f,
-        key,
-        "",
-        prefs[key],
-        values.map((v) => [v, t(v)]),
-      );
+    const groups=[ ["Appearance",["theme","accent","motion"]], ["Units & formats",["distance","volume","consumption","currency","dateFormat"]], ["New vehicle defaults",["defaultFuel","defaultBody"]] ];
+    for(const [title,keys] of groups){const group=el("fieldset",undefined,"settings-section");group.append(el("legend",title));for(const key of keys){const values=preferenceOptions[key];field(group,key,"",prefs[key],values.map(v=>[v,t(v)]));}f.append(group);}
     const submit = el("button", t("save"));
     submit.type = "submit";
     f.append(submit);

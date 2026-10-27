@@ -36,3 +36,6 @@ Rebuilt garage cards into image/identity/specifications/actions, added a vehicle
 
 ## Phase 4 evidence
 Maintenance now composes upcoming work and history into distinct sections, with a contextual action header. Rebuilt expense rows with category/identity/amount hierarchy; trip cards now show readiness and departure date; documents and ownership workspaces have dedicated headings. Maintenance recurrence/completion/edit/delete, finance accuracy, document/checklist/calendar, backup recovery, four-width accessibility and offline suites passed. Service-worker version advances with this release.
+
+## Phase 5 evidence
+Rebuilt Settings into appearance/units/default fieldsets and Profile into identity/details columns. Statistics now includes the same currency-safe monthly fuel module above export/report workflows. Desktop links expose expenses, trips, statistics and reminders; compact widths retain the Tools menu. Profile/avatar persistence and backup recovery, settings/documents/report flows, keyboard/dock geometry, light/dark accessibility and offline suites passed. Syntax/build passed.

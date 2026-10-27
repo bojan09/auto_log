@@ -78,7 +78,7 @@ export function profilePanel({ db, profile = {}, onSave, onSettings }) {
   const card = el("article", undefined, "card profile-card"),
     form = el("form");
   root.append(card);
-  card.append(form);
+
   const hero = el("div", undefined, "profile-identity"),
     preview = el("div", undefined, "profile-avatar");
   let avatar = profile.avatar || "",
@@ -86,10 +86,11 @@ export function profilePanel({ db, profile = {}, onSave, onSettings }) {
   const identity = el("div");
   identity.append(
     el("h3", profile.displayName || "Make it yours."),
-    el("p", "Your photo. Your garage.", "muted"),
+    el("p", "Your personal vehicle journal.", "muted"),
+    el("p", "Your profile is stored privately on this device.", "profile-privacy"),
   );
   hero.append(preview, identity);
-  form.append(hero);
+  card.append(hero, form);
   function field(key, label, value, tag = "input") {
     const wrap = el("label", label),
       input = el(tag);

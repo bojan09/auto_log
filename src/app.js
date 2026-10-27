@@ -173,6 +173,13 @@ function render() {
   };
   renderTopbar({
     profile,
+    onDestination: (key) => {
+      if (key === "expenses") {view="fuel"; if(current) (financeStates[current.id] ??= {}).category="all";}
+      else if(key === "reminders") view="services";
+      else {view="more";moreState.tab=key;}
+      render();
+      if(key === "expenses") document.querySelector(".ledger-heading")?.scrollIntoView({block:"start"});
+    },
     onProfile: openProfile,
     vehicles,
     current,
