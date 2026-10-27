@@ -366,16 +366,9 @@ export function financePanel({
     );
     for (const e of chosen.slice(0, state.limit)) {
       const card = el("article", undefined, "card ledger-row");
-      card.append(
-        el("h4", category(e.category) + " · " + money(e.amount)),
-        el("p", date(e.date) + " · " + (e.title || e.station || "")),
-        el(
-          "p",
-          t("source") +
-            ": " +
-            (e.source === "fuel" ? t("fuelCategory") : t(e.source)),
-        ),
-      );
+      const identity=el("div",undefined,"ledger-identity"),amount=el("strong",money(e.amount),"ledger-amount");
+      identity.append(el("span",category(e.category),"status"),el("h4",e.title||e.station||category(e.category)),el("p",date(e.date)+" · "+(e.source==="fuel"?t("fuelCategory"):t(e.source))));
+      card.append(identity,amount);
       const actions = el("div", undefined, "actions");
       if (e.source === "expense") {
         actions.append(

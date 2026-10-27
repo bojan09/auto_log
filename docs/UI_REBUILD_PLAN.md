@@ -33,3 +33,6 @@ Rebuilt the overview component and showcase composition. Added twelve-month fuel
 
 ## Phase 3 evidence
 Rebuilt garage cards into image/identity/specifications/actions, added a vehicle-detail dialog with actual service/fuel/expense history, and rebuilt fuel rows as labeled purchase/cost/odometer values. Finance now has a contextual workspace header. Existing archive/restore, photo persistence, correction confirmation, deletion, finance calculations, four-width accessibility and offline browser checks passed; syntax/build passed. No records/schema changed.
+
+## Phase 4 evidence
+Maintenance now composes upcoming work and history into distinct sections, with a contextual action header. Rebuilt expense rows with category/identity/amount hierarchy; trip cards now show readiness and departure date; documents and ownership workspaces have dedicated headings. Maintenance recurrence/completion/edit/delete, finance accuracy, document/checklist/calendar, backup recovery, four-width accessibility and offline suites passed. Service-worker version advances with this release.

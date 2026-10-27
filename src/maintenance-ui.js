@@ -61,9 +61,8 @@ export function maintenancePanel({
       root.append(el("p", t("noVehicle")));
       return;
     }
-    root.append(
-      el("h3", summary ? t("reminders") : vehicle.make + " " + vehicle.model),
-    );
+    const header=el("div",undefined,"workspace-heading"),identity=el("div");
+    identity.append(el("h3",summary?t("reminders"):vehicle.make+" "+vehicle.model),el("p",summary?"Your next scheduled maintenance.":"Upcoming work and a complete service history."));header.append(identity);root.append(header);
     if (!summary) {
       const select = el("select");
       select.setAttribute("aria-label", t("choose"));
@@ -82,7 +81,7 @@ export function maintenancePanel({
         button("+ " + t("newSchedule"), () => editor("schedule"), "primary"),
         button("+ " + t("newRecord"), () => editor("record")),
       );
-      root.append(actions);
+      header.append(actions);
       const filters = el("div", undefined, "actions filters");
       for (const key of ["all", "scheduled", "soon", "due", "overdue"]) {
         const b = button(t(key), () => {
@@ -97,7 +96,8 @@ export function maintenancePanel({
     const rows = ownSchedules
       .map((s) => ({ s, d: dueStatus(s, vehicle, ownRecords) }))
       .sort(compareDue);
-    root.append(el("h4", t("schedules")));
+    const layout=el("div",undefined,"ownership-layout"),upcoming=el("section",undefined,"schedule-list"),historySection=el("section",undefined,"history-section");
+    upcoming.append(el("h4",t("schedules")));layout.append(upcoming);root.append(layout);
     let visible = 0;
     for (const { s, d } of rows) {
       if (
@@ -141,11 +141,11 @@ export function maintenancePanel({
         ),
       );
       card.append(actions);
-      root.append(card);
+      upcoming.append(card);
     }
-    if (!visible) root.append(el("p", t("empty"), "muted"));
+    if (!visible) upcoming.append(el("p", t("empty"), "empty-state"));
     if (summary) return;
-    root.append(el("h4", t("history")), el("p", t("historyNote"), "muted"));
+    historySection.append(el("h4",t("history")),el("p",t("historyNote"),"muted"));layout.append(historySection);
     const timeline = el("div", undefined, "service-timeline");
     for (const r of [...ownRecords].sort((a, b) =>
       b.date.localeCompare(a.date),
@@ -190,7 +190,7 @@ export function maintenancePanel({
       }
       timeline.append(card);
     }
-    root.append(timeline);
+    historySection.append(timeline);
   }
   function editor(kind, existing = {}, linked) {
     const modal = el("dialog"),

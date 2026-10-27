@@ -1,4 +1,4 @@
-const CACHE = "autolog-v19";
+const CACHE = "autolog-v20";
 const ASSETS = [
   "./",
   "./index.html",
