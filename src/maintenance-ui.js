@@ -9,6 +9,7 @@ import {
 } from "./maintenance.js";
 export function maintenancePanel({
   db,
+  initialAction = null,
   vehicle,
   vehicles,
   schedules,
@@ -330,5 +331,6 @@ export function maintenancePanel({
     modal.showModal();
   }
   draw();
+  if (initialAction && vehicle) queueMicrotask(() => editor(initialAction));
   return root;
 }

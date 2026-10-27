@@ -1,3 +1,13 @@
+# Compact reference layout validation
+
+`npm run check`, all 28 unit tests, and all eight browser suites passed. Existing garage, maintenance, finance, documents, backups, motion and offline workflows remain covered.
+
+The new reference-layout browser journey checks no sidebar element, a compact top bar, vehicle/tools dropdowns with Escape handling and viewport containment, correct vehicle switching, all four quick-entry forms, and a floating bottom dock at 360×640, 390×844, 768×1024 and 1440×900. Fixture history verifies weighted consumption (9.7 L/100km), exact expense cents (18,400.55 MKD), recent activity, schedule-derived next service and empty/zero states after switching vehicles. No fixture records are shipped in the app.
+
+Desktop/mobile dark-theme and mobile Macedonian light-theme WCAG A/AA scans passed, as did offline reload of the new dashboard/styles. The controls suite continues to cover 320px layout, minimum 44px dock touch targets, scroll clearance and keyboard add/dismiss; its selectors were updated for the header and dock now shown on desktop. The new top bar's light surface was corrected during contrast testing. No page errors or horizontal overflow occurred.
+
+Screenshots in ignored test-results/reference-dashboard-{360,390,768,1440}.png were generated and compared with the user's 1000034610.jpg concept for compact header/dropdowns, panoramic vehicle area, smaller actions, denser data cards, recent activity and floating navigation. Desktop, tablet and mobile images were reviewed. Pixel-identical reproduction is not claimed: illustrations remain honest body-style assets, recorded compliance replaces an invented fuel-level gauge, and trip preparation is a checklist rather than unimplemented GPS tracking. Physical-device/notch behavior and non-Chromium engines remain unverified. Phase 6 is still pending.
+
 # Button and floating navigation refinement
 
 Syntax checks and all 28 unit tests passed. All six existing browser suites passed, followed by the new controls browser suite. New checks cover floating dock clearance at 320/360/390px, at least 44px touch targets, no horizontal overflow, bottom actions scrolling clear of the dock, keyboard add/escape, EN/MK light/dark WCAG A/AA scans, desktop navigation and offline stylesheet availability. The offline style assertion waits for database-backed rendering.

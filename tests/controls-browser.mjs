@@ -59,7 +59,7 @@ for (const theme of ["dark", "light"])
       [390, 844],
     ]) {
       await page.setViewportSize({ width, height });
-      const nav = page.locator("aside nav");
+      const nav = page.locator(".floating-nav");
       const box = await nav.boundingBox();
       assert(
         box.x >= 11 && width - box.x - box.width >= 11,
@@ -131,7 +131,7 @@ await page.screenshot({
   fullPage: true,
   animations: "disabled",
 });
-assert.equal(await page.locator("#quick-add").isVisible(), false);
+assert.equal(await page.locator("#quick-add").isVisible(), true);
 await page.evaluate(() => navigator.serviceWorker.ready);
 await context.setOffline(true);
 await page.reload();
@@ -139,7 +139,7 @@ assert.equal(
   await page
     .locator("#app .heading>button")
     .evaluate((e) => getComputedStyle(e).borderRadius),
-  "12px",
+  "8px",
 );
 assert.deepEqual(errors, []);
 console.log(

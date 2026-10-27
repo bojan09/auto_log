@@ -1,6 +1,8 @@
+import { renderTopbar, setupTopbar } from "./topbar.js";
+import { layoutText, quickActions, dashboardOverview } from "./dashboard.js";
 import { morePanel, applyAppearance } from "./vault-ui.js";
 import { readPreferences, defaults } from "./vault.js";
-import { visualAsset, careCard, hotspots, setupMotion } from "./visuals.js";
+import { visualAsset, hotspots, setupMotion } from "./visuals.js";
 import { financePanel } from "./finance-ui.js";
 import { list, dueStatus, compareDue } from "./maintenance.js";
 import { maintenancePanel } from "./maintenance-ui.js";
@@ -9,6 +11,8 @@ import { messages } from "./i18n.js";
 
 const financeStates = {};
 const moreState = {};
+let pendingEditor = null;
+setupTopbar();
 const preferences = {
   getItem(key) {
     try {
@@ -139,12 +143,42 @@ function render() {
     b.prepend(svg);
     b.setAttribute("aria-current", view === b.dataset.view ? "page" : "false");
   });
+  const current =
+    vehicles.find((v) => v.id === selected && !v.archived) ||
+    vehicles.find((v) => !v.archived);
+  renderTopbar({
+    vehicles,
+    current,
+    viewLabel: t(view),
+    language,
+    onSelect: (id) => {
+      selected = id;
+      preferences.setItem("selected", id);
+      view = "dashboard";
+      render();
+    },
+    onGarage: () => {
+      view = "garage";
+      render();
+    },
+    onTool: (key) => {
+      moreState.tab = key;
+      view = "more";
+      render();
+    },
+    onTheme: () => {
+      preferences.setItem(
+        "theme",
+        document.documentElement.dataset.theme === "dark" ? "light" : "dark",
+      );
+      applyAppearance(preferences);
+    },
+  });
   app.replaceChildren();
   const heading = node("div", undefined, "heading");
-  heading.append(
-    node("h2", t(view)),
-    button("+ " + t("add"), () => edit()),
-  );
+  heading.append(node("h2", t(view)));
+  if (view !== "dashboard")
+    heading.append(button("+ " + t("add"), () => edit()));
   app.append(heading);
   if (view === "more") {
     app.append(
@@ -175,9 +209,6 @@ function render() {
     );
     return;
   }
-  const current =
-    vehicles.find((v) => v.id === selected && !v.archived) ||
-    vehicles.find((v) => !v.archived);
   if (!vehicles.length) {
     const c = node("section", undefined, "hero");
     c.append(
@@ -189,8 +220,11 @@ function render() {
     app.append(c);
     return;
   }
+  const initialAction = pendingEditor;
+  pendingEditor = null;
   const panel = (summary = false) =>
     maintenancePanel({
+      initialAction: summary ? null : initialAction,
       db,
       vehicle: current,
       vehicles,
@@ -207,6 +241,7 @@ function render() {
     });
   const finance = (summary = false) =>
     financePanel({
+      initialAction: summary ? null : initialAction,
       db,
       preferences: readPreferences(preferences),
       vehicle: current,
@@ -243,7 +278,7 @@ function render() {
       node("p", current.year + " · " + current.variant),
       art(current),
       hotspots(current, records, language),
-      button(t("edit"), () => edit(current)),
+      button(t("edit"), () => edit(current), "primary"),
     );
     const switcher = node("select");
     switcher.setAttribute("aria-label", t("switchVehicle"));
@@ -258,8 +293,19 @@ function render() {
       preferences.setItem("selected", selected);
       render();
     };
-    app.append(switcher, hero);
-    const grid = node("div", undefined, "grid");
+    switcher.className = "dashboard-switcher";
+    heading.append(switcher);
+    const top = node("div", undefined, "dashboard-top");
+    app.append(
+      node("p", layoutText[language].overview, "page-description"),
+      top,
+    );
+    top.append(hero);
+    const grid = node("div", undefined, "dashboard-status");
+    const upcoming = schedules
+      .filter((s) => s.vehicleId === current.id)
+      .map((s) => ({ s, d: dueStatus(s, current, records) }))
+      .sort(compareDue)[0];
     for (const [title, value] of [
       [
         t("mileage"),
@@ -269,16 +315,27 @@ function render() {
           " " +
           (current.unit || "km"),
       ],
-      [
-        t("next"),
-        schedules
-          .filter((s) => s.vehicleId === current.id)
-          .map((s) => ({ s, d: dueStatus(s, current, records) }))
-          .sort(compareDue)[0]?.s.title || t("none"),
-      ],
+      [t("next"), upcoming?.s.title || layoutText[language].noSchedule],
     ]) {
       const c = node("section", undefined, "card");
       c.append(node("h3", title), node("p", value));
+      if (title === t("next") && upcoming) {
+        const parts = [];
+        if (Number.isFinite(upcoming.d.remaining))
+          parts.push(
+            new Intl.NumberFormat(language === "mk" ? "mk-MK" : "en", {
+              maximumFractionDigits: 0,
+            }).format(Math.abs(upcoming.d.remaining)) +
+              " " +
+              upcoming.s.unit +
+              " " +
+              layoutText[language][
+                upcoming.d.remaining < 0 ? "overdue" : "remaining"
+              ],
+          );
+        if (upcoming.d.dueDate) parts.push(upcoming.d.dueDate);
+        c.append(node("p", parts.join(" · "), "next-detail"));
+      }
       if (title === t("next"))
         c.append(
           button(t("services"), () => {
@@ -288,16 +345,42 @@ function render() {
         );
       grid.append(c);
     }
-    grid.append(careCard(current, schedules, records, language));
-    const shortcuts = node("div", undefined, "dashboard-shortcuts");
-    for (const key of ["fuel", "services", "garage"])
-      shortcuts.append(
-        button(t(key), () => {
-          view = key;
+    top.append(grid);
+    app.append(
+      quickActions(language, (kind) => {
+        if (kind === "trip") {
+          view = "more";
+          moreState.tab = "trips";
+          moreState.vehicleId = current.id;
+          moreState.addTrip = true;
+        } else {
+          view = kind === "service" ? "services" : "fuel";
+          pendingEditor = kind === "service" ? "record" : kind;
+        }
+        render();
+      }),
+    );
+    app.append(
+      dashboardOverview({
+        vehicle: current,
+        fuel,
+        expenses,
+        records,
+        schedules,
+        language,
+        preferences: readPreferences(preferences),
+        onFinance: () => {
+          view = "fuel";
           render();
-        }),
-      );
-    app.append(shortcuts, grid, finance(true), panel(true));
+        },
+      }),
+    );
+    const reminders = node("details", undefined, "dashboard-reminders");
+    reminders.append(
+      node("summary", layoutText[language].reminders),
+      panel(true),
+    );
+    app.append(reminders);
     const history = node("details", undefined, "card");
     history.append(node("summary", t("mileageHistory")));
     for (const entry of current.odometerHistory || []) {
@@ -557,7 +640,6 @@ function localize() {
   document.querySelector("#cancel").textContent = t("ui17");
   form.querySelector("[type=submit]").textContent = t("ui18");
   document.querySelector("header small").textContent = t("ui19");
-  document.querySelector("aside p").textContent = t("ui20");
 }
 const catalog = {
   Fiat: [
@@ -595,7 +677,7 @@ window.addEventListener("beforeinstallprompt", (event) => {
     await event.prompt();
     install.remove();
   });
-  document.querySelector("aside").append(install);
+  document.querySelector(".app-bar").append(install);
 });
 
 document.querySelector("#quick-add").onclick = () => edit();

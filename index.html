@@ -6,16 +6,19 @@
   /><meta name="theme-color" content="#070e12" /><link
     rel="manifest"
     href="manifest.webmanifest"
-  /><link rel="stylesheet" href="src/controls.css" /><title>AutoLog</title>
+  /><link rel="stylesheet" href="src/reference.css" /><title>AutoLog</title>
   <body>
     <a class="skip" href="#app">AutoLog ↓</a>
-    <aside>
+    <header class="app-bar">
       <h1>
         <img src="assets/icon.svg" alt="" width="36" height="36" /> Auto<span
           >Log</span
         >
       </h1>
-      <nav aria-label="AutoLog">
+      <small class="app-context"></small>
+      <div id="top-tools"></div>
+      <button id="language">MK</button>
+      <nav class="floating-nav" aria-label="AutoLog">
         <button data-view="garage" class="desktop-only">Garage</button
         ><button data-view="dashboard">Dashboard</button
         ><button data-view="services" id="services-nav">Services</button
@@ -26,13 +29,8 @@
         ><button data-view="fuel" id="fuel-nav">Fuel</button
         ><button data-view="more">More</button>
       </nav>
-      <p>Local-first · Offline PWA</p>
-    </aside>
+    </header>
     <main>
-      <header>
-        <small>Your vehicle’s digital companion</small
-        ><button id="language">MK</button>
-      </header>
       <div id="app" tabindex="-1"></div>
     </main>
     <dialog id="editor">

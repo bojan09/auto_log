@@ -1,4 +1,4 @@
-const CACHE = "autolog-v12";
+const CACHE = "autolog-v13";
 const ASSETS = [
   "./",
   "./index.html",
@@ -23,6 +23,9 @@ const ASSETS = [
   "./src/i18n.js",
   "./src/style.css",
   "./src/controls.css",
+  "./src/reference.css",
+  "./src/dashboard.js",
+  "./src/topbar.js",
   "./manifest.webmanifest",
   "./assets/icon.svg",
   "./assets/icon-192.png",

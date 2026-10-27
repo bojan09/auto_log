@@ -16,6 +16,7 @@ import {
 import { chart } from "./finance-charts.js";
 export function financePanel({
   db,
+  initialAction = null,
   preferences = {},
   vehicle,
   vehicles,
@@ -596,5 +597,6 @@ export function financePanel({
     modal.showModal();
   }
   draw();
+  if (initialAction && vehicle) queueMicrotask(() => editor(initialAction));
   return root;
 }

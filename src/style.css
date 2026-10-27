@@ -13,14 +13,14 @@ body {
   display: flex;
   min-height: 100vh;
 }
-aside {
+.app-bar {
   width: 240px;
   padding: 30px 22px;
   border-right: 1px solid #28424a;
   display: flex;
   flex-direction: column;
 }
-aside p {
+.app-bar p {
   margin-top: auto;
   color: #98aeb5;
   font-size: 12px;
@@ -142,15 +142,15 @@ footer {
   body {
     display: block;
   }
-  aside {
+  .app-bar {
     width: 100%;
     padding: 12px 20px;
     border: 0;
   }
-  aside h1 {
+  .app-bar h1 {
     margin: 0;
   }
-  aside p {
+  .app-bar p {
     display: none;
   }
   nav {
@@ -326,7 +326,7 @@ main {
   align-self: flex-start;
   margin: 0 auto;
 }
-aside {
+.app-bar {
   position: sticky;
   top: 0;
   height: 100vh;
@@ -342,7 +342,7 @@ header {
   padding-bottom: 18px;
 }
 @media (max-width: 700px) {
-  aside {
+  .app-bar {
     position: static;
     height: auto;
   }
@@ -624,7 +624,7 @@ body {
   background:
     radial-gradient(ellipse at 80% 0, #16456966, transparent 55%), #06111e;
 }
-aside {
+.app-bar {
   position: sticky;
   top: 12px;
   z-index: 10;
@@ -642,29 +642,29 @@ aside {
   backdrop-filter: blur(18px);
   box-shadow: 0 10px 35px #0006;
 }
-aside h1 {
+.app-bar h1 {
   margin: 0;
   white-space: nowrap;
   font-size: 25px;
 }
-aside nav {
+.app-bar nav {
   display: flex;
   gap: 6px;
   flex: 1;
 }
-aside nav button {
+.app-bar nav button {
   border: 0;
   background: transparent;
   font-size: 13px;
   white-space: nowrap;
   padding: 12px;
 }
-aside nav button[aria-current="page"] {
+.app-bar nav button[aria-current="page"] {
   background: linear-gradient(135deg, #087bf1, #0556b8);
   color: white;
   border: 1px solid #2b9bff;
 }
-aside p {
+.app-bar p {
   display: none;
 }
 main {
@@ -874,20 +874,15 @@ html[data-hidden="true"] * {
     transition: none !important;
   }
 }
-@media (min-width: 701px) {
-  .mobile-add {
-    display: none !important;
-  }
-}
 @media (max-width: 1000px) {
-  aside {
+  .app-bar {
     gap: 10px;
     padding: 10px;
   }
-  aside h1 {
+  .app-bar h1 {
     font-size: 21px;
   }
-  aside nav button {
+  .app-bar nav button {
     font-size: 11px;
     padding: 9px;
   }
@@ -905,7 +900,7 @@ html[data-hidden="true"] * {
   }
 }
 @media (max-width: 700px) {
-  aside {
+  .app-bar {
     position: relative;
     top: 0;
     margin: 0;
@@ -916,10 +911,10 @@ html[data-hidden="true"] * {
     background: #07182c;
     backdrop-filter: none;
   }
-  aside h1 {
+  .app-bar h1 {
     font-size: 25px;
   }
-  aside nav {
+  .app-bar nav {
     position: fixed;
     top: auto;
     bottom: 0;
@@ -931,7 +926,7 @@ html[data-hidden="true"] * {
     border-radius: 0;
     gap: 2px;
   }
-  aside nav button {
+  .app-bar nav button {
     font-size: 9px;
     white-space: normal;
     padding: 6px 3px;
@@ -942,7 +937,7 @@ html[data-hidden="true"] * {
     font-size: 21px;
     margin: 0 0 3px;
   }
-  aside nav button[aria-current="page"] {
+  .app-bar nav button[aria-current="page"] {
     background: #10416a;
     border: 0;
     color: #7bddff;
@@ -1216,8 +1211,8 @@ html[data-theme="light"] body {
 }
 html[data-theme="light"] .card,
 html[data-theme="light"] dialog,
-html[data-theme="light"] aside,
-html[data-theme="light"] aside nav {
+html[data-theme="light"] .app-bar,
+html[data-theme="light"] .app-bar nav {
   background: #fff;
   color: #102c43;
   border-color: #93aabc;
@@ -1235,7 +1230,7 @@ html[data-theme="light"] button {
   border-color: #647e92;
 }
 html[data-theme="light"] .muted,
-html[data-theme="light"] aside p,
+html[data-theme="light"] .app-bar p,
 html[data-theme="light"] header,
 html[data-theme="light"] .card p {
   color: #405a6f;

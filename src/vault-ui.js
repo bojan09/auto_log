@@ -668,7 +668,13 @@ export function morePanel({
       if (!vehicle) return;
       if (state.tab === "documents") await documents(vehicle);
       else if (state.tab === "reports") reports(vehicle);
-      else await trips(vehicle);
+      else {
+        await trips(vehicle);
+        if (state.addTrip) {
+          delete state.addTrip;
+          checklistForm(vehicle);
+        }
+      }
     }
   }
   state.tab ||= "settings";
