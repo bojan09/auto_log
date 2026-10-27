@@ -1,7 +1,4 @@
-import {
-  fillVehicleField,
-  saveVehicleForm,
-} from "./helpers/vehicle.mjs";
+import { fillVehicleField, saveVehicleForm } from "./helpers/vehicle.mjs";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 import assert from "node:assert/strict";
@@ -135,7 +132,12 @@ await page.screenshot({
   fullPage: true,
   animations: "disabled",
 });
-assert.equal(await page.getByRole("button", { name: "+ Add vehicle", exact: true }).isVisible(), true);
+assert.equal(
+  await page
+    .getByRole("button", { name: "+ Add vehicle", exact: true })
+    .isVisible(),
+  true,
+);
 await page.evaluate(() => navigator.serviceWorker.ready);
 await context.setOffline(true);
 await page.reload();

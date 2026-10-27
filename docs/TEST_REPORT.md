@@ -1,3 +1,13 @@
+# Version 2.0 full presentation rebuild
+
+Syntax checks, 34 unit tests, all twelve browser suites, the legacy-style audit and runtime packaging passed. The release contains 45 files / 739,063 bytes plus .nojekyll. No data schema changed. The four original CSS files were deleted and replaced with six explicit style owners; the final static class-reference audit found no orphan class names.
+
+New tests cover actual monthly fuel purchases, all/selected vehicles, currency separation, elapsed zero-spend months, gallon conversion, deletion recalculation, accessible month drilldown and vehicle-detail history. Responsive screen review covers 360, 390, 700, 768, 820, 1280 and 1440px with no horizontal overflow. Reviewed final dashboard, garage, fuel modes, tablet settings and profile screenshots. Dark/light axe scans include the dashboard/monthly filters and vehicle details, in addition to the existing form/profile/settings scans. Browser scripts record no page errors.
+
+Regression journeys preserve vehicle and finance CRUD, odometer audit/corrections, maintenance recurrence, owner photos, profile/avatar backup recovery, documents, checklists, calendars, CSV/PDF export, worker update/cache cleanup, quota/blocked-storage handling, offline refresh and subpath hosting. Tests now navigate the intended Garage creation entry point and Fuel log tab, retaining persistence/count assertions. The dashboard performance probe measured 354ms with simulated 4× CPU slowdown. This is not a real-device benchmark or a complete accessibility certification.
+
+Evidence: test-results/rebuild/ screenshots and runtime.json; docs/UI_REBUILD_PLAN.md and docs/MATTE_DESIGN_SYSTEM.md. Physical devices, Safari/Firefox and screen-reader verification remain outstanding. Existing state-driven navigation is preserved; this release does not add URL routes. No Vercel deployment result is claimed.
+
 # Version 1.3 guided-entry validation
 
 Syntax checks, 32 unit tests, runtime packaging and all eleven browser suites passed. After final mobile grid/width adjustments, the dedicated entry suite passed again and the runtime was rebuilt: 41 files / 840,596 bytes plus .nojekyll.

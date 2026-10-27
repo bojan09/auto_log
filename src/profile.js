@@ -87,7 +87,11 @@ export function profilePanel({ db, profile = {}, onSave, onSettings }) {
   identity.append(
     el("h3", profile.displayName || "Make it yours."),
     el("p", "Your personal vehicle journal.", "muted"),
-    el("p", "Your profile is stored privately on this device.", "profile-privacy"),
+    el(
+      "p",
+      "Your profile is stored privately on this device.",
+      "profile-privacy",
+    ),
   );
   hero.append(preview, identity);
   card.append(hero, form);

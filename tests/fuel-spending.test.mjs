@@ -1,4 +1,47 @@
-import {test} from 'node:test';import assert from 'node:assert/strict';import {monthlyFuel} from '../src/fuel-spending.js';
-const row=(date,total,extra={})=>({date,total,volume:10,volumeUnit:'L',currency:'EUR',vehicleId:'a',...extra});
-test('fuel spending separates currencies/vehicles and averages elapsed zero months',()=>{const r=monthlyFuel([row('2026-01-02',40),row('2026-03-04',60),row('2026-02-02',100,{currency:'USD'}),row('2026-03-01',90,{vehicleId:'b'}),row('2026-04-01',99)],{year:2026,currency:'EUR',vehicleId:'a',asOf:'2026-03-20'});assert.equal(r.total,100);assert.equal(r.average,100/3);assert.equal(r.current.total,60);assert.equal(r.months[1].count,0);});
-test('all vehicles, gallon conversion, corrections and deletions recalculate',()=>{const entries=[row('2025-01-01',20,{volume:1,volumeUnit:'USgal'}),row('2025-01-02',30,{vehicleId:'b'})];const r=monthlyFuel(entries,{year:2025,currency:'EUR',asOf:'2026-03-20'});assert.equal(r.total,50);assert.equal(r.average,50/12);assert.equal(r.months[0].litres,13.785411784);assert.equal(r.current,null);assert.equal(monthlyFuel(entries.slice(1),{year:2025,currency:'EUR'}).total,30);});
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { monthlyFuel } from "../src/fuel-spending.js";
+const row = (date, total, extra = {}) => ({
+  date,
+  total,
+  volume: 10,
+  volumeUnit: "L",
+  currency: "EUR",
+  vehicleId: "a",
+  ...extra,
+});
+test("fuel spending separates currencies/vehicles and averages elapsed zero months", () => {
+  const r = monthlyFuel(
+    [
+      row("2026-01-02", 40),
+      row("2026-03-04", 60),
+      row("2026-02-02", 100, { currency: "USD" }),
+      row("2026-03-01", 90, { vehicleId: "b" }),
+      row("2026-04-01", 99),
+    ],
+    { year: 2026, currency: "EUR", vehicleId: "a", asOf: "2026-03-20" },
+  );
+  assert.equal(r.total, 100);
+  assert.equal(r.average, 100 / 3);
+  assert.equal(r.current.total, 60);
+  assert.equal(r.months[1].count, 0);
+});
+test("all vehicles, gallon conversion, corrections and deletions recalculate", () => {
+  const entries = [
+    row("2025-01-01", 20, { volume: 1, volumeUnit: "USgal" }),
+    row("2025-01-02", 30, { vehicleId: "b" }),
+  ];
+  const r = monthlyFuel(entries, {
+    year: 2025,
+    currency: "EUR",
+    asOf: "2026-03-20",
+  });
+  assert.equal(r.total, 50);
+  assert.equal(r.average, 50 / 12);
+  assert.equal(r.months[0].litres, 13.785411784);
+  assert.equal(r.current, null);
+  assert.equal(
+    monthlyFuel(entries.slice(1), { year: 2025, currency: "EUR" }).total,
+    30,
+  );
+});

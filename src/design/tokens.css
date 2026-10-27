@@ -1,4 +1,46 @@
-@font-face{font-family:Manrope;src:url('../../assets/fonts/manrope-latin.woff2') format('woff2');font-weight:200 800;font-display:swap}
-:root{font-family:Manrope,system-ui,sans-serif;font-size:14px;color-scheme:dark;--canvas:#10161b;--surface:#172027;--raised:#1d282f;--line:#34424b;--ink:#e7ecee;--muted:#acb8bf;--accent:#507b98;--accent-ink:#b4d2e5;--positive:#a2c4b2;--warning:#dac398;--danger:#ecb0b0;--focus:#c5e3f5;--radius:10px;--surface-raised:var(--raised);--stroke:var(--line);--subtle:var(--muted);--action:var(--accent);--action-strong:#365b74;--action-text:var(--accent-ink);--button-border:var(--line);--action-soft:var(--raised)}
-:root[data-theme=light]{color-scheme:light;--canvas:#eef1f2;--surface:#fff;--raised:#e7edef;--line:#aab8c0;--ink:#1d2b34;--muted:#4c606c;--accent:#426b85;--accent-ink:#305872;--positive:#37684d;--warning:#785422;--danger:#9c3038;--focus:#305872}
-:root[data-accent=mint]{--accent:#426c5b;--accent-ink:#b3d6c4}:root[data-theme=light][data-accent=mint]{--accent-ink:#315c48}
+@font-face {
+  font-family: Manrope;
+  src: url("../../assets/fonts/manrope-latin.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+:root {
+  font-family: Manrope, system-ui, sans-serif;
+  font-size: 14px;
+  color-scheme: dark;
+  --canvas: #10161b;
+  --surface: #172027;
+  --raised: #1d282f;
+  --line: #34424b;
+  --ink: #e7ecee;
+  --muted: #acb8bf;
+  --accent: #507b98;
+  --accent-ink: #b4d2e5;
+  --positive: #a2c4b2;
+  --warning: #dac398;
+  --danger: #ecb0b0;
+  --focus: #c5e3f5;
+  --radius: 10px;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #eef1f2;
+  --surface: #fff;
+  --raised: #e7edef;
+  --line: #aab8c0;
+  --ink: #1d2b34;
+  --muted: #4c606c;
+  --accent: #426b85;
+  --accent-ink: #305872;
+  --positive: #37684d;
+  --warning: #785422;
+  --danger: #9c3038;
+  --focus: #305872;
+}
+:root[data-accent="mint"] {
+  --accent: #426c5b;
+  --accent-ink: #b3d6c4;
+}
+:root[data-theme="light"][data-accent="mint"] {
+  --accent-ink: #315c48;
+}

@@ -7,3 +7,6 @@ Phase 4 adds original AI-generated `alpine-road.png`, `crossover-studio.png`, `h
 Phase 6 derives optimized WebP versions of the four original generated PNGs using standard resize/compression (quality 82 for scenery, 85 for vehicles). The original PNGs remain as provenance in source control. Only the 455,346-byte WebP set is loaded/cached and included in the runtime package. No new third-party imagery or manufacturer badges were added. The later 1000034610.jpg attachment was available locally and reviewed as a design reference; it is not a bundled runtime asset.
 
 Version 1.1 replaces the original A symbol with a newly authored vector gauge and rasterized 192/512px app icons. Manrope Latin variable font is locally hosted from `@fontsource-variable/manrope` 5.3.0; copyright 2019 The Manrope Project Authors, SIL Open Font License 1.1. The full license ships at assets/fonts/OFL.txt and is included in the offline artifact. No external font requests are made at runtime.
+
+## 2.0 brand refresh
+The flat A/road emblem in assets/icon.svg is original SVG UI artwork authored for AutoLog. The 192px and 512px PNG install icons are rasterizations of that same SVG. It replaces the earlier gauge emblem; no manufacturer logo is used.

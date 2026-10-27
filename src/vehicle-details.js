@@ -1,13 +1,110 @@
-import {visualAsset} from './visuals.js';
-export function openVehicleDetails({vehicle,records,fuel,expenses,onEdit}){
- const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
- const d=el('dialog',undefined,'vehicle-detail-dialog'),title=el('h2',vehicle.make+' '+vehicle.model);d.setAttribute('aria-label','Vehicle details');
- const header=el('div',undefined,'section-heading'),close=el('button','Close');close.onclick=()=>d.close();header.append(title,close);d.append(header);
- const grid=el('div',undefined,'vehicle-detail-grid'),figure=el('figure'),img=el('img');img.src=visualAsset(vehicle);img.alt=vehicle.photo?'Your vehicle photo':'Body-style illustration';figure.append(img,el('figcaption',vehicle.photo?'Your vehicle photo':'Body-style illustration','muted'));const specs=el('dl');
- for(const [label,value]of [['Year',vehicle.year],['Odometer',new Intl.NumberFormat('en').format(vehicle.odometer)+' '+vehicle.unit],['Engine & drivetrain',vehicle.variant],['Fuel',vehicle.fuel],['Nickname',vehicle.nickname],['License plate',vehicle.plate],['Color',vehicle.color],['Purchased',vehicle.purchaseDate]]){if(!value)continue;const row=el('div');row.append(el('dt',label),el('dd',String(value)));specs.append(row);}grid.append(figure,specs);d.append(grid);
- const tabs=el('div',undefined,'actions filters detail-tabs'),content=el('div');
- const sources={Services:records.filter(r=>r.vehicleId===vehicle.id),Fuel:fuel.filter(r=>r.vehicleId===vehicle.id),Expenses:expenses.filter(r=>r.vehicleId===vehicle.id)};
- function show(key){for(const b of tabs.children)b.setAttribute('aria-pressed',String(b.textContent===key));content.replaceChildren();const rows=sources[key];if(!rows.length)content.append(el('p','No '+key.toLowerCase()+' recorded yet.','empty-state'));for(const r of [...rows].sort((a,b)=>b.date.localeCompare(a.date))){const row=el('article',undefined,'detail-record');row.append(el('strong',r.title||'Fuel refill'),el('span',r.date),el('span',new Intl.NumberFormat('en',{maximumFractionDigits:2}).format(r.cost??r.total??r.amount)+' '+r.currency));content.append(row);}}
- for(const key of Object.keys(sources)){const b=el('button',key);b.onclick=()=>show(key);tabs.append(b);}d.append(tabs,content);show('Services');
- if(vehicle.notes)d.append(el('p',vehicle.notes,'muted'));const edit=el('button','Edit vehicle');edit.dataset.tone='primary';edit.onclick=()=>{d.close();onEdit(vehicle);};const footer=el('footer');footer.append(edit);d.append(footer);d.onclose=()=>d.remove();document.body.append(d);d.showModal();
+import { visualAsset } from "./visuals.js";
+export function openVehicleDetails({
+  vehicle,
+  records,
+  fuel,
+  expenses,
+  onEdit,
+}) {
+  const el = (tag, text, cls) => {
+    const n = document.createElement(tag);
+    if (text !== undefined) n.textContent = text;
+    if (cls) n.className = cls;
+    return n;
+  };
+  const d = el("dialog", undefined, "vehicle-detail-dialog"),
+    title = el("h2", vehicle.make + " " + vehicle.model);
+  d.setAttribute("aria-label", "Vehicle details");
+  const header = el("div", undefined, "section-heading"),
+    close = el("button", "Close");
+  close.onclick = () => d.close();
+  header.append(title, close);
+  d.append(header);
+  const grid = el("div", undefined, "vehicle-detail-grid"),
+    figure = el("figure"),
+    img = el("img");
+  img.src = visualAsset(vehicle);
+  img.alt = vehicle.photo ? "Your vehicle photo" : "Body-style illustration";
+  figure.append(
+    img,
+    el(
+      "figcaption",
+      vehicle.photo ? "Your vehicle photo" : "Body-style illustration",
+      "muted",
+    ),
+  );
+  const specs = el("dl");
+  for (const [label, value] of [
+    ["Year", vehicle.year],
+    [
+      "Odometer",
+      new Intl.NumberFormat("en").format(vehicle.odometer) + " " + vehicle.unit,
+    ],
+    ["Engine & drivetrain", vehicle.variant],
+    ["Fuel", vehicle.fuel],
+    ["Nickname", vehicle.nickname],
+    ["License plate", vehicle.plate],
+    ["Color", vehicle.color],
+    ["Purchased", vehicle.purchaseDate],
+  ]) {
+    if (!value) continue;
+    const row = el("div");
+    row.append(el("dt", label), el("dd", String(value)));
+    specs.append(row);
+  }
+  grid.append(figure, specs);
+  d.append(grid);
+  const tabs = el("div", undefined, "actions filters detail-tabs"),
+    content = el("div");
+  const sources = {
+    Services: records.filter((r) => r.vehicleId === vehicle.id),
+    Fuel: fuel.filter((r) => r.vehicleId === vehicle.id),
+    Expenses: expenses.filter((r) => r.vehicleId === vehicle.id),
+  };
+  function show(key) {
+    for (const b of tabs.children)
+      b.setAttribute("aria-pressed", String(b.textContent === key));
+    content.replaceChildren();
+    const rows = sources[key];
+    if (!rows.length)
+      content.append(
+        el("p", "No " + key.toLowerCase() + " recorded yet.", "empty-state"),
+      );
+    for (const r of [...rows].sort((a, b) => b.date.localeCompare(a.date))) {
+      const row = el("article", undefined, "detail-record");
+      row.append(
+        el("strong", r.title || "Fuel refill"),
+        el("span", r.date),
+        el(
+          "span",
+          new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(
+            r.cost ?? r.total ?? r.amount,
+          ) +
+            " " +
+            r.currency,
+        ),
+      );
+      content.append(row);
+    }
+  }
+  for (const key of Object.keys(sources)) {
+    const b = el("button", key);
+    b.onclick = () => show(key);
+    tabs.append(b);
+  }
+  d.append(tabs, content);
+  show("Services");
+  if (vehicle.notes) d.append(el("p", vehicle.notes, "muted"));
+  const edit = el("button", "Edit vehicle");
+  edit.dataset.tone = "primary";
+  edit.onclick = () => {
+    d.close();
+    onEdit(vehicle);
+  };
+  const footer = el("footer");
+  footer.append(edit);
+  d.append(footer);
+  d.onclose = () => d.remove();
+  document.body.append(d);
+  d.showModal();
 }

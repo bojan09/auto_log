@@ -64,7 +64,7 @@ export function morePanel({
   notice.setAttribute("role", "status");
   const nav = el("div", undefined, "vault-tabs");
   nav.setAttribute("aria-label", t("settings"));
-  const content = el("div",undefined,"vault-content");
+  const content = el("div", undefined, "vault-content");
   root.append(nav, notice, content);
   const message = (key, error = false) => {
     notice.setAttribute("role", error ? "alert" : "status");
@@ -385,12 +385,41 @@ export function morePanel({
         ),
       ),
     );
-    if (!rows.length) content.append(el("p", "Plan your next journey with a departure date and a checklist.", "empty-state"));
+    if (!rows.length)
+      content.append(
+        el(
+          "p",
+          "Plan your next journey with a departure date and a checklist.",
+          "empty-state",
+        ),
+      );
     for (const row of rows) {
-      const card=el("article",undefined,"card trip-card"),header=el("div",undefined,"section-heading"),identity=el("div");
-      identity.append(el("h3",row.title),el("p",row.date||"No departure date","muted"));
-      header.append(identity,el("span",row.items.filter(i=>i.done).length+" / "+row.items.length+" ready","status"));card.append(header);
-      card.append(el("p",row.items.filter(i=>!i.done).length+" "+t("remaining"),"muted"));
+      const card = el("article", undefined, "card trip-card"),
+        header = el("div", undefined, "section-heading"),
+        identity = el("div");
+      identity.append(
+        el("h3", row.title),
+        el("p", row.date || "No departure date", "muted"),
+      );
+      header.append(
+        identity,
+        el(
+          "span",
+          row.items.filter((i) => i.done).length +
+            " / " +
+            row.items.length +
+            " ready",
+          "status",
+        ),
+      );
+      card.append(header);
+      card.append(
+        el(
+          "p",
+          row.items.filter((i) => !i.done).length + " " + t("remaining"),
+          "muted",
+        ),
+      );
       for (const [index, item] of row.items.entries()) {
         const label = el("label", undefined, "check-item");
         const box = el("input");
@@ -433,7 +462,7 @@ export function morePanel({
     }
   }
   function reports(vehicle) {
-    content.append(fuelSpendingPanel({fuel,vehicles,vehicle}));
+    content.append(fuelSpendingPanel({ fuel, vehicles, vehicle }));
     content.append(el("p", t("reportHelp"), "muted"));
     for (const [kind, rows] of Object.entries(rowsFor(vehicle))) {
       const card = el("article", undefined, "card");
@@ -587,8 +616,29 @@ export function morePanel({
   async function settings() {
     const f = el("form", undefined, "card settings-grid");
     const prefs = readPreferences(preferences);
-    const groups=[ ["Appearance",["theme","accent","motion"]], ["Units & formats",["distance","volume","consumption","currency","dateFormat"]], ["New vehicle defaults",["defaultFuel","defaultBody"]] ];
-    for(const [title,keys] of groups){const group=el("fieldset",undefined,"settings-section");group.append(el("legend",title));for(const key of keys){const values=preferenceOptions[key];field(group,key,"",prefs[key],values.map(v=>[v,t(v)]));}f.append(group);}
+    const groups = [
+      ["Appearance", ["theme", "accent", "motion"]],
+      [
+        "Units & formats",
+        ["distance", "volume", "consumption", "currency", "dateFormat"],
+      ],
+      ["New vehicle defaults", ["defaultFuel", "defaultBody"]],
+    ];
+    for (const [title, keys] of groups) {
+      const group = el("fieldset", undefined, "settings-section");
+      group.append(el("legend", title));
+      for (const key of keys) {
+        const values = preferenceOptions[key];
+        field(
+          group,
+          key,
+          "",
+          prefs[key],
+          values.map((v) => [v, t(v)]),
+        );
+      }
+      f.append(group);
+    }
     const submit = el("button", t("save"));
     submit.type = "submit";
     f.append(submit);
@@ -656,9 +706,27 @@ export function morePanel({
   async function draw() {
     generation++;
     content.replaceChildren();
-    const descriptions={settings:["Settings","Make AutoLog work the way you do."],documents:["Documents","Keep the paperwork with the vehicle."],reports:["Statistics & reports","Your recorded ownership history, ready to review or export."],trips:["Trip preparation","Prepare for the road and export your upcoming reminders."],backup:["Backup & restore","Keep a portable copy of the records stored on this device."]};
-    const [title,description]=descriptions[state.tab]||descriptions.settings;
-    const heading=el("header",undefined,"page-banner");heading.append(el("h3",title),el("p",description,"muted"));content.append(heading);
+    const descriptions = {
+      settings: ["Settings", "Make AutoLog work the way you do."],
+      documents: ["Documents", "Keep the paperwork with the vehicle."],
+      reports: [
+        "Statistics & reports",
+        "Your recorded ownership history, ready to review or export.",
+      ],
+      trips: [
+        "Trip preparation",
+        "Prepare for the road and export your upcoming reminders.",
+      ],
+      backup: [
+        "Backup & restore",
+        "Keep a portable copy of the records stored on this device.",
+      ],
+    };
+    const [title, description] =
+      descriptions[state.tab] || descriptions.settings;
+    const heading = el("header", undefined, "page-banner");
+    heading.append(el("h3", title), el("p", description, "muted"));
+    content.append(heading);
     notice.textContent = state.flash ? t(state.flash) : "";
     delete state.flash;
     for (const b of nav.children)

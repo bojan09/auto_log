@@ -174,11 +174,23 @@ function render() {
   renderTopbar({
     profile,
     onDestination: (key) => {
-      if (key === "expenses") {view="fuel"; if(current) (financeStates[current.id] ??= {}).category="all";}
-      else if(key === "reminders") view="services";
-      else {view="more";moreState.tab=key;}
+      if (key === "expenses") {
+        view = "fuel";
+        if (current)
+          Object.assign((financeStates[current.id] ??= {}), {
+            category: "all",
+            workspace: "expenses",
+          });
+      } else if (key === "reminders") view = "services";
+      else {
+        view = "more";
+        moreState.tab = key;
+      }
       render();
-      if(key === "expenses") document.querySelector(".ledger-heading")?.scrollIntoView({block:"start"});
+      if (key === "expenses")
+        document
+          .querySelector(".ledger-heading")
+          ?.scrollIntoView({ block: "start" });
     },
     onProfile: openProfile,
     vehicles,
@@ -211,8 +223,7 @@ function render() {
   app.replaceChildren();
   const heading = node("div", undefined, "heading");
   heading.append(node("h2", t(view)));
-  if (!["dashboard", "profile"].includes(view))
-    heading.append(button("+ " + t("add"), () => edit()));
+  if (view === "garage") heading.append(button("+ " + t("add"), () => edit()));
   heading.append(
     avatarButton(profile, openProfile, "profile-trigger mobile-profile"),
   );
@@ -392,13 +403,26 @@ function render() {
     switcher.className = "dashboard-switcher";
     heading.append(switcher);
     const top = node("div", undefined, "dashboard-top");
-    app.append(
-      node("p", layoutText[language].overview, "page-description"),
-      top,
-    );
+    app.append(top);
     const showcase = node("div", undefined, "showcase");
     const greeting = node("div", undefined, "showcase-greeting");
-    greeting.append(node("h3", "Good " + (new Date().getHours() < 12 ? "morning" : new Date().getHours() < 18 ? "afternoon" : "evening") + (profile.displayName ? ", " + profile.displayName : "") + "."), node("p", "Your " + current.make + " " + current.model + ", ready for the road."));
+    greeting.append(
+      node(
+        "h3",
+        "Good " +
+          (new Date().getHours() < 12
+            ? "morning"
+            : new Date().getHours() < 18
+              ? "afternoon"
+              : "evening") +
+          (profile.displayName ? ", " + profile.displayName : "") +
+          ".",
+      ),
+      node(
+        "p",
+        "Your " + current.make + " " + current.model + ", ready for the road.",
+      ),
+    );
     showcase.append(greeting, hero);
     top.append(showcase);
     const grid = node("div", undefined, "dashboard-status");
@@ -506,9 +530,25 @@ function render() {
     const c = node("section", undefined, "card garage-card");
     const body = node("div", undefined, "garage-card-body");
     const identity = node("div", undefined, "section-heading");
-    identity.append(node("h3", v.make + " " + v.model), node("span", v.archived ? t("archived") : v.id === current?.id ? "Active" : String(v.year), "status"));
+    identity.append(
+      node("h3", v.make + " " + v.model),
+      node(
+        "span",
+        v.archived
+          ? t("archived")
+          : v.id === current?.id
+            ? "Active"
+            : String(v.year),
+        "status",
+      ),
+    );
     const specs = node("div", undefined, "vehicle-specs");
-    for (const text of [String(v.year), v.variant, new Intl.NumberFormat("en").format(v.odometer) + " " + (v.unit || "km")]) if (text) specs.append(node("span", text));
+    for (const text of [
+      String(v.year),
+      v.variant,
+      new Intl.NumberFormat("en").format(v.odometer) + " " + (v.unit || "km"),
+    ])
+      if (text) specs.append(node("span", text));
     body.append(identity, specs);
     c.append(art(v), body);
     const a = node("div", undefined, "actions");
@@ -570,7 +610,18 @@ function render() {
           "primary",
         ),
       );
-    const details = button("View details", () => openVehicleDetails({vehicle:v,records,fuel,expenses,onEdit:edit}), "quiet");
+    const details = button(
+      "View details",
+      () =>
+        openVehicleDetails({
+          vehicle: v,
+          records,
+          fuel,
+          expenses,
+          onEdit: edit,
+        }),
+      "quiet",
+    );
     body.append(details, a);
     grid.append(c);
   }

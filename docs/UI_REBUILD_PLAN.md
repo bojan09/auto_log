@@ -39,3 +39,13 @@ Maintenance now composes upcoming work and history into distinct sections, with 
 
 ## Phase 5 evidence
 Rebuilt Settings into appearance/units/default fieldsets and Profile into identity/details columns. Statistics now includes the same currency-safe monthly fuel module above export/report workflows. Desktop links expose expenses, trips, statistics and reminders; compact widths retain the Tools menu. Profile/avatar persistence and backup recovery, settings/documents/report flows, keyboard/dock geometry, light/dark accessibility and offline suites passed. Syntax/build passed.
+
+
+## Phase 6 evidence and completion
+All phases are complete. Final syntax/build, 34 unit tests and all twelve browser suites passed. The additional rebuild suite checks currency/vehicle filters, monthly transaction drilldown, vehicle detail history, overflow at 360/390/700/768/820/1280/1440px, and dark/light dashboard plus detail accessibility. Existing suites retain archive/restore/delete, mileage correction, maintenance recurrence, finance calculations, profile/backup, documents/checklists, print/export, worker update and offline coverage.
+
+Final visual review covered dashboard, garage, fuel modes, maintenance, settings and profile screenshots. Fixed stretched tablet fields, oversized initial showcase, redundant dashboard copy, obsolete menu control assertions and finance page length. The fuel workspace now has focused Overview/Fuel log/Expenses sections. Added an original flat A/road emblem and matching install icons. Removed unused chart-gradient definitions, inline gauge styling and stale token aliases. The static style audit passes with six explicit files and 42,046 CSS bytes.
+
+Runtime package: 45 files / 739,063 bytes plus .nojekyll. The existing browser performance probe measured dashboard readiness at 354ms under its simulated 4× CPU slowdown; this is local evidence, not a field performance claim. Screenshots and runtime resource metadata are in ignored test-results/rebuild/. Physical-device/Safari/Firefox/screen-reader checks and the actual Vercel production outcome remain unverified. Internal navigation retains its prior state-based model; URL routing was not introduced.
+
+Phase commits pushed to master: discovery a6ccd23; foundation 9a4e89c; dashboard db991b2; vehicles/fuel df0e76a; ownership 6a485b4; personal workspace 72cc989. The final verification/cleanup commit follows these six.

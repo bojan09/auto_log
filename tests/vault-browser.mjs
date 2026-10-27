@@ -1,7 +1,4 @@
-import {
-  fillVehicleField,
-  saveVehicleForm,
-} from "./helpers/vehicle.mjs";
+import { fillVehicleField, saveVehicleForm } from "./helpers/vehicle.mjs";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 import assert from "node:assert/strict";
@@ -160,6 +157,10 @@ assert(
     ),
   ),
 );
+await page
+  .locator(".vault-tabs")
+  .getByRole("button", { name: "Garage", exact: true })
+  .click();
 await page.getByRole("button", { name: "+ Add vehicle", exact: true }).click();
 assert.equal(await page.locator("#vehicle [name=unit]").inputValue(), "mi");
 assert.equal(
@@ -167,6 +168,10 @@ assert.equal(
   "EUR",
 );
 await page.keyboard.press("Escape");
+await page
+  .locator(".floating-nav")
+  .getByRole("button", { name: "More", exact: true })
+  .click();
 await tab("Backup & restore");
 dl = page.waitForEvent("download");
 await page

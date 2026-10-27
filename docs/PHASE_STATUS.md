@@ -34,3 +34,6 @@ Validation: 30 unit tests, nine browser suites, syntax checks, runtime build and
 
 ## Guided entry refinement — 1.3
 Vehicle creation/editing now uses three stages with final review, optional details and live previews. Fuel/expense/service/schedule forms use grouped fields and anchored actions, including mobile bottom sheets. See FORM_DESIGN_REVIEW.md for the inspected Porsche guidance and network limitations. English-only behavior and local storage remain in effect.
+
+## Full matte UI rebuild — 2.0
+Completed discovery and six rebuild/verification phases. Removed the legacy CSS stack; rebuilt the shell, dashboard/monthly fuel, garage/details, fuel/expense workspaces, maintenance, ownership tools, statistics, settings and profile. All 34 unit tests and twelve browser suites pass. See UI_REBUILD_PLAN.md for phase commits and MATTE_DESIGN_SYSTEM.md for the final architecture and intentional scope.

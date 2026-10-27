@@ -35,8 +35,8 @@ const server = createServer(async (req, res) => {
         body
           .toString()
           .replace(
-            "autolog-v21",
-            version === "old" ? "autolog-release-old" : "autolog-v21",
+            "autolog-v22",
+            version === "old" ? "autolog-release-old" : "autolog-v22",
           ),
       );
     res.writeHead(200, {
@@ -134,7 +134,7 @@ try {
           await worker.evaluate(async () => {
             const keys = await caches.keys();
             return (
-              keys.includes("autolog-v21") &&
+              keys.includes("autolog-v22") &&
               !keys.includes("autolog-release-old")
             );
           })

@@ -27,6 +27,7 @@ export function renderTopbar({
     const d = el("details");
     d.className = "top-menu";
     const s = el("summary");
+    s.setAttribute("aria-label", label);
     s.append(
       menuIcon(label === t.vehicles ? "vehicle" : "tools"),
       el("span", label),
@@ -52,8 +53,20 @@ export function renderTopbar({
     menu.p.append(b);
     return b;
   }
-  const destinations=el("div");destinations.className="workspace-links";
-  for(const [key,label] of [["expenses","Expenses"],["trips","Trips"],["reports","Statistics"],["reminders","Reminders"]]){const b=el("button",label);b.type="button";b.onclick=()=>onDestination(key);destinations.append(b);}root.append(destinations);
+  const destinations = el("div");
+  destinations.className = "workspace-links";
+  for (const [key, label] of [
+    ["expenses", "Expenses"],
+    ["trips", "Trips"],
+    ["reports", "Statistics"],
+    ["reminders", "Reminders"],
+  ]) {
+    const b = el("button", label);
+    b.type = "button";
+    b.onclick = () => onDestination(key);
+    destinations.append(b);
+  }
+  root.append(destinations);
   const cars = menu(t.vehicles);
   for (const v of vehicles.filter((v) => !v.archived)) {
     const b = option(cars, v.make + " " + v.model, () => onSelect(v.id));
@@ -83,7 +96,12 @@ export function renderTopbar({
 export function setupTopbar() {
   const dock = document.querySelector(".floating-nav");
   const desktop = matchMedia("(min-width: 701px)");
-  const place = () => desktop.matches ? document.querySelector(".app-bar").insertBefore(dock, document.querySelector("#top-tools")) : document.querySelector(".app-bar").after(dock);
+  const place = () =>
+    desktop.matches
+      ? document
+          .querySelector(".app-bar")
+          .insertBefore(dock, document.querySelector("#top-tools"))
+      : document.querySelector(".app-bar").after(dock);
   desktop.addEventListener("change", place);
   place();
   document.addEventListener("click", (event) => {

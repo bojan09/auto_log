@@ -61,8 +61,19 @@ export function maintenancePanel({
       root.append(el("p", t("noVehicle")));
       return;
     }
-    const header=el("div",undefined,"workspace-heading"),identity=el("div");
-    identity.append(el("h3",summary?t("reminders"):vehicle.make+" "+vehicle.model),el("p",summary?"Your next scheduled maintenance.":"Upcoming work and a complete service history."));header.append(identity);root.append(header);
+    const header = el("div", undefined, "workspace-heading"),
+      identity = el("div");
+    identity.append(
+      el("h3", summary ? t("reminders") : vehicle.make + " " + vehicle.model),
+      el(
+        "p",
+        summary
+          ? "Your next scheduled maintenance."
+          : "Upcoming work and a complete service history.",
+      ),
+    );
+    header.append(identity);
+    root.append(header);
     if (!summary) {
       const select = el("select");
       select.setAttribute("aria-label", t("choose"));
@@ -96,8 +107,12 @@ export function maintenancePanel({
     const rows = ownSchedules
       .map((s) => ({ s, d: dueStatus(s, vehicle, ownRecords) }))
       .sort(compareDue);
-    const layout=el("div",undefined,"ownership-layout"),upcoming=el("section",undefined,"schedule-list"),historySection=el("section",undefined,"history-section");
-    upcoming.append(el("h4",t("schedules")));layout.append(upcoming);root.append(layout);
+    const layout = el("div", undefined, "ownership-layout"),
+      upcoming = el("section", undefined, "schedule-list"),
+      historySection = el("section", undefined, "history-section");
+    upcoming.append(el("h4", t("schedules")));
+    layout.append(upcoming);
+    root.append(layout);
     let visible = 0;
     for (const { s, d } of rows) {
       if (
@@ -145,7 +160,11 @@ export function maintenancePanel({
     }
     if (!visible) upcoming.append(el("p", t("empty"), "empty-state"));
     if (summary) return;
-    historySection.append(el("h4",t("history")),el("p",t("historyNote"),"muted"));layout.append(historySection);
+    historySection.append(
+      el("h4", t("history")),
+      el("p", t("historyNote"), "muted"),
+    );
+    layout.append(historySection);
     const timeline = el("div", undefined, "service-timeline");
     for (const r of [...ownRecords].sort((a, b) =>
       b.date.localeCompare(a.date),

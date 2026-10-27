@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.0 — 2026-10-27
+
+- Deleted the four legacy stylesheets and rebuilt the presentation with six explicit style owners.
+- Rebuilt the desktop/mobile shell, matte palette, flat road emblem and install icons.
+- Rebuilt dashboard, garage cards, vehicle details, fuel/expense workspaces, maintenance, trip preparation, documents, statistics, settings and profile layouts.
+- Added actual monthly fuel purchases with year/vehicle/currency filters and month drilldown.
+- Preserved local records, finance calculations, maintenance logic, backups and offline operation.
+- Added seven-width screen review and finance/detail regression coverage.
+
 ## 1.3.0 — 2026-10-27
 
 - Replaced the long vehicle form with Vehicle, Usage and Review steps, optional sections and a live preview.

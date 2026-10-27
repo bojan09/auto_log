@@ -1,7 +1,4 @@
-import {
-  fillVehicleField,
-  saveVehicleForm,
-} from "./helpers/vehicle.mjs";
+import { fillVehicleField, saveVehicleForm } from "./helpers/vehicle.mjs";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 import assert from "node:assert/strict";
@@ -75,9 +72,7 @@ await page
   .getByRole("button", { name: "Other · 100 MKD", exact: true })
   .click();
 assert.equal(await page.locator(".ledger-row").count(), 1);
-await page
-  .locator(".finance > label select[name=category]")
-  .selectOption("all");
+await page.locator(".finance label select[name=category]").selectOption("all");
 await mkdir("test-results", { recursive: true });
 for (const [width, height] of [
   [360, 640],
@@ -119,6 +114,10 @@ await page.reload();
 await page
   .locator("nav")
   .getByRole("button", { name: "Fuel & expenses", exact: true })
+  .click();
+await page
+  .locator(".finance-workspace-tabs")
+  .getByRole("button", { name: "Fuel log", exact: true })
   .click();
 await page.locator(".finance-entry").first().waitFor();
 assert.equal(await page.locator(".finance-entry").count(), 3);

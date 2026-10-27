@@ -87,7 +87,6 @@ export function careCard(v, schedules, records, lang) {
   h.textContent = t.score;
   const gauge = document.createElement("div");
   gauge.className = "care-gauge";
-  gauge.style.setProperty("--score", data.score ?? 0);
   gauge.textContent = data.score === null ? "—" : data.score + "%";
   const detail = document.createElement("details"),
     summary = document.createElement("summary");

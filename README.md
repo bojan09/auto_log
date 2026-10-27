@@ -1,6 +1,6 @@
 # AutoLog
 
-An English-only, local-first vehicle maintenance PWA. Track vehicles, mileage, service schedules/history, fuel consumption, expenses, documents and trip checklists without an account or backend. Desktop and tablet use a dropdown header. Mobile has no top navigation bar: the vehicle picker or page title sits beside an avatar, and navigation stays in the floating bottom dock. Vehicle entry uses three focused steps with a final review. Fuel, expense and service forms use grouped fields with visible actions, alongside the gauge identity, self-hosted Manrope typography and compact controls.
+An English-only, local-first vehicle maintenance PWA. Track vehicles, mileage, service schedules/history, fuel consumption, expenses, documents and trip checklists without an account or backend. Desktop and tablet use a dropdown header. Mobile has no top navigation bar: the vehicle picker or page title sits beside an avatar, and navigation stays in the floating bottom dock. Vehicle entry uses three focused steps with a final review. Fuel, expense and service forms use grouped fields with visible actions, alongside a flat road emblem, self-hosted Manrope typography and compact controls.
 
 ## Develop
 
@@ -38,8 +38,12 @@ Full JSON restore validates schema, records, relationships and encoded documents
 
 Fuel economy uses complete full-to-full intervals; partial/missed fills and unit conversions are handled explicitly. Totals remain separate by currency. Maintenance compliance measures recorded schedules and does not diagnose mechanical health. Car artwork is labeled generic; owner photos take priority. Trip preparation provides checklists and dated calendar exports, not GPS tracking. Closed-app background reminders are not promised.
 
+## Presentation architecture
+
+Version 2.0 replaces the entire legacy CSS stack with six explicitly owned stylesheets. See [matte design system](docs/MATTE_DESIGN_SYSTEM.md) and [rebuild phases](docs/UI_REBUILD_PLAN.md). Run `node scripts/audit-ui.mjs` to check legacy removal and style references. Fuel & expenses now has focused Overview, Fuel log and Expenses views.
+
 ## Release evidence
 
-All six implementation phases are complete within the verified Chromium scope. Thirty-two unit tests and ten browser suites pass, including offline recovery, update activation, accessibility, compact layouts and failure handling. Runtime artwork is 94.4% smaller than the source PNGs; the current staged release totals 801,432 bytes. Original PNGs remain in source control for provenance and are excluded from `dist/` and offline caching.
+All seven UI rebuild phases (0–6) are complete within the verified Chromium scope. Thirty-four unit tests and twelve browser suites pass, including offline recovery, worker updates, accessibility, seven responsive widths and data integrity. The current staged release totals 739,063 bytes across 45 runtime files. Original source PNGs remain in the repository for provenance and are excluded from the runtime cache.
 
 Firefox, WebKit, physical-device installation/notches and full screen-reader review remain unverified. See [test report](docs/TEST_REPORT.md), [release review](docs/RELEASE_REVIEW.md), [phase status](docs/PHASE_STATUS.md), [design](docs/DESIGN_SPEC.md), [credits](docs/ASSET_CREDITS.md) and [changelog](CHANGELOG.md).

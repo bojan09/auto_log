@@ -3,8 +3,8 @@
   "short_name": "AutoLog",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#070e12",
-  "theme_color": "#070e12",
+  "background_color": "#10161b",
+  "theme_color": "#10161b",
   "icons": [
     {
       "src": "assets/icon-192.png",

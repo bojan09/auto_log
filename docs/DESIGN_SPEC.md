@@ -1,3 +1,5 @@
+> Current design authority: [AutoLog 2.0 matte system](MATTE_DESIGN_SYSTEM.md) and [rebuild plan](UI_REBUILD_PLAN.md). Earlier visual decisions below are historical. English-only and bottom-only phone navigation follow the direct user instructions.
+
 # Design specification
 
 Use the supplied mobile and desktop concepts as the visual target: near-black graphite (#070e12), elevated dark teal cards, mint (#34e5ce) highlights, white/muted typography, rounded borders and restrained glows. Desktop uses a left sidebar and wide hero. Mobile stacks content with fixed bottom navigation and a central add action. Preserve visible keyboard focus, 44px actions, Cyrillic support and reduced-motion behavior.

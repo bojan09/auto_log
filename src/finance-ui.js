@@ -125,8 +125,15 @@ export function financePanel({
     );
     const header = el("div", undefined, "workspace-heading");
     const title = el("div");
-    title.append(el("h3", summary ? t("fuel") : vehicle.make + " " + vehicle.model), el("p", "Fuel purchases, measured economy and your complete cost history."));
-    header.append(title);root.append(header);
+    title.append(
+      el("h3", summary ? t("fuel") : vehicle.make + " " + vehicle.model),
+      el(
+        "p",
+        "Fuel purchases, measured economy and your complete cost history.",
+      ),
+    );
+    header.append(title);
+    root.append(header);
     if (!summary) {
       const select = field(
         root,
@@ -294,6 +301,7 @@ export function financePanel({
         card.append(
           chart(kind, points, t(key), (p) => {
             if (p.category) {
+              state.workspace = "expenses";
               state.category = p.category;
               draw();
               root
@@ -310,18 +318,32 @@ export function financePanel({
     }
     root.append(graphGrid, el("p", t("chartWindow"), "muted"), detail);
     if (summary) return;
-    root.append(el("h3", t("history")));
+    const historyHeading = el("h3", t("history"));
+    root.append(historyHeading);
     const history = ownFuel
       .filter((e) => inRange(e, state.from, state.to))
       .sort((a, b) => b.date.localeCompare(a.date) || b.odometer - a.odometer);
     for (const e of history.slice(0, state.limit)) {
       const card = el("article", undefined, "card finance-entry");
-      const identity=el("div",undefined,"record-identity");
-      identity.append(el("h4",date(e.date)),el("span",e.full?t("fullYes"):t("fullNo"),"status"));
-      const values=el("dl",undefined,"record-values");
-      for(const [label,value] of [["Purchased",n(e.volume)+" "+e.volumeUnit],["Price / unit",n(e.unitPrice)+" "+e.currency],["Total paid",n(e.total)+" "+e.currency],["Odometer",n(e.odometer)+" "+e.unit]]) {const pair=el("div");pair.append(el("dt",label),el("dd",value));values.append(pair);}
-      card.append(identity,values);
-      if(e.station||e.notes)card.append(el("p",[e.station,e.notes].filter(Boolean).join(" · ")));
+      const identity = el("div", undefined, "record-identity");
+      identity.append(
+        el("h4", date(e.date)),
+        el("span", e.full ? t("fullYes") : t("fullNo"), "status"),
+      );
+      const values = el("dl", undefined, "record-values");
+      for (const [label, value] of [
+        ["Purchased", n(e.volume) + " " + e.volumeUnit],
+        ["Price / unit", n(e.unitPrice) + " " + e.currency],
+        ["Total paid", n(e.total) + " " + e.currency],
+        ["Odometer", n(e.odometer) + " " + e.unit],
+      ]) {
+        const pair = el("div");
+        pair.append(el("dt", label), el("dd", value));
+        values.append(pair);
+      }
+      card.append(identity, values);
+      if (e.station || e.notes)
+        card.append(el("p", [e.station, e.notes].filter(Boolean).join(" · ")));
       if (e.missed) card.append(el("p", t("missed"), "muted"));
       if (e.receipt) {
         const details = el("details");
@@ -366,9 +388,19 @@ export function financePanel({
     );
     for (const e of chosen.slice(0, state.limit)) {
       const card = el("article", undefined, "card ledger-row");
-      const identity=el("div",undefined,"ledger-identity"),amount=el("strong",money(e.amount),"ledger-amount");
-      identity.append(el("span",category(e.category),"status"),el("h4",e.title||e.station||category(e.category)),el("p",date(e.date)+" · "+(e.source==="fuel"?t("fuelCategory"):t(e.source))));
-      card.append(identity,amount);
+      const identity = el("div", undefined, "ledger-identity"),
+        amount = el("strong", money(e.amount), "ledger-amount");
+      identity.append(
+        el("span", category(e.category), "status"),
+        el("h4", e.title || e.station || category(e.category)),
+        el(
+          "p",
+          date(e.date) +
+            " · " +
+            (e.source === "fuel" ? t("fuelCategory") : t(e.source)),
+        ),
+      );
+      card.append(identity, amount);
       const actions = el("div", undefined, "actions");
       if (e.source === "expense") {
         actions.append(
@@ -397,7 +429,8 @@ export function financePanel({
           draw();
         }),
       );
-    root.append(el("h3", t("comparison")));
+    const comparisonHeading = el("h3", t("comparison"));
+    root.append(comparisonHeading);
     for (const v of vehicles.filter((v) => !v.archived)) {
       const f = fuel.filter((e) => e.vehicleId === v.id),
         s = services.filter((e) => e.vehicleId === v.id),
@@ -435,6 +468,41 @@ export function financePanel({
         ),
       );
     }
+    const tabs = el("div", undefined, "actions filters finance-workspace-tabs"),
+      sections = {
+        overview: el("section"),
+        fuel: el("section"),
+        expenses: el("section"),
+      };
+    const ledgerHeading = root.querySelector(".ledger-heading");
+    let destination = null;
+    for (const child of [...root.children]) {
+      if (child === metrics) destination = "overview";
+      if (child === historyHeading) destination = "fuel";
+      if (child === ledgerHeading) destination = "expenses";
+      if (child === comparisonHeading) destination = "overview";
+      if (destination && child.tagName !== "BUTTON")
+        sections[destination].append(child);
+    }
+    for (const [key, label] of [
+      ["overview", "Overview"],
+      ["fuel", "Fuel log"],
+      ["expenses", "Expenses"],
+    ]) {
+      const b = button(label, () => {
+        state.workspace = key;
+        draw();
+      });
+      b.setAttribute(
+        "aria-pressed",
+        String((state.workspace || "overview") === key),
+      );
+      tabs.append(b);
+      sections[key].hidden = (state.workspace || "overview") !== key;
+      sections[key].className = "finance-workspace " + key;
+      root.append(sections[key]);
+    }
+    header.after(tabs);
   }
   async function remove(kind, e) {
     if (confirm(t("confirm"))) {

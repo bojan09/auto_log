@@ -1,4 +1,3 @@
-let chartSequence = 0;
 const NS = "http://www.w3.org/2000/svg";
 export function chart(kind, points, label, onSelect) {
   const wrap = document.createElement("div");
@@ -27,26 +26,6 @@ export function chart(kind, points, label, onSelect) {
     svg.append(n);
     return n;
   }
-  const chartId = "chart-fill-" + ++chartSequence;
-  const defs = document.createElementNS(NS, "defs");
-  const gradient = document.createElementNS(NS, "linearGradient");
-  gradient.id = chartId;
-  gradient.setAttribute("x1", "0");
-  gradient.setAttribute("y1", "0");
-  gradient.setAttribute("x2", "0");
-  gradient.setAttribute("y2", "1");
-  for (const [offset, opacity] of [
-    ["0%", ".32"],
-    ["100%", "0"],
-  ]) {
-    const stop = document.createElementNS(NS, "stop");
-    stop.setAttribute("offset", offset);
-    stop.setAttribute("stop-color", kind === "line" ? "#789ab0" : "#789ab0");
-    stop.setAttribute("stop-opacity", opacity);
-    gradient.append(stop);
-  }
-  defs.append(gradient);
-  svg.append(defs);
   if (kind !== "donut")
     for (const y of [35, 75, 115, 155])
       shape("line", {
@@ -119,8 +98,7 @@ export function chart(kind, points, label, onSelect) {
     button.type = "button";
     button.textContent = p.label;
     button.onclick = () => onSelect(p);
-    button.style.borderLeftColor =
-      colors[kind === "donut" ? i % colors.length : 0];
+
     legend.append(button);
   });
   wrap.append(legend);
