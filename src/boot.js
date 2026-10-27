@@ -1,5 +1,5 @@
 import("./app.js").catch(() => {
-  const mk = navigator.language.startsWith("mk");
+  const mk = false;
   const app = document.querySelector("#app");
   app.replaceChildren();
   const title = document.createElement("h2");

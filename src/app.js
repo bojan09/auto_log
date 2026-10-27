@@ -32,9 +32,7 @@ applyAppearance(preferences);
 matchMedia("(prefers-color-scheme: light)").addEventListener("change", () =>
   applyAppearance(preferences),
 );
-let language =
-    preferences.getItem("language") ||
-    (navigator.language.startsWith("mk") ? "mk" : "en"),
+let language = "en",
   view = "garage",
   vehicles = [],
   schedules = [],
@@ -108,7 +106,7 @@ function render() {
   document.body.dataset.view = view;
   localize();
   document.documentElement.lang = language === "mk" ? "mk" : "en";
-  document.querySelector("#language").textContent = t("ui1");
+
   document.querySelectorAll("nav [data-view]").forEach((b) => {
     b.replaceChildren();
     b.setAttribute("aria-label", t(b.dataset.view));
@@ -198,7 +196,8 @@ function render() {
             replace ? { ...defaults, ...values } : values,
           ))
             preferences.setItem(key, value);
-          language = preferences.getItem("language") || "en";
+          language = "en";
+          preferences.setItem("language", "en");
           applyMotion();
           applyAppearance(preferences);
           for (const key of Object.keys(financeStates))
@@ -538,11 +537,6 @@ form.onsubmit = async (e) => {
   }
 };
 document.querySelector("#cancel").onclick = () => dialog.close();
-document.querySelector("#language").onclick = () => {
-  language = t("ui8");
-  preferences.setItem("language", language);
-  render();
-};
 document.querySelectorAll("nav [data-view]").forEach(
   (b) =>
     (b.onclick = () => {

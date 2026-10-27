@@ -71,3 +71,6 @@ Screenshots in ignored test-results/ cover the garage at four widths and dashboa
 Test fixes: use a valid generated PNG fixture, select the Sedici by identity rather than random IndexedDB ID order, and await database-backed rendering after navigation. These were harness issues; no assertions were removed to mask product failures.
 
 Unverified: physical-device installation, Safari/Firefox, screen reader review, real operating-system update prompts, and production HTTPS hosting. Automated accessibility scans are not a complete accessibility certification. Full six-phase design fidelity is not claimed.
+
+## English-only change
+The user's English-only instruction supersedes earlier bilingual requirements. Syntax checks and 28 unit tests passed. A Chromium journey using a Macedonian browser locale and a saved Macedonian preference verified English rendering, removed language controls, and settings save/reload. Legacy backup language values remain readable for compatibility and are normalized to English on use. The earlier bilingual browser suites were not rerun because their language-switch assertions now require revision.

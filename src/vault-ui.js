@@ -582,7 +582,9 @@ export function morePanel({
   async function settings() {
     const f = el("form", undefined, "card settings-grid");
     const prefs = readPreferences(preferences);
-    for (const [key, values] of Object.entries(preferenceOptions))
+    for (const [key, values] of Object.entries(preferenceOptions).filter(
+      ([key]) => key !== "language",
+    ))
       field(
         f,
         key,
@@ -601,7 +603,10 @@ export function morePanel({
       e.preventDefault();
       submit.disabled = true;
       try {
-        const values = Object.fromEntries(new FormData(f));
+        const values = {
+          ...Object.fromEntries(new FormData(f)),
+          language: "en",
+        };
         await writeRow(db, "settings", { id: "preferences", values });
         state.flash = "saved";
         await onPreferences(values);

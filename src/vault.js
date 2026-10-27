@@ -37,6 +37,10 @@ export const defaults = {
   defaultBody: "crossover",
 };
 export function readPreferences(storage) {
+  storage = {
+    getItem: ((source) => (key) =>
+      key === "language" ? "en" : source.getItem(key))(storage),
+  };
   return Object.fromEntries(
     Object.entries(defaults).map(([k, v]) => [
       k,
