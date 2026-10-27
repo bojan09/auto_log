@@ -1,10 +1,16 @@
-const CACHE = "autolog-v18";
+const CACHE = "autolog-v19";
 const ASSETS = [
   "./",
   "./index.html",
   "./src/app.js",
+  "./src/design/tokens.css",
+  "./src/design/base.css",
+  "./src/design/shell.css",
+  "./src/design/components.css",
+  "./src/design/pages.css",
+  "./src/design/editors.css",
+
   "./src/entry-forms.js",
-  "./src/forms.css",
   "./src/profile.js",
   "./src/visuals.js",
   "./src/vault.js",
@@ -24,9 +30,6 @@ const ASSETS = [
   "./src/boot.js",
   "./src/storage.js",
   "./src/i18n.js",
-  "./src/style.css",
-  "./src/controls.css",
-  "./src/reference.css",
   "./src/dashboard.js",
   "./src/topbar.js",
   "./manifest.webmanifest",

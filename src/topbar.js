@@ -76,6 +76,11 @@ export function renderTopbar({
   root.append(theme, avatarButton(profile, onProfile));
 }
 export function setupTopbar() {
+  const dock = document.querySelector(".floating-nav");
+  const desktop = matchMedia("(min-width: 701px)");
+  const place = () => desktop.matches ? document.querySelector(".app-bar").insertBefore(dock, document.querySelector("#top-tools")) : document.querySelector(".app-bar").after(dock);
+  desktop.addEventListener("change", place);
+  place();
   document.addEventListener("click", (event) => {
     for (const d of document.querySelectorAll(
       ".top-menu[open], .vehicle-menu[open]",

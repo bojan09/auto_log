@@ -674,7 +674,7 @@ if ("serviceWorker" in navigator)
     });
 
 function art(v) {
-  const figure = node("figure");
+  const figure = node("figure", undefined, "vehicle-image");
   const img = node("img");
   img.src = visualAsset(v);
   img.alt = v.photo ? v.make + " " + v.model : t("ui11");

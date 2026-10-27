@@ -24,3 +24,6 @@ No UI/UX skill is installed; apply the approved reference and explicit sizing co
 
 ## Phase 0 evidence
 Baseline syntax, 32 unit tests, build and all eleven browser suites passed on 1abb549. Baseline journeys generated desktop/tablet/phone screenshots in test-results. Working tree was clean before this plan. Remote and master branch verified. Runtime/network skill read; managed environment connected.
+
+## Phase 1 evidence
+Deleted all four legacy stylesheets (over 5,000 lines). New design files are independently authored; no old stylesheet imports remain. Rebuilt header/navigation placement and shared primitive/editor styles. Syntax/build, dark/light accessibility, all entry steps at five viewports and dock/keyboard/offline control checks passed. Desktop creation is now the page's Add vehicle action, so the old duplicate-header-plus assertion was updated; its creation/keyboard coverage remains. Reviewed the new mobile editor screenshot.

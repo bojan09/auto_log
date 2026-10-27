@@ -135,7 +135,7 @@ await page.screenshot({
   fullPage: true,
   animations: "disabled",
 });
-assert.equal(await page.locator("#quick-add").isVisible(), true);
+assert.equal(await page.getByRole("button", { name: "+ Add vehicle", exact: true }).isVisible(), true);
 await page.evaluate(() => navigator.serviceWorker.ready);
 await context.setOffline(true);
 await page.reload();
@@ -143,7 +143,7 @@ assert.equal(
   await page
     .locator("#app .heading>button:not(.mobile-profile)")
     .evaluate((e) => getComputedStyle(e).borderRadius),
-  "10px",
+  "6px",
 );
 assert.deepEqual(errors, []);
 console.log(
