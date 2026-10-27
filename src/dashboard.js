@@ -1,3 +1,4 @@
+import { fuelSpendingPanel } from "./fuel-spending.js";
 import {
   fuelCycles,
   consumption,
@@ -80,145 +81,28 @@ export function quickActions(language, onAction) {
     b.className = "quick-action " + kind;
     const icon = el("span", undefined, "action-icon");
     icon.append(actionIcon(kind));
-    b.append(icon, el("span", t[key]));
+    b.append(icon, el("span", t[key]), el("span", "↗", "action-arrow"));
+    b.querySelector(".action-arrow").setAttribute("aria-hidden", "true");
     b.onclick = () => onAction(kind);
     wrap.append(b);
   }
   return wrap;
 }
-export function dashboardOverview({
-  vehicle,
-  fuel,
-  expenses,
-  records,
-  schedules,
-  language,
-  preferences,
-  onFinance,
-}) {
-  const t = layoutText[language],
-    root = el("section", undefined, "dashboard-overview"),
-    from = today().slice(0, 4) + "-01-01",
-    to = today();
-  const ownFuel = fuel.filter((r) => r.vehicleId === vehicle.id),
-    ownServices = records.filter((r) => r.vehicleId === vehicle.id),
-    ownExpenses = expenses.filter((r) => r.vehicleId === vehicle.id);
-  const rows = ledger(ownFuel, ownExpenses, ownServices),
-    report = summarize(
-      rows,
-      (vehicle.currency || "MKD").toUpperCase(),
-      from,
-      to,
-    ),
-    cycles = fuelCycles(ownFuel).filter((c) => c.start >= from && c.end <= to),
-    cons = consumption(cycles),
-    format = preferences.consumption || "L100";
-  const num = (v, maximumFractionDigits = 2) =>
-    new Intl.NumberFormat(language === "mk" ? "mk-MK" : "en", {
-      maximumFractionDigits,
-    }).format(v);
-  const group = el("div", undefined, "overview-cards");
-  const economy = el("article", undefined, "card overview-card economy");
-  economy.append(
-    el("h3", t.economy),
-    el(
-      "p",
-      cons === null
-        ? "—"
-        : num(efficiency(cons, format), 1) +
-            " " +
-            { L100: "L/100km", USmpg: "US MPG", UKmpg: "UK MPG" }[format],
-      "metric",
-    ),
-    el("p", cons === null ? t.insufficient : t.year, "muted"),
-  );
-  const spending = el("article", undefined, "card overview-card spending");
-  spending.append(
-    el("h3", t.spending),
-    el(
-      "p",
-      num(report.total) + " " + (vehicle.currency || "MKD").toUpperCase(),
-      "metric",
-    ),
-  );
-  spending.append(el("p", t.year, "muted"));
-  function miniGraph(card, kind, points) {
-    if (!points.length) return;
-    const status = el("p", "", "graph-status");
-    status.setAttribute("role", "status");
-    const graph = chart(
-      kind,
-      points,
-      card.querySelector("h3").textContent,
-      (p) => (status.textContent = p.label),
-    );
-    const svg = graph.querySelector("svg");
-    svg.setAttribute("preserveAspectRatio", "none");
-    for (const line of svg.querySelectorAll("polyline"))
-      line.setAttribute("vector-effect", "non-scaling-stroke");
-    const buttons = graph.querySelector(".chart-points");
-    const details = el("details", undefined, "graph-data");
-    details.append(el("summary", t.details), buttons);
-    graph.append(details);
-    card.append(graph, status);
-  }
-  miniGraph(
-    economy,
-    "line",
-    cycles.slice(-6).map((c) => ({
-      value: efficiency(c.l100, format),
-      label: c.end + " · " + num(efficiency(c.l100, format)),
-    })),
-  );
-  miniGraph(
-    spending,
-    "bar",
-    Object.entries(report.byMonth)
-      .sort()
-      .slice(-6)
-      .map(([month, value]) => ({
-        value,
-        label:
-          month +
-          " · " +
-          num(value) +
-          " " +
-          (vehicle.currency || "MKD").toUpperCase(),
-      })),
-  );
-  group.append(
-    economy,
-    spending,
-    careCard(vehicle, schedules, records, language),
-  );
-  const activity = el("article", undefined, "card recent-activity");
-  const heading = el("div", undefined, "section-heading");
-  const all = el("button", t.viewAll);
-  all.type = "button";
-  all.dataset.tone = "quiet";
-  all.onclick = onFinance;
-  heading.append(el("h3", t.recent), all);
-  activity.append(heading);
-  const latest = [...rows]
-    .sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id))
-    .slice(0, 4);
-  if (!latest.length) activity.append(el("p", t.empty, "muted"));
-  for (const r of latest) {
-    const row = el("div", undefined, "activity-row");
-    const icon = el("span", undefined, "action-icon " + r.source);
-    icon.append(actionIcon(r.source));
-    const description = el("div");
-    description.append(
-      el("strong", r.source === "fuel" ? t.fuel : r.title || t[r.source]),
-      el("p", r.date),
-    );
-    row.append(
-      icon,
-      description,
-      el("strong", num(r.amount) + " " + r.currency, "activity-amount"),
-    );
-    activity.append(row);
-  }
-  root.append(group, activity);
-  return root;
+export function dashboardOverview({ vehicle, vehicles, fuel, expenses, records, schedules, language, preferences, onFinance }) {
+  const root=el("section",undefined,"dashboard-overview"), group=el("div",undefined,"overview-cards");
+  const from=today().slice(0,4)+"-01-01", ownFuel=fuel.filter(r=>r.vehicleId===vehicle.id);
+  const rows=ledger(ownFuel,expenses.filter(r=>r.vehicleId===vehicle.id),records.filter(r=>r.vehicleId===vehicle.id));
+  const currency=(vehicle.currency||"MKD").toUpperCase(), report=summarize(rows,currency,from,today());
+  const cycles=fuelCycles(ownFuel).filter(c=>c.start>=from && c.end<=today()), value=consumption(cycles), format=preferences.consumption||"L100";
+  const num=n=>new Intl.NumberFormat("en",{maximumFractionDigits:2}).format(n);
+  function metric(kind,title,amount,caption){const card=el("article",undefined,"card overview-card "+kind);const label=el("div",undefined,"metric-label");label.append(actionIcon(kind==="economy"?"fuel":"expense"),el("h3",title));card.append(label,el("p",amount,"metric"),el("p",caption,"muted"));group.append(card);return card;}
+  const economy=metric("economy","Fuel economy",value===null?"—":new Intl.NumberFormat("en",{maximumFractionDigits:1}).format(efficiency(value,format))+" "+({L100:"L/100km",USmpg:"US MPG",UKmpg:"UK MPG"}[format]),value===null?"Add full-tank readings to measure consumption.":"Measured full-to-full · this year");
+  if(cycles.length){const detail=el("p","","graph-status");const graph=chart("line",cycles.slice(-6).map(c=>({value:efficiency(c.l100,format),label:c.end+" · "+num(efficiency(c.l100,format))})),"Measured fuel economy",p=>detail.textContent=p.label);const disclosure=el("details",undefined,"graph-data");disclosure.append(el("summary","Chart details"),graph.querySelector(".chart-points"));graph.append(disclosure);economy.append(graph,detail);}
+  metric("spending","Total expenses",num(report.total)+" "+currency,"Year to date · recorded costs");
+  group.append(careCard(vehicle,schedules,records,language));
+  const activity=el("article",undefined,"card recent-activity"),heading=el("div",undefined,"section-heading"),all=el("button","View all");all.type="button";all.dataset.tone="quiet";all.onclick=onFinance;heading.append(el("h3","Recent activity"),all);activity.append(heading);
+  const latest=[...rows].sort((a,b)=>b.date.localeCompare(a.date)||a.id.localeCompare(b.id)).slice(0,4);
+  if(!latest.length)activity.append(el("p","Your fill-ups, services and expenses will appear here.","empty-state"));
+  for(const r of latest){const row=el("div",undefined,"activity-row"),icon=el("span",undefined,"action-icon "+r.source),description=el("div");icon.append(actionIcon(r.source));description.append(el("strong",r.source==="fuel"?"Fuel refill":r.title||"Service"),el("p",r.date));row.append(icon,description,el("strong",num(r.amount)+" "+r.currency,"activity-amount"));activity.append(row);}
+  const lower=el("div",undefined,"dashboard-lower");lower.append(fuelSpendingPanel({fuel,vehicles,vehicle}),activity);root.append(group,lower);return root;
 }

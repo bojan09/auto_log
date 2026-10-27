@@ -388,7 +388,11 @@ function render() {
       node("p", layoutText[language].overview, "page-description"),
       top,
     );
-    top.append(hero);
+    const showcase = node("div", undefined, "showcase");
+    const greeting = node("div", undefined, "showcase-greeting");
+    greeting.append(node("h3", "Good " + (new Date().getHours() < 12 ? "morning" : new Date().getHours() < 18 ? "afternoon" : "evening") + (profile.displayName ? ", " + profile.displayName : "") + "."), node("p", "Your " + current.make + " " + current.model + ", ready for the road."));
+    showcase.append(greeting, hero);
+    top.append(showcase);
     const grid = node("div", undefined, "dashboard-status");
     const upcoming = schedules
       .filter((s) => s.vehicleId === current.id)
@@ -451,6 +455,7 @@ function render() {
     app.append(
       dashboardOverview({
         vehicle: current,
+        vehicles,
         fuel,
         expenses,
         records,

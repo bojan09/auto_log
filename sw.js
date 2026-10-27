@@ -31,6 +31,7 @@ const ASSETS = [
   "./src/storage.js",
   "./src/i18n.js",
   "./src/dashboard.js",
+  "./src/fuel-spending.js",
   "./src/topbar.js",
   "./manifest.webmanifest",
   "./assets/icon.svg",

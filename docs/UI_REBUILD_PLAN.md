@@ -27,3 +27,6 @@ Baseline syntax, 32 unit tests, build and all eleven browser suites passed on 1a
 
 ## Phase 1 evidence
 Deleted all four legacy stylesheets (over 5,000 lines). New design files are independently authored; no old stylesheet imports remain. Rebuilt header/navigation placement and shared primitive/editor styles. Syntax/build, dark/light accessibility, all entry steps at five viewports and dock/keyboard/offline control checks passed. Desktop creation is now the page's Add vehicle action, so the old duplicate-header-plus assertion was updated; its creation/keyboard coverage remains. Reviewed the new mobile editor screenshot.
+
+## Phase 2 evidence
+Rebuilt the overview component and showcase composition. Added twelve-month fuel purchases with vehicle/year/currency filters, current month/YTD/average, accessible month buttons and actual-record drilldown. Zero-spend elapsed months are included in the labeled average; future transactions are excluded. Chart palette is restrained. Syntax/build, 34 unit tests (including mixed currency/vehicle, zero months, gallon conversion and deletion recalculation), and the dashboard/quick-action/accessibility/offline browser suite passed. Reviewed desktop screenshot and reduced hero height to keep the dashboard compact.

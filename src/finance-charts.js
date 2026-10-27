@@ -8,15 +8,15 @@ export function chart(kind, points, label, onSelect) {
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", label);
   const colors = [
-    "#34e5ce",
-    "#36b7e9",
-    "#efb44f",
-    "#ac8cf5",
-    "#e86774",
-    "#8cbad0",
-    "#c1e078",
-    "#f2a071",
-    "#8dcebd",
+    "#87aa98",
+    "#789ab0",
+    "#b49a72",
+    "#9b9eab",
+    "#b97f7f",
+    "#8a9da7",
+    "#9da883",
+    "#b0957b",
+    "#84a69b",
     "#98aeb5",
   ];
   const max = Math.max(1, ...points.map((p) => p.value));
@@ -41,7 +41,7 @@ export function chart(kind, points, label, onSelect) {
   ]) {
     const stop = document.createElementNS(NS, "stop");
     stop.setAttribute("offset", offset);
-    stop.setAttribute("stop-color", kind === "line" ? "#5caeff" : "#a68ae4");
+    stop.setAttribute("stop-color", kind === "line" ? "#789ab0" : "#789ab0");
     stop.setAttribute("stop-opacity", opacity);
     gradient.append(stop);
   }
@@ -66,16 +66,16 @@ export function chart(kind, points, label, onSelect) {
     if (coords.length > 1)
       shape("polygon", {
         points: `${coords[0][0]},160 ${coords.map((p) => p.join(",")).join(" ")} ${coords.at(-1)[0]},160`,
-        fill: `url(#${chartId})`,
+        fill: "#507b9818",
       });
     shape("polyline", {
       points: coords.map((p) => p.join(",")).join(" "),
       fill: "none",
-      stroke: "#6bb8ff",
+      stroke: "#8eb0c5",
       "stroke-width": 3,
     });
     coords.forEach(([cx, cy], i) => {
-      const dot = shape("circle", { cx, cy, r: 3.5, fill: "#b9dcff" });
+      const dot = shape("circle", { cx, cy, r: 3.5, fill: "#b4cad7" });
       const title = document.createElementNS(NS, "title");
       title.textContent = points[i].label;
       dot.append(title);
@@ -89,7 +89,7 @@ export function chart(kind, points, label, onSelect) {
         width: Math.max(1, 260 / points.length),
         height: (p.value / max) * 130,
         rx: 3,
-        fill: "#a78ae3",
+        fill: "#507b98",
       }),
     );
   if (kind === "donut" && sum > 0) {
