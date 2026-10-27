@@ -123,9 +123,10 @@ export function financePanel({
       state.from,
       state.to,
     );
-    root.append(
-      el("h3", summary ? t("fuel") : vehicle.make + " " + vehicle.model),
-    );
+    const header = el("div", undefined, "workspace-heading");
+    const title = el("div");
+    title.append(el("h3", summary ? t("fuel") : vehicle.make + " " + vehicle.model), el("p", "Fuel purchases, measured economy and your complete cost history."));
+    header.append(title);root.append(header);
     if (!summary) {
       const select = field(
         root,
@@ -142,7 +143,7 @@ export function financePanel({
         button("+ " + t("addFuel"), () => editor("fuel"), "primary"),
         button("+ " + t("addExpense"), () => editor("expense")),
       );
-      root.append(actions);
+      header.append(actions);
     }
     const filter = el("form", undefined, "finance-filters");
     field(filter, "from", "date", state.from).required = true;
@@ -315,21 +316,12 @@ export function financePanel({
       .sort((a, b) => b.date.localeCompare(a.date) || b.odometer - a.odometer);
     for (const e of history.slice(0, state.limit)) {
       const card = el("article", undefined, "card finance-entry");
-      card.append(
-        el("h4", date(e.date) + " · " + (e.full ? t("fullYes") : t("fullNo"))),
-        el(
-          "p",
-          n(e.odometer) +
-            " " +
-            e.unit +
-            " · " +
-            n(e.volume) +
-            " " +
-            e.volumeUnit,
-        ),
-        el("p", n(e.total) + " " + e.currency + " · " + e.station),
-        el("p", e.notes),
-      );
+      const identity=el("div",undefined,"record-identity");
+      identity.append(el("h4",date(e.date)),el("span",e.full?t("fullYes"):t("fullNo"),"status"));
+      const values=el("dl",undefined,"record-values");
+      for(const [label,value] of [["Purchased",n(e.volume)+" "+e.volumeUnit],["Price / unit",n(e.unitPrice)+" "+e.currency],["Total paid",n(e.total)+" "+e.currency],["Odometer",n(e.odometer)+" "+e.unit]]) {const pair=el("div");pair.append(el("dt",label),el("dd",value));values.append(pair);}
+      card.append(identity,values);
+      if(e.station||e.notes)card.append(el("p",[e.station,e.notes].filter(Boolean).join(" · ")));
       if (e.missed) card.append(el("p", t("missed"), "muted"));
       if (e.receipt) {
         const details = el("details");

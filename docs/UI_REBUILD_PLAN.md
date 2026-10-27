@@ -30,3 +30,6 @@ Deleted all four legacy stylesheets (over 5,000 lines). New design files are ind
 
 ## Phase 2 evidence
 Rebuilt the overview component and showcase composition. Added twelve-month fuel purchases with vehicle/year/currency filters, current month/YTD/average, accessible month buttons and actual-record drilldown. Zero-spend elapsed months are included in the labeled average; future transactions are excluded. Chart palette is restrained. Syntax/build, 34 unit tests (including mixed currency/vehicle, zero months, gallon conversion and deletion recalculation), and the dashboard/quick-action/accessibility/offline browser suite passed. Reviewed desktop screenshot and reduced hero height to keep the dashboard compact.
+
+## Phase 3 evidence
+Rebuilt garage cards into image/identity/specifications/actions, added a vehicle-detail dialog with actual service/fuel/expense history, and rebuilt fuel rows as labeled purchase/cost/odometer values. Finance now has a contextual workspace header. Existing archive/restore, photo persistence, correction confirmation, deletion, finance calculations, four-width accessibility and offline browser checks passed; syntax/build passed. No records/schema changed.

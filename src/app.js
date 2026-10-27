@@ -1,3 +1,4 @@
+import { openVehicleDetails } from "./vehicle-details.js";
 import { setupVehicleEditor } from "./entry-forms.js";
 import { profilePanel, avatarButton } from "./profile.js";
 import { renderTopbar, setupTopbar } from "./topbar.js";
@@ -495,21 +496,14 @@ function render() {
   }
   const grid = node("div", undefined, "grid");
   for (const v of vehicles) {
-    const c = node("section", undefined, "card");
-    c.append(
-      art(v),
-      node("h3", v.make + " " + v.model),
-      node("p", v.year + " · " + v.variant),
-      node(
-        "p",
-        new Intl.NumberFormat(language === "mk" ? "mk-MK" : "en").format(
-          v.odometer,
-        ) +
-          " " +
-          (v.unit || "km"),
-      ),
-      node("p", v.archived ? t("archived") : ""),
-    );
+    const c = node("section", undefined, "card garage-card");
+    const body = node("div", undefined, "garage-card-body");
+    const identity = node("div", undefined, "section-heading");
+    identity.append(node("h3", v.make + " " + v.model), node("span", v.archived ? t("archived") : v.id === current?.id ? "Active" : String(v.year), "status"));
+    const specs = node("div", undefined, "vehicle-specs");
+    for (const text of [String(v.year), v.variant, new Intl.NumberFormat("en").format(v.odometer) + " " + (v.unit || "km")]) if (text) specs.append(node("span", text));
+    body.append(identity, specs);
+    c.append(art(v), body);
     const a = node("div", undefined, "actions");
     a.append(button(t("edit"), () => edit(v), "quiet"));
     const menu = node("details", undefined, "vehicle-menu");
@@ -569,7 +563,8 @@ function render() {
           "primary",
         ),
       );
-    c.append(a);
+    const details = button("View details", () => openVehicleDetails({vehicle:v,records,fuel,expenses,onEdit:edit}), "quiet");
+    body.append(details, a);
     grid.append(c);
   }
   app.append(grid);
