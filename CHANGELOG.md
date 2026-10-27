@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0 — 2026-10-27
+
+- Replaced the long vehicle form with Vehicle, Usage and Review steps, optional sections and a live preview.
+- Added compact grouped fuel, expense and maintenance forms with anchored actions.
+- Tuned responsive dialogs for desktop/tablet and bottom sheets for mobile; retained local/offline storage and existing image validation.
+- Added responsive entry, validation recovery and accessibility regression coverage.
+
 ## 1.2.0 — 2026-10-27
 
 - Added a separate Profile page with display name, bio, avatar upload/removal and initials fallback.

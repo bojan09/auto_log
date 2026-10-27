@@ -1,3 +1,7 @@
+import {
+  fillVehicleField,
+  saveVehicleForm,
+} from "./helpers/vehicle.mjs";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 import assert from "node:assert/strict";
@@ -18,8 +22,8 @@ for (const [name, value] of Object.entries({
   year: "2010",
   odometer: "10000",
 }))
-  await page.locator("#vehicle [name=" + name + "]").fill(value);
-await page.getByRole("button", { name: "Save", exact: true }).click();
+  await fillVehicleField(page, name, value);
+await saveVehicleForm(page);
 await page.getByRole("heading", { name: "Fiat Sedici", exact: true }).waitFor();
 await page
   .locator("nav")

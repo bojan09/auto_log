@@ -1,6 +1,6 @@
 # AutoLog
 
-An English-only, local-first vehicle maintenance PWA. Track vehicles, mileage, service schedules/history, fuel consumption, expenses, documents and trip checklists without an account or backend. Desktop and tablet use a dropdown header. Mobile has no top navigation bar: the vehicle picker or page title sits beside an avatar, and navigation stays in the floating bottom dock. Version 1.1 introduces a new gauge identity, self-hosted Manrope typography, quieter surfaces and a consistent button hierarchy.
+An English-only, local-first vehicle maintenance PWA. Track vehicles, mileage, service schedules/history, fuel consumption, expenses, documents and trip checklists without an account or backend. Desktop and tablet use a dropdown header. Mobile has no top navigation bar: the vehicle picker or page title sits beside an avatar, and navigation stays in the floating bottom dock. Vehicle entry uses three focused steps with a final review. Fuel, expense and service forms use grouped fields with visible actions, alongside the gauge identity, self-hosted Manrope typography and compact controls.
 
 ## Develop
 

@@ -127,6 +127,8 @@ for (const [label, input] of [
 ]) {
   await page.getByRole("button", { name: label, exact: true }).click();
   await page.getByRole("dialog").waitFor();
+  if (input === "provider")
+    await page.getByText("Provider & notes", { exact: true }).click();
   await page
     .getByRole("dialog")
     .locator("[name=" + input + "]")

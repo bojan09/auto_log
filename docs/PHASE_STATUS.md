@@ -31,3 +31,6 @@ Editable trip checklists retain completion state and reminder dates. ICS exports
 Completed English-only regression updates, removed unused interface translations, compressed runtime artwork by 94.4%, added runtime-only release packaging, and reviewed keyboard/accessibility/design behavior. Hardened imported-document signatures and large-backup lookups; verified quota/blocked-storage handling and preference recovery without localStorage. Worker install/update/waiting/activation/cache cleanup and offline subpath deployment have browser coverage.
 
 Validation: 30 unit tests, nine browser suites, syntax checks, runtime build and dependency audit passed. Release and deployment documentation distinguish verified Chromium behavior from outstanding physical-device, screen-reader, Firefox/WebKit and real-hosting checks. All six implementation phases are complete within that scope. Publication is a separate manual action using the provided master-only workflow.
+
+## Guided entry refinement — 1.3
+Vehicle creation/editing now uses three stages with final review, optional details and live previews. Fuel/expense/service/schedule forms use grouped fields and anchored actions, including mobile bottom sheets. See FORM_DESIGN_REVIEW.md for the inspected Porsche guidance and network limitations. English-only behavior and local storage remain in effect.

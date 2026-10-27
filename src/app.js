@@ -1,3 +1,4 @@
+import { setupVehicleEditor } from "./entry-forms.js";
 import { profilePanel, avatarButton } from "./profile.js";
 import { renderTopbar, setupTopbar } from "./topbar.js";
 import { layoutText, quickActions, dashboardOverview } from "./dashboard.js";
@@ -49,6 +50,7 @@ const app = document.querySelector("#app"),
   dialog = document.querySelector("dialog"),
   form = document.querySelector("form");
 const t = (k) => messages[language][k];
+const vehicleEditor = setupVehicleEditor({ form, dialog });
 
 preferences.setItem("language", language);
 const db = await openDatabase();
@@ -118,7 +120,9 @@ function edit(v = {}) {
   document.querySelector("#form-title").textContent = v.id
     ? t("edit")
     : t("add");
+  vehicleEditor.open(v);
   dialog.showModal();
+  vehicleEditor.focus();
 }
 function render() {
   document.body.dataset.view = view;
@@ -683,36 +687,12 @@ function localize() {
   document.querySelector("#services-nav").textContent = t("services");
   document.querySelector("#fuel-nav").textContent = t("fuel");
   document.querySelector("#quick-add").setAttribute("aria-label", t("add"));
-  const labels = [
-    "Make",
-    "Model",
-    "Year",
-    "Engine, fuel and drivetrain",
-    "Odometer",
-    "Vehicle photo (JPEG, PNG or WebP; up to 5 MB)",
-    "Body style",
-    "Nickname",
-    "License plate (optional)",
-    "Notes",
-    "Distance unit",
-    "Fuel type",
-    "Purchase date (optional)",
-    "Purchase price (optional)",
-    "Currency (e.g. MKD or EUR)",
-    "Color (optional)",
-  ];
-  document
-    .querySelectorAll("#vehicle label:not(.checkbox)")
-    .forEach((label, i) => {
-      if (labels[i]) label.firstChild.textContent = labels[i];
-    });
   form
     .querySelectorAll("[data-en]")
     .forEach((el) => (el.textContent = el.dataset[language]));
   document.querySelector("#remove-photo-text").textContent = t("ui15");
   document.querySelector("#custom").textContent = t("ui16");
   document.querySelector("#cancel").textContent = t("ui17");
-  form.querySelector("[type=submit]").textContent = t("ui18");
   document.querySelector(".app-context").textContent = t("ui19");
 }
 const catalog = {

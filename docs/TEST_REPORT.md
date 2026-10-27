@@ -1,3 +1,13 @@
+# Version 1.3 guided-entry validation
+
+Syntax checks, 32 unit tests, runtime packaging and all eleven browser suites passed. After final mobile grid/width adjustments, the dedicated entry suite passed again and the runtime was rebuilt: 41 files / 840,596 bytes plus .nojekyll.
+
+New coverage exercises required-field blocking, corrupt-photo rejection/recovery, back/forward value preservation, review values, final save/reload and no page errors. Anchored actions were checked at 360×640, 390×844, 768×1024, 1440×900 and 390×500. Vehicle steps and fuel entry passed dark/light axe WCAG A/AA scans. Fuel actions also remain inside the viewport at phone/tablet/desktop widths. Existing mileage-correction, owner-photo persistence, finance, maintenance, profile, document, backup and offline/service-worker update journeys pass.
+
+Manually reviewed generated phone, tablet and desktop screenshots, including the final mobile two-column Usage section and compact fill-up sheet. Corrected active-step contrast and an older mobile grid rule; increased the distance-unit column to avoid clipped labels. Existing test journeys now navigate the explicit steps and open optional provider/photo sections before interacting; data and persistence assertions remain intact. Screenshots are generated under ignored test-results/entry/. See FORM_DESIGN_REVIEW.md for online research provenance.
+
+Physical phone keyboard behavior, Safari/Firefox and screen readers remain unverified (Firefox/WebKit executables unavailable). Automated scans do not constitute full accessibility certification. No production deployment result is claimed.
+
 # Version 1.2 profile and mobile validation
 
 Syntax checks, 32 unit tests, runtime packaging and all ten browser suites passed. A targeted profile rerun also verified the final crop-fixture assertion. The staged artifact is 39 runtime files / 801,432 bytes, plus .nojekyll.

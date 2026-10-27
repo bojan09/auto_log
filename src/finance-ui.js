@@ -1,3 +1,4 @@
+import { enhanceRecordEditor } from "./entry-forms.js";
 import { financeMessages } from "./finance-i18n.js";
 import { today, validDate } from "./maintenance.js";
 import {
@@ -539,6 +540,42 @@ export function financePanel({
       save,
     );
     form.append(actions, error);
+    enhanceRecordEditor({
+      modal,
+      form,
+      vehicleName: vehicle.make + " " + vehicle.model,
+      groups:
+        kind === "fuel"
+          ? [
+              { title: "The fill-up", names: ["date", "odometer", "unit"] },
+              {
+                title: "Amount & cost",
+                names: [
+                  "volume",
+                  "volumeUnit",
+                  "unitPrice",
+                  "totalPaid",
+                  "currency",
+                  "full",
+                  "missed",
+                ],
+                hints: true,
+              },
+              {
+                title: "Station, receipt & notes",
+                names: ["station", "receipt", "removeReceipt", "notes"],
+                optional: true,
+              },
+            ]
+          : [
+              {
+                title: "Expense details",
+                names: ["title", "category", "date"],
+              },
+              { title: "Amount", names: ["amount", "currency"] },
+              { title: "Add a note", names: ["notes"], optional: true },
+            ],
+    });
     modal.append(form);
     document.body.append(modal);
     modal.onclose = () => modal.remove();

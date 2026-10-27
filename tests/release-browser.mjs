@@ -1,3 +1,7 @@
+import {
+  fillVehicleField,
+  saveVehicleForm,
+} from "./helpers/vehicle.mjs";
 import { chromium, firefox, webkit } from "playwright";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
@@ -31,8 +35,8 @@ const server = createServer(async (req, res) => {
         body
           .toString()
           .replace(
-            "autolog-v17",
-            version === "old" ? "autolog-release-old" : "autolog-v17",
+            "autolog-v18",
+            version === "old" ? "autolog-release-old" : "autolog-v18",
           ),
       );
     res.writeHead(200, {
@@ -71,8 +75,8 @@ try {
     year: "2010",
     odometer: "0",
   }))
-    await page.locator("#vehicle [name=" + name + "]").fill(value);
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+    await fillVehicleField(page, name, value);
+  await saveVehicleForm(page);
   await page
     .getByRole("heading", { name: hostile + " Sedici", exact: true })
     .waitFor();
@@ -130,7 +134,7 @@ try {
           await worker.evaluate(async () => {
             const keys = await caches.keys();
             return (
-              keys.includes("autolog-v17") &&
+              keys.includes("autolog-v18") &&
               !keys.includes("autolog-release-old")
             );
           })

@@ -1,8 +1,10 @@
-const CACHE = "autolog-v17";
+const CACHE = "autolog-v18";
 const ASSETS = [
   "./",
   "./index.html",
   "./src/app.js",
+  "./src/entry-forms.js",
+  "./src/forms.css",
   "./src/profile.js",
   "./src/visuals.js",
   "./src/vault.js",

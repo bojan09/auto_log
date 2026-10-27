@@ -1,3 +1,4 @@
+import { fillVehicleField, saveVehicleForm } from "./helpers/vehicle.mjs";
 import { chromium } from "playwright";
 const browser = await chromium.launch({
   executablePath: "/usr/bin/chromium",
@@ -14,8 +15,8 @@ for (const [name, value] of Object.entries({
   variant: "2.0 MultiJet diesel 4x4",
   odometer: "120000",
 }))
-  await page.locator(`[name="${name}"]`).fill(value);
-await page.getByRole("button", { name: "Save" }).click();
+  await fillVehicleField(page, name, value);
+await saveVehicleForm(page);
 await page.getByRole("heading", { name: "Fiat Sedici" }).waitFor();
 await page.reload();
 await page.getByRole("heading", { name: "Fiat Sedici" }).waitFor();
@@ -26,5 +27,5 @@ await page.reload();
 await page.context().setOffline(true);
 await page.reload();
 await page.getByRole("heading", { name: "Fiat Sedici" }).waitFor();
-console.log("PASS vehicle save, reload, Macedonian navigation, offline reload");
+console.log("PASS vehicle save, reload, English navigation, offline reload");
 await browser.close();

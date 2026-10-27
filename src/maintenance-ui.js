@@ -1,3 +1,4 @@
+import { enhanceRecordEditor } from "./entry-forms.js";
 import { maintenanceMessages } from "./maintenance-i18n.js";
 import {
   today,
@@ -288,6 +289,36 @@ export function maintenancePanel({
       save,
     );
     form.append(actions, error);
+    enhanceRecordEditor({
+      modal,
+      form,
+      vehicleName: vehicle.make + " " + vehicle.model,
+      groups:
+        kind === "schedule"
+          ? [
+              { title: "The service", names: ["title", "category", "unit"] },
+              { title: "Starting point", names: ["baseDate", "baseOdometer"] },
+              {
+                title: "Intervals & reminders",
+                names: ["months", "distance", "warnDays", "warnDistance"],
+              },
+            ]
+          : [
+              {
+                title: "The service",
+                names: ["title", "category", "date", "linked"],
+              },
+              {
+                title: "Reading & cost",
+                names: ["odometer", "unit", "cost", "currency"],
+              },
+              {
+                title: "Provider & notes",
+                names: ["provider", "notes"],
+                optional: true,
+              },
+            ],
+    });
     modal.append(form);
     document.body.append(modal);
     modal.addEventListener("close", () => modal.remove());

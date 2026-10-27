@@ -1,3 +1,7 @@
+import {
+  fillVehicleField,
+  saveVehicleForm,
+} from "./helpers/vehicle.mjs";
 import { chromium } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
 import assert from "node:assert/strict";
@@ -21,8 +25,8 @@ async function car(make, model) {
     year: "2010",
     odometer: "120000",
   }))
-    await page.locator("#vehicle [name=" + key + "]").fill(value);
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+    await fillVehicleField(page, key, value);
+  await saveVehicleForm(page);
   await page
     .getByRole("heading", { name: make + " " + model, exact: true })
     .waitFor();
@@ -69,6 +73,7 @@ await page
   .click();
 modal = page.getByRole("dialog", { name: "Log service" });
 await modal.locator("[name=cost]").fill("4500");
+await modal.getByText("Provider & notes", { exact: true }).click();
 await modal.locator("[name=provider]").fill("Local workshop");
 await modal.locator("[name=notes]").fill("Oil and filter replaced");
 await modal.getByRole("button", { name: "Save", exact: true }).click();
@@ -91,7 +96,7 @@ await page
   .locator(".service-timeline")
   .getByRole("button", { name: "Edit", exact: true })
   .click();
-modal = page.getByRole("dialog", { name: "Log service" });
+modal = page.getByRole("dialog", { name: "Edit service" });
 await modal.locator("[name=cost]").fill("4600");
 await modal.getByRole("button", { name: "Save", exact: true }).click();
 await page

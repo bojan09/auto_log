@@ -1,3 +1,8 @@
+import {
+  fillVehicleField,
+  vehicleStep,
+  saveVehicleForm,
+} from "./helpers/vehicle.mjs";
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
 import { mkdir } from "node:fs/promises";
@@ -18,8 +23,8 @@ async function add(make, model) {
     variant: "2.0 MultiJet diesel 4x4",
     odometer: "120000",
   }))
-    await page.locator(`[name=${key}]`).fill(value);
-  await page.getByRole("button", { name: "Save", exact: true }).click();
+    await fillVehicleField(page, key, value);
+  await saveVehicleForm(page);
   await page
     .getByRole("heading", { name: make + " " + model, exact: true })
     .waitFor();
@@ -74,12 +79,18 @@ await page
   .waitFor();
 await page.keyboard.press("Escape");
 await page.getByRole("button", { name: "Edit", exact: true }).first().click();
+await vehicleStep(page, 1);
+const photos = page
+  .locator("#vehicle details")
+  .filter({ has: page.locator("[name=photo]") });
+if ((await photos.getAttribute("open")) === null)
+  await photos.locator("summary").click();
 await page.locator("[name=photo]").setInputFiles({
   name: "photo.png",
   mimeType: "image/png",
   buffer: await page.screenshot(),
 });
-await page.getByRole("button", { name: "Save", exact: true }).click();
+await saveVehicleForm(page);
 await page.locator("dialog").waitFor({ state: "hidden" });
 await page.reload();
 await page.getByRole("heading", { name: "Fiat Sedici", exact: true }).waitFor();
@@ -108,9 +119,9 @@ const fiat = page.locator(".card").filter({
   has: page.getByRole("heading", { name: "Fiat Sedici", exact: true }),
 });
 await fiat.getByRole("button", { name: "Edit", exact: true }).click();
-await page.locator("[name=odometer]").fill("119000");
+await fillVehicleField(page, "odometer", "119000");
 page.once("dialog", (dialog) => dialog.accept());
-await page.getByRole("button", { name: "Save", exact: true }).click();
+await saveVehicleForm(page);
 await page.locator("dialog").waitFor({ state: "hidden" });
 assert((await fiat.textContent()).includes("119,000"));
 const golf = page.locator(".card").filter({
