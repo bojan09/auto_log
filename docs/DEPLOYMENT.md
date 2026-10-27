@@ -1,5 +1,11 @@
 # Deploy AutoLog
 
+## Vercel
+
+Import `bojan09/auto_log`, use `master` as the production branch, and keep the root directory at the repository root. The checked-in `vercel.json` sets Framework to Other (`null`), Build Command to `npm run build` and Output Directory to `dist`. No environment variables or backend are required. The service worker is served with revalidation enabled.
+
+The Vercel build must use `dist`, not the default `public` directory. The configuration fixes `STATIC_BUILD_NO_OUT_DIR` after an otherwise successful build. A push to the connected production branch should trigger a new deployment; otherwise redeploy the latest commit from the Vercel dashboard. An npm `cache-dir` deprecation warning is unrelated to the missing output-directory error.
+
 ## GitHub Pages (free static hosting)
 
 1. In `bojan09/auto_log`, open Settings → Pages and choose **GitHub Actions** as the source. Use the existing `master` branch; no publishing branch is needed.

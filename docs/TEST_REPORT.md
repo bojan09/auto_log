@@ -98,3 +98,6 @@ Unverified: physical-device installation, Safari/Firefox, screen reader review, 
 
 ## English-only change
 The user's English-only instruction supersedes earlier bilingual requirements. Syntax checks and 28 unit tests passed. A Chromium journey using a Macedonian browser locale and a saved Macedonian preference verified English rendering, removed language controls, and settings save/reload. Legacy backup language values remain readable for compatibility and are normalized to English on use. The earlier bilingual browser suites were not rerun because their language-switch assertions now require revision.
+
+## Vercel output-directory fix
+Vercel's build succeeded but looked for `public`. Added explicit static framework, build command and `dist` output configuration, plus service-worker cache revalidation. `npm run build` and a local configuration/artifact integrity check passed. No production deployment result is claimed by these local checks.
