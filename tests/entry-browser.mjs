@@ -18,7 +18,7 @@ const page = await context.newPage();
 page.setDefaultTimeout(10000);
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
-await page.goto("http://127.0.0.1:8080");
+await page.goto("http://127.0.0.1:8080/#garage");
 await page.locator("#quick-add").click();
 await page.locator("#editor [type=submit]").click();
 assert.equal(

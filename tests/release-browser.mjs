@@ -32,8 +32,8 @@ const server = createServer(async (req, res) => {
         body
           .toString()
           .replace(
-            "autolog-v25",
-            version === "old" ? "autolog-release-old" : "autolog-v25",
+            "autolog-v26",
+            version === "old" ? "autolog-release-old" : "autolog-v26",
           ),
       );
     res.writeHead(200, {
@@ -54,7 +54,7 @@ const browser = await chromium.launch({
 try {
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:8091");
+  await page.goto("http://127.0.0.1:8091/#garage");
   await page.getByRole("heading", { name: "Garage", exact: true }).waitFor();
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.reload();
@@ -142,7 +142,7 @@ try {
           await worker.evaluate(async () => {
             const keys = await caches.keys();
             return (
-              keys.includes("autolog-v25") &&
+              keys.includes("autolog-v26") &&
               !keys.includes("autolog-release-old")
             );
           })
@@ -159,7 +159,7 @@ try {
   );
   const offline = await context.newPage();
   await context.setOffline(true);
-  await offline.goto("http://127.0.0.1:8091");
+  await offline.goto("http://127.0.0.1:8091/#garage");
   await offline.getByRole("heading", { name: "Garage", exact: true }).waitFor();
   assert.equal(await offline.locator("html").getAttribute("lang"), "en");
   await context.close();
@@ -174,7 +174,7 @@ try {
     }),
   );
   const failure = await blocked.newPage();
-  await failure.goto("http://127.0.0.1:8091");
+  await failure.goto("http://127.0.0.1:8091/#garage");
   await failure
     .getByRole("heading", { name: "Local storage is unavailable" })
     .waitFor();
@@ -189,7 +189,7 @@ try {
     }),
   );
   const prefPage = await preference.newPage();
-  await prefPage.goto("http://127.0.0.1:8091");
+  await prefPage.goto("http://127.0.0.1:8091/#garage");
   await prefPage
     .locator("nav")
     .getByRole("button", { name: "More", exact: true })
@@ -210,7 +210,7 @@ try {
   await preference.close();
   const staged = await browser.newContext();
   const project = await staged.newPage();
-  await project.goto("http://127.0.0.1:8091/auto_log/");
+  await project.goto("http://127.0.0.1:8091/auto_log/#garage");
   await project.getByRole("heading", { name: "Garage", exact: true }).waitFor();
   await project.evaluate(() => navigator.serviceWorker.ready);
   await project.reload();

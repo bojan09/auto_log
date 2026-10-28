@@ -13,7 +13,7 @@ const context = await browser.newContext({
 page.setDefaultTimeout(10000);
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
-await page.goto("http://127.0.0.1:8080");
+await page.goto("http://127.0.0.1:8080/#garage");
 await page.getByRole("heading", { name: "Garage", exact: true }).waitFor();
 await page.evaluate(async () => {
   const { openDatabase } = await import("/src/storage.js"),

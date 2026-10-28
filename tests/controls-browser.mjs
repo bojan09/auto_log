@@ -13,7 +13,7 @@ const context = await browser.newContext({
 const page = await context.newPage();
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
-await page.goto("http://127.0.0.1:8080");
+await page.goto("http://127.0.0.1:8080/#garage");
 await page.locator("#quick-add").click();
 for (const [key, value] of Object.entries({
   make: "Fiat",

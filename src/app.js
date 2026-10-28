@@ -40,7 +40,7 @@ matchMedia("(prefers-color-scheme: light)").addEventListener("change", () =>
   applyAppearance(preferences),
 );
 let language = "en",
-  view = "garage",
+  view = "dashboard",
   vehicles = [],
   schedules = [],
   records = [],

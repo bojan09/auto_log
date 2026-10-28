@@ -52,7 +52,7 @@
   --accent-ink: #9cc9ff;
 }
 [data-theme="light"][data-accent="blue"] {
-  --accent-ink: #2563ad;
+  --accent-ink: #1d508e;
 }
 [data-accent="mint"] {
   --accent: #246a50;

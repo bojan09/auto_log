@@ -53,3 +53,8 @@
 - Rounded controls and floating navigation, scenic garage cards and a navy/ocean default.
 - Compact update prompt with progress feedback and immediate reload.
 - Settings can apply a waiting update; removed outdated close-all-tabs update guidance.
+
+## 2.3.0
+- Open Dashboard on launch while preserving direct destination links.
+- Refined dashboard vehicle showcase, summary cards and charts.
+- Consistent rounded inputs and form sections across the app, with guided editor styling and mobile numeric keyboard hints.

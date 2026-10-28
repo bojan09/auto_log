@@ -9,7 +9,7 @@ const context = await browser.newContext({ locale: "mk-MK" });
 const page = await context.newPage();
 await page.addInitScript(() => localStorage.setItem("language", "mk"));
 for (const theme of ["dark", "light"]) {
-  await page.goto("http://127.0.0.1:8080");
+  await page.goto("http://127.0.0.1:8080/#garage");
   await page.evaluate((theme) => localStorage.setItem("theme", theme), theme);
   await page.reload();
   await page.getByRole("heading", { name: "Garage", exact: true }).waitFor();

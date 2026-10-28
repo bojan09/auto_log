@@ -449,3 +449,128 @@
     min-width: 100px;
   }
 }
+
+/* Shared entry surfaces: legible labels, grouped fields and anchored actions. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+select,
+textarea {
+  border-radius: 12px;
+  border-color: color-mix(in srgb, var(--line) 75%, transparent);
+  background: color-mix(in srgb, var(--canvas) 75%, var(--surface));
+  transition:
+    border-color 150ms,
+    box-shadow 150ms;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent-ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+dialog {
+  border-radius: 22px;
+  box-shadow: 0 24px 80px #00000055;
+}
+.vehicle-editor-header,
+.record-editor-header {
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--accent) 12%, var(--surface)),
+    var(--surface)
+  );
+}
+.vehicle-editor-footer,
+.record-editor-footer {
+  box-shadow: 0 -8px 20px #0000000a;
+}
+.vehicle-progress {
+  gap: 8px;
+  padding-bottom: 12px;
+}
+.vehicle-progress button {
+  border: 1px solid transparent;
+  border-radius: 24px;
+  padding: 10px 12px;
+}
+.vehicle-progress button[aria-current="step"] {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: var(--raised);
+}
+.step-number {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--canvas);
+  flex-shrink: 0;
+}
+.vehicle-photo-picker {
+  border-radius: 16px;
+  background: var(--raised);
+  min-height: 112px;
+}
+.vehicle-entry-preview {
+  border-radius: 18px;
+}
+.record-group {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+.record-group legend {
+  color: var(--accent-ink);
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+.record-optional {
+  border-top: 0;
+  border-radius: 12px;
+  background: var(--raised);
+  padding: 8px 12px;
+}
+.profile-card form > label,
+.vault-form > label {
+  gap: 8px;
+}
+.profile-footer {
+  position: sticky;
+  bottom: 0;
+  background: var(--surface);
+  padding-bottom: 8px;
+}
+input[type="file"] {
+  border-radius: 12px;
+  padding: 10px;
+}
+input::file-selector-button {
+  border-radius: 20px;
+  padding: 8px 12px;
+  background: var(--raised);
+}
+@media (max-width: 700px) {
+  #editor.vehicle-editor,
+  dialog.record-editor {
+    border-radius: 24px 24px 0 0;
+  }
+  .vehicle-progress button {
+    padding: 8px;
+    gap: 6px;
+  }
+  .record-fields {
+    gap: 16px 12px;
+  }
+  .record-editor-header h2,
+  .vehicle-editor-header h2 {
+    font-size: 21px;
+  }
+  .vehicle-optional {
+    border-radius: 14px;
+    padding: 0 12px;
+    background: var(--raised);
+    border-top: 0;
+  }
+  .vehicle-fields label,
+  .record-fields label {
+    font-size: 12px;
+  }
+}

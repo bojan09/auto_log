@@ -137,3 +137,6 @@ Passed 34 unit tests, syntax checks, runtime build and static stylesheet audit. 
 
 ## 2.2.0 — rounded interface and immediate updates
 Passed 34 unit tests and all fourteen Chromium browser suites, including update activation/reload, offline persistence, responsive controls and accessibility. Syntax checks, build and stylesheet audit passed. Visually reviewed the refreshed 390px garage screenshot. Physical-device and live-host verification remain outstanding.
+
+## 2.3.0 — dashboard-first launch and form refinement
+Passed 34 unit tests and fourteen Chromium browser suites. Existing garage workflows now use explicit garage URLs; navigation tests verify empty dashboard landing, and the reference suite verifies populated dashboard landing. Fixed a light-theme contrast failure discovered in the final accessibility checks and reran rebuild/navigation/appearance suites successfully. Reviewed mobile dashboard and guided vehicle editor screenshots. Syntax checks, runtime build and stylesheet audit passed. Physical-device testing and live Vercel deployment remain unverified.

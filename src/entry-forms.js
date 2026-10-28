@@ -107,6 +107,9 @@ export function setupVehicleEditor({ form, dialog }) {
   controls.model.placeholder = "e.g. Sedici";
   controls.year.placeholder = "e.g. 2010";
   controls.odometer.placeholder = "Current reading";
+  controls.year.inputMode = "numeric";
+  controls.odometer.inputMode = "decimal";
+  controls.purchasePrice.inputMode = "decimal";
   steps[1].append(
     el(
       "p",
@@ -417,6 +420,8 @@ export function setupVehicleEditor({ form, dialog }) {
 
 export function enhanceRecordEditor({ modal, form, vehicleName, groups }) {
   modal.classList.add("record-editor");
+  for (const input of form.querySelectorAll('input[type="number"]'))
+    input.inputMode = input.step === "1" ? "numeric" : "decimal";
   const title = form.querySelector("h2"),
     footer = form.querySelector("footer"),
     error = form.querySelector("[role=alert]");

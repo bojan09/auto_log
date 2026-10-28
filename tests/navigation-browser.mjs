@@ -11,6 +11,10 @@ for (const width of [390, 820, 1440]) {
   const errors = [];
   p.on("pageerror", (e) => errors.push(e.message));
   await p.goto("http://127.0.0.1:8080");
+  await p
+    .getByRole("heading", { name: "Your dashboard is ready", exact: true })
+    .waitFor();
+  assert.equal(new URL(p.url()).hash, "#dashboard");
   for (const [key, label] of destinations) {
     await p
       .locator(".floating-nav")

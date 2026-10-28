@@ -11,7 +11,7 @@ const page = await context.newPage();
 page.setDefaultTimeout(10000);
 const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
-await page.goto("http://127.0.0.1:8080");
+await page.goto("http://127.0.0.1:8080/#garage");
 await page.evaluate(async () => {
   const { openDatabase } = await import("/src/storage.js");
   const { writeRow } = await import("/src/vault.js");
@@ -99,7 +99,9 @@ await page.evaluate(async () => {
   db.close();
   localStorage.setItem("selected", "sedici");
 });
-await page.reload();
+await page.goto("http://127.0.0.1:8080/");
+await page.locator(".vehicle-hero").waitFor();
+assert.equal(new URL(page.url()).hash, "#dashboard");
 const dashboard = () =>
   page
     .locator("nav")

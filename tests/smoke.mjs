@@ -6,7 +6,7 @@ const browser = await chromium.launch({
   args: ["--no-sandbox"],
 });
 const page = await browser.newPage();
-await page.goto("http://127.0.0.1:8080");
+await page.goto("http://127.0.0.1:8080/#garage");
 await page.getByRole("button", { name: "+ Add vehicle" }).click();
 for (const [name, value] of Object.entries({
   make: "Fiat",

@@ -1307,3 +1307,110 @@
     border-radius: 20px;
   }
 }
+
+/* Dashboard: a prominent vehicle, compact summaries and clear next actions. */
+.vehicle-hero {
+  border-radius: 20px;
+  height: 290px;
+  padding: 22px;
+  border-color: color-mix(in srgb, var(--line) 55%, transparent);
+}
+.vehicle-hero::before {
+  background: linear-gradient(90deg, #06111bce, #06111b20 75%);
+}
+.vehicle-hero .vehicle-image {
+  height: 210px;
+}
+.vehicle-hero .vehicle-art {
+  filter: drop-shadow(0 14px 12px #00000055);
+}
+.vehicle-hotspots {
+  gap: 6px;
+}
+.hotspot {
+  border-radius: 20px;
+  background: #132332d9;
+  border-color: #71839166;
+  padding: 7px 12px;
+}
+.dashboard-status .card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--raised), var(--surface));
+}
+.dashboard-status .card > p:first-of-type {
+  font-size: 26px;
+  letter-spacing: -0.7px;
+}
+.dashboard-status button {
+  align-self: flex-start;
+  padding: 7px 12px;
+}
+.overview-card {
+  background: linear-gradient(
+    135deg,
+    var(--surface),
+    color-mix(in srgb, var(--accent) 8%, var(--surface))
+  );
+}
+.showcase-greeting h3 {
+  font-size: 26px;
+  letter-spacing: -0.7px;
+}
+.dashboard-switcher {
+  border-radius: 24px;
+}
+.monthly-fuel .section-heading {
+  align-items: flex-start;
+}
+.month-bar .bar-fill {
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(
+    0deg,
+    var(--accent),
+    color-mix(in srgb, var(--accent) 60%, var(--accent-ink))
+  );
+}
+@media (max-width: 700px) {
+  .vehicle-hero {
+    height: auto;
+    padding: 18px;
+    min-height: 290px;
+  }
+  .vehicle-hero .vehicle-image {
+    height: 160px;
+  }
+  .vehicle-hero::before {
+    background: linear-gradient(0deg, #06111be8, #06111b15 80%);
+  }
+  .showcase-greeting h3 {
+    font-size: 22px;
+  }
+  .dashboard-status .card > p:first-of-type {
+    font-size: 20px;
+  }
+  .dashboard-status .card {
+    min-height: 108px;
+  }
+  .dashboard-status {
+    gap: 10px;
+  }
+  .manage-vehicle {
+    bottom: 65px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+  }
+  .vehicle-hotspots {
+    margin-top: 16px;
+  }
+  .hotspot {
+    padding: 7px 4px;
+    font-size: 9px;
+  }
+  .dashboard-lower {
+    gap: 12px;
+  }
+}

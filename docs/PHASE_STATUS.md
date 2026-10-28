@@ -45,3 +45,6 @@ Settings now offer eight accent colors, five surface palettes and five backgroun
 
 ## Rounded interface refinement — 2.2
 Reworked garage imagery with a scenic backdrop, refined card surfaces, pill buttons and a rounded floating mobile dock. New preferences default to navy/ocean; existing chosen palettes are preserved. The update prompt exposes progress and activates/reloads immediately; Settings can apply an already waiting update. Saved records remain local and open dialogs prevent activation.
+
+## Dashboard-first and form refinement — 2.3
+Launches without a destination now open Dashboard, with vehicle onboarding for an empty garage. Explicit hash links continue to open their requested page. Refined dashboard hero, summaries and charts; standardized rounded form controls, grouped entry sections, step navigation and mobile numeric keyboard hints across vehicle and record editors.
