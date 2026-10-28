@@ -134,3 +134,6 @@ Vercel's build succeeded but looked for `public`. Added explicit static framewor
 
 ## 2.1.0 — navigation, mobile controls and personal appearance
 Passed 34 unit tests, syntax checks, runtime build and static stylesheet audit. All fourteen Chromium browser suites passed (the six initial suites followed by the remaining suites after updating assertions for retained hash routes and the intentional button radius change). New coverage verifies identical destination lists at 390/820/1440px, direct routes/Back/reload, explicit service-worker activation, appearance preview/save/reload, backup validation and light/dark accessibility. Reviewed generated mobile maintenance and appearance screenshots. Firefox/WebKit and physical-device verification remain outstanding; no live Vercel verification is claimed.
+
+## 2.2.0 — rounded interface and immediate updates
+Passed 34 unit tests and all fourteen Chromium browser suites, including update activation/reload, offline persistence, responsive controls and accessibility. Syntax checks, build and stylesheet audit passed. Visually reviewed the refreshed 390px garage screenshot. Physical-device and live-host verification remain outstanding.

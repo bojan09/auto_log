@@ -779,8 +779,19 @@ export function morePanel({
           message("unavailable");
           return;
         }
-        await reg.update();
-        message("updateChecked");
+        try {
+          await reg.update();
+          if (reg.waiting) {
+            window.dispatchEvent(new Event("autolog-update"));
+          } else {
+            message("updateChecked");
+          }
+        } catch {
+          message(
+            "Update check failed. Reconnect to the internet and try again.",
+            true,
+          );
+        }
       }),
     );
   }

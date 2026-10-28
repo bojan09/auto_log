@@ -42,3 +42,6 @@ Completed discovery and six rebuild/verification phases. Removed the legacy CSS 
 Shared feature directory and hash navigation resolve desktop/mobile parity, direct links and Back/reload behavior. Empty destinations explain the need for a vehicle. Updates have an explicit activation button that protects open editors.
 
 Settings now offer eight accent colors, five surface palettes and five background finishes with an isolated preview. Preferences retain backup validation and local persistence. Mobile workspace headers put actions below identity, tabs use compact segmented styling, quick actions have colored icon tiles, and empty spending charts use less vertical space. Mobile navigation remains bottom-only.
+
+## Rounded interface refinement — 2.2
+Reworked garage imagery with a scenic backdrop, refined card surfaces, pill buttons and a rounded floating mobile dock. New preferences default to navy/ocean; existing chosen palettes are preserved. The update prompt exposes progress and activates/reloads immediately; Settings can apply an already waiting update. Saved records remain local and open dialogs prevent activation.

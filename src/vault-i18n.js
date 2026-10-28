@@ -118,11 +118,11 @@ export const vaultMessages = {
     persist: "Request persistent storage",
     persistent: "Persistent storage granted.",
     notPersistent: "Persistent storage was not granted. Keep external backups.",
-    update: "Check for app updates",
+    update: "Check & apply update",
     updateHelp:
-      "Updates are checked when online. Close all AutoLog tabs and reopen to activate a downloaded update.",
+      "Updates are checked when online. When an update is ready, select Update now. The app reloads with your saved records intact.",
     updateChecked:
-      "Update check completed. Close all AutoLog tabs and reopen to activate any downloaded update.",
+      "Update check completed. If a new version is downloading, an Update now button will appear when it is ready.",
     installHelp:
       "Install AutoLog from your browser’s install menu when supported. The app works offline after its initial successful load.",
     noVehicle: "Add a vehicle in Garage first.",

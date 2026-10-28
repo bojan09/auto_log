@@ -785,7 +785,7 @@ if ("serviceWorker" in navigator)
         notice.setAttribute("role", "status");
         const text = node(
           "span",
-          "An update is ready. Install the latest design without deleting your records.",
+          "An update is ready. Apply it now to see the latest version.",
         );
         const install = button(
           "Update now",
@@ -800,6 +800,9 @@ if ("serviceWorker" in navigator)
               return;
             }
             install.disabled = true;
+            install.textContent = "Updating…";
+            text.textContent =
+              "Installing the update. Your saved records will stay on this device.";
             navigator.serviceWorker.addEventListener(
               "controllerchange",
               () => location.reload(),
@@ -820,6 +823,10 @@ if ("serviceWorker" in navigator)
         worker.addEventListener("statechange", check);
         check();
       };
+      window.addEventListener("autolog-update", () => {
+        if (reg.waiting) notify();
+        document.querySelector("#update-ready button")?.click();
+      });
       reg.addEventListener("updatefound", () => watch(reg.installing));
       watch(reg.installing);
       if (reg.waiting) notify();

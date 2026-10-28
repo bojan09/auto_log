@@ -48,3 +48,8 @@
 - Eight accents, five surface palettes and five solid/gradient finishes, with preview before save.
 - Mobile action-row, tab and quick-action refinements; compact empty charts.
 - Explicit service-worker update activation and cache revalidation without deleting user records.
+
+## 2.2.0
+- Rounded controls and floating navigation, scenic garage cards and a navy/ocean default.
+- Compact update prompt with progress feedback and immediate reload.
+- Settings can apply a waiting update; removed outdated close-all-tabs update guidance.

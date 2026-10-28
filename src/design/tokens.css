@@ -21,7 +21,7 @@
   --warning: #dac398;
   --danger: #ecb0b0;
   --focus: #c5e3f5;
-  --radius: 10px;
+  --radius: 18px;
 }
 [data-theme="light"] {
   color-scheme: light;

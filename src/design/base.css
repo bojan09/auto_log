@@ -32,9 +32,9 @@ button {
   color: var(--ink);
   background: var(--raised);
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: 999px;
   min-height: 36px;
-  padding: 7px 12px;
+  padding: 8px 16px;
   font-size: 12px;
   font-weight: 600;
   line-height: 1.4;

@@ -1,6 +1,7 @@
 .card {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  box-shadow: 0 8px 24px #0000000a;
   border-radius: var(--radius);
   padding: 16px;
   min-width: 0;
@@ -282,5 +283,23 @@
   }
   main {
     padding-bottom: 24px;
+  }
+}
+
+#update-ready {
+  border-radius: 22px;
+  padding: 12px 16px;
+  box-shadow: 0 12px 40px #00000035;
+  font-size: 12px;
+}
+#update-ready button {
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-height: 40px;
+}
+@media (max-width: 700px) {
+  #update-ready {
+    top: auto;
+    bottom: calc(92px + env(safe-area-inset-bottom));
   }
 }

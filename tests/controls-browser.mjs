@@ -149,7 +149,7 @@ assert.equal(
   await page
     .locator("#app .heading>button:not(.mobile-profile)")
     .evaluate((e) => getComputedStyle(e).borderRadius),
-  "9px",
+  "999px",
 );
 assert.deepEqual(errors, []);
 console.log(

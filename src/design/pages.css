@@ -4,10 +4,13 @@
   overflow: visible;
 }
 .garage-card .vehicle-image {
-  border-radius: 9px 9px 0 0;
+  border-radius: 18px 18px 0 0;
   overflow: hidden;
-  background: var(--raised);
-  height: 175px;
+  background:
+    linear-gradient(0deg, var(--surface), transparent 55%),
+    linear-gradient(#07152555, #07152555),
+    url("../../assets/alpine-road.webp") center/cover;
+  height: 210px;
   position: relative;
 }
 .vehicle-art {
@@ -23,7 +26,7 @@
   color: var(--muted);
 }
 .garage-card-body {
-  padding: 16px;
+  padding: 20px;
 }
 .garage-card-body h3 {
   font-size: 16px;
@@ -1232,5 +1235,75 @@
   }
   .monthly-fuel .fuel-filters select {
     font-size: 12px;
+  }
+}
+
+/* Garage is a vehicle showcase with a single compact action rail. */
+.garage-card .vehicle-art {
+  padding: 14px 12px 0;
+  filter: drop-shadow(0 12px 10px #00000055);
+}
+.garage-card .vehicle-image figcaption {
+  color: #e1e9f1;
+  background: #101820b8;
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 9px;
+}
+.garage-card-body .vehicle-specs {
+  line-height: 1.7;
+  gap: 4px 12px;
+}
+.garage-card-body .section-heading h3 {
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+.garage-card-body .status {
+  border-radius: 20px;
+  padding: 4px 9px;
+}
+.garage-card-body .actions {
+  border-top: 0;
+  padding-top: 14px;
+  gap: 4px;
+}
+.garage-card-body > button {
+  padding-left: 0;
+  min-height: 36px;
+}
+.garage-card-body .actions > button[data-tone="primary"] {
+  font-size: 11px;
+  min-height: 38px;
+}
+.quick-action {
+  border-radius: 16px;
+  border-color: color-mix(in srgb, var(--line) 55%, transparent);
+}
+.workspace-heading .actions button {
+  border-radius: 999px;
+}
+@media (max-width: 700px) {
+  .garage-card .vehicle-image {
+    height: 205px;
+  }
+  .garage-card-body {
+    padding: 18px;
+  }
+  .garage-card-body .actions {
+    flex-wrap: nowrap;
+  }
+  .garage-card-body .actions > button {
+    padding: 9px 12px;
+  }
+  .quick-action {
+    border-radius: 16px;
+    background: linear-gradient(145deg, var(--raised), var(--surface));
+  }
+  .filters {
+    border-radius: 24px;
+    padding: 4px;
+  }
+  .filters button {
+    border-radius: 20px;
   }
 }
