@@ -15,6 +15,10 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto("http://127.0.0.1:8080/#garage");
 await page.locator("#quick-add").click();
+await page
+  .getByRole("dialog", { name: "Quick add", exact: true })
+  .getByRole("button", { name: "Add vehicle", exact: false })
+  .click();
 for (const [key, value] of Object.entries({
   make: "Fiat",
   model: "Sedici",
@@ -117,6 +121,10 @@ for (const theme of ["dark", "light"])
     );
     await page.locator("#quick-add").focus();
     await page.keyboard.press("Enter");
+    await page
+      .getByRole("dialog", { name: "Quick add", exact: true })
+      .getByRole("button", { name: "Add vehicle", exact: false })
+      .click();
     await page.locator("#editor").waitFor({ state: "visible" });
     await page.keyboard.press("Escape");
     await page.locator("#editor").waitFor({ state: "hidden" });

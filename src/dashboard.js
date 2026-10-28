@@ -204,7 +204,18 @@ export function dashboardOverview({
     activity.append(row);
   }
   const lower = el("div", undefined, "dashboard-lower");
-  lower.append(fuelSpendingPanel({ fuel, vehicles, vehicle }), activity);
-  root.append(group, lower);
+  const insights = el("details", undefined, "spending-insights");
+  insights.open = ownFuel.length > 0;
+  insights.append(
+    el(
+      "summary",
+      ownFuel.length
+        ? "Spending insights"
+        : "Spending insights · add a fill-up to get started",
+    ),
+    fuelSpendingPanel({ fuel, vehicles, vehicle }),
+  );
+  lower.append(insights);
+  root.append(activity, group, lower);
   return root;
 }

@@ -20,6 +20,10 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto("http://127.0.0.1:8080/#garage");
 await page.locator("#quick-add").click();
+await page
+  .getByRole("dialog", { name: "Quick add", exact: true })
+  .getByRole("button", { name: "Add vehicle", exact: false })
+  .click();
 await page.locator("#editor [type=submit]").click();
 assert.equal(
   await page.locator("#vehicle [name=make]").getAttribute("aria-invalid"),

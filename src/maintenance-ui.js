@@ -1,3 +1,6 @@
+import { latestEntry, mileageForecast } from "./journey.js";
+import { calendar, reminderEvents } from "./vault.js";
+import { downloadFile } from "./vault-ui.js";
 import { enhanceRecordEditor } from "./entry-forms.js";
 import { maintenanceMessages } from "./maintenance-i18n.js";
 import {
@@ -15,6 +18,7 @@ export function maintenancePanel({
   vehicles,
   schedules,
   records,
+  fuel = [],
   language,
   onChange,
   onSelect,
@@ -92,6 +96,19 @@ export function maintenancePanel({
         button("+ " + t("newSchedule"), () => editor("schedule"), "primary"),
         button("+ " + t("newRecord"), () => editor("record")),
       );
+      const events = reminderEvents(vehicle, schedules, records, []);
+      const calendarButton = button("Export reminders", () =>
+        downloadFile(
+          calendar(events),
+          "autolog-maintenance.ics",
+          "text/calendar;charset=utf-8",
+        ),
+      );
+      calendarButton.disabled = !events.length;
+      calendarButton.title = events.length
+        ? "Export date-based schedules. Mileage estimates are not calendar deadlines."
+        : "Add a date-based schedule to export reminders.";
+      actions.append(calendarButton);
       header.append(actions);
       const filters = el("div", undefined, "actions filters");
       for (const key of ["all", "scheduled", "soon", "due", "overdue"]) {
@@ -140,6 +157,20 @@ export function maintenancePanel({
               .join(" · "),
         ),
       );
+      const forecast = mileageForecast(d.remaining, s.unit, [
+        ...ownRecords,
+        ...fuel.filter((r) => r.vehicleId === vehicle.id),
+      ]);
+      if (forecast)
+        card.append(
+          el(
+            "p",
+            "Estimated mileage due: " +
+              forecast.date +
+              " · based on recorded driving; actual use may vary.",
+            "muted",
+          ),
+        );
       const actions = el("div", undefined, "actions");
       actions.append(
         button(t("complete"), () => editor("record", {}, s), "primary"),
@@ -212,6 +243,7 @@ export function maintenancePanel({
     historySection.append(timeline);
   }
   function editor(kind, existing = {}, linked) {
+    const recent = latestEntry(records, vehicle.id);
     const modal = el("dialog"),
       form = el("form"),
       error = el("p");
@@ -289,8 +321,16 @@ export function maintenancePanel({
       field("date", "date", existing.date || today()).max = today();
       field("odometer", "number", existing.odometer ?? vehicle.odometer);
       field("cost", "number", existing.cost ?? 0);
-      field("currency", "text", existing.currency || vehicle.currency || "MKD");
-      field("provider", "text", existing.provider || "");
+      field(
+        "currency",
+        "text",
+        existing.currency || recent?.currency || vehicle.currency || "MKD",
+      );
+      field(
+        "provider",
+        "text",
+        existing.id ? existing.provider || "" : recent?.provider || "",
+      );
       field("notes", "textarea", existing.notes || "");
       const link = field(
         "linked",

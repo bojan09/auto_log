@@ -143,3 +143,6 @@ Passed 34 unit tests and fourteen Chromium browser suites. Existing garage workf
 
 ## 2.3.1 — cross-page UI audit
 All 34 unit tests and fourteen existing Chromium suites passed. An additional UI audit suite passed six-page checks at 320/390/820/1440px, native selection changes, keyboard disclosures, forced-colors fallback and compact empty-state typography. Build, syntax and static stylesheet checks passed. Reviewed the mobile finance screenshot. See UI_AUDIT_2_3_1.md for findings and verification limits.
+
+## 2.4.0 — six everyday workflow improvements
+Passed 37 unit tests and all sixteen Chromium browser suites. The new integrated workflow suite covers empty/active quick add, desktop access, vehicle-specific defaults, automatic total/manual override, mileage estimates and calendar downloads, searchable history and receipt downloads, backup request persistence, collapsed empty insights and offline quick entry. Unit coverage verifies forecast units/staleness/corrections and history vehicle isolation/document association. Reviewed mobile quick-add and history screenshots; history overflow checks cover 390/820/1440px and both new views pass axe checks. Build, syntax and stylesheet audit passed. Physical devices, Firefox/WebKit and live Vercel deployment remain unverified.

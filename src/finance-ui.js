@@ -1,3 +1,4 @@
+import { latestEntry } from "./journey.js";
 import { enhanceRecordEditor } from "./entry-forms.js";
 import { financeMessages } from "./finance-i18n.js";
 import { today, validDate } from "./maintenance.js";
@@ -515,6 +516,8 @@ export function financePanel({
     }
   }
   function editor(kind, existing = {}) {
+    const recent = latestEntry(kind === "fuel" ? fuel : expenses, vehicle.id);
+    const saved = !!existing.id;
     const modal = el("dialog"),
       form = el("form"),
       error = el("p");
@@ -531,7 +534,12 @@ export function financePanel({
     );
     const id = existing.id || crypto.randomUUID();
     field(form, "date", "date", existing.date || today()).max = today();
-    field(form, "currency", "text", existing.currency || state.currency);
+    field(
+      form,
+      "currency",
+      "text",
+      existing.currency || recent?.currency || state.currency,
+    );
     if (kind === "fuel") {
       field(form, "odometer", "number", existing.odometer ?? vehicle.odometer);
       field(form, "unit", "select", existing.unit || vehicle.unit || "km", [
@@ -553,20 +561,34 @@ export function financePanel({
       field(form, "unitPrice", "number", existing.unitPrice);
       field(form, "totalPaid", "number", existing.total);
       const preview = el("p");
-      const update = () =>
-        (preview.textContent =
-          t("preview") +
-          ": " +
-          n(
-            Number(form.elements.volume.value) *
-              Number(form.elements.unitPrice.value),
-          ));
+      let manualTotal = saved;
+      form.elements.totalPaid.addEventListener("input", () => {
+        manualTotal = form.elements.totalPaid.value !== "";
+      });
+      const update = (event) => {
+        const volume = form.elements.volume,
+          price = form.elements.unitPrice;
+        const total = Number(volume.value) * Number(price.value);
+        preview.textContent = t("preview") + ": " + n(total);
+        if (
+          !manualTotal &&
+          volume.value &&
+          price.value &&
+          Number.isFinite(total)
+        )
+          form.elements.totalPaid.value = total.toFixed(2);
+      };
       form.addEventListener("input", update);
       update();
       form.append(preview, el("p", t("priceNote"), "muted"));
       field(form, "full", "checkbox", existing.full ?? true);
       field(form, "missed", "checkbox", existing.missed ?? false);
-      field(form, "station", "text", existing.station);
+      field(
+        form,
+        "station",
+        "text",
+        saved ? existing.station : recent?.station,
+      );
       field(form, "receipt", "file").accept = "image/jpeg,image/png,image/webp";
       if (existing.receipt) field(form, "removeReceipt", "checkbox", false);
     } else {

@@ -1,3 +1,4 @@
+import { historyPanel } from "./history-ui.js";
 import { destinations } from "./navigation.js";
 import { fuelSpendingPanel } from "./fuel-spending.js";
 import { vaultMessages } from "./vault-i18n.js";
@@ -45,6 +46,31 @@ export function downloadFile(content, name, type) {
   a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+export async function exportBackup(db, preferences) {
+  const data = JSON.stringify(await snapshot(db, readPreferences(preferences)));
+  if (new Blob([data]).size > MAX_BACKUP) throw Error("Backup exceeds 50 MiB.");
+  downloadFile(
+    data,
+    "autolog-backup-" + new Date().toISOString().slice(0, 10) + ".json",
+    "application/json",
+  );
+  const stamp = new Date().toISOString();
+  preferences.setItem("lastBackupAt", stamp);
+  return stamp;
+}
+export function backupSummary(preferences) {
+  const stamp = preferences.getItem("lastBackupAt");
+  const valid =
+    stamp &&
+    Number.isFinite(Date.parse(stamp)) &&
+    Date.parse(stamp) <= Date.now();
+  return {
+    due: !valid || Date.now() - Date.parse(stamp) > 30 * 86400000,
+    text: valid
+      ? "Last export requested: " + new Date(stamp).toLocaleDateString("en")
+      : "No backup export requested on this device.",
+  };
 }
 export function morePanel({
   db,
@@ -558,30 +584,16 @@ export function morePanel({
     );
   }
   async function backup() {
+    const status = el("p", backupSummary(preferences).text, "muted");
+    content.append(status);
     content.append(el("p", t("backupHelp")));
     content.append(
       action(
         t("exportBackup"),
         async () => {
-          const data = JSON.stringify(
-            await snapshot(db, readPreferences(preferences)),
-          );
-          const size = new Blob([data]).size;
-          if (size > MAX_BACKUP) {
-            message("exportTooLarge", true);
-            return;
-          }
-          notice.textContent =
-            t("backupSize") +
-            ": " +
-            (size / 1024 / 1024).toFixed(2) +
-            " MiB" +
-            (size > 10 * 1024 * 1024 ? " · " + t("large") : "");
-          downloadFile(
-            data,
-            "autolog-backup-" + new Date().toISOString().slice(0, 10) + ".json",
-            "application/json",
-          );
+          await exportBackup(db, preferences);
+          message("Backup download requested. Check your Downloads folder.");
+          status.textContent = backupSummary(preferences).text;
         },
         "primary",
       ),
@@ -800,6 +812,10 @@ export function morePanel({
     generation++;
     content.replaceChildren();
     const descriptions = {
+      history: [
+        "Vehicle history",
+        "Search services, fill-ups, expenses and receipts together.",
+      ],
       settings: ["Settings", "Make AutoLog work the way you do."],
       documents: ["Documents", "Keep the paperwork with the vehicle."],
       reports: [
@@ -831,7 +847,14 @@ export function morePanel({
       if (!vehicle) return;
       if (state.tab === "documents") await documents(vehicle);
       else if (state.tab === "reports") reports(vehicle);
-      else {
+      else if (state.tab === "history") {
+        const request = generation;
+        const documents = await list(db, "attachments");
+        if (request === generation)
+          content.append(
+            historyPanel({ vehicle, services, fuel, expenses, documents }),
+          );
+      } else {
         await trips(vehicle);
         if (state.addTrip) {
           delete state.addTrip;
@@ -841,7 +864,14 @@ export function morePanel({
     }
   }
   state.tab ||= "settings";
-  for (const key of ["settings", "documents", "reports", "trips", "backup"]) {
+  for (const key of [
+    "settings",
+    "history",
+    "documents",
+    "reports",
+    "trips",
+    "backup",
+  ]) {
     const b = action(t(key), async () => {
       if (onDestination) onDestination(key);
       else {

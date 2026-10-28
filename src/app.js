@@ -4,7 +4,12 @@ import { setupVehicleEditor } from "./entry-forms.js";
 import { profilePanel, avatarButton } from "./profile.js";
 import { renderTopbar, setupTopbar } from "./topbar.js";
 import { layoutText, quickActions, dashboardOverview } from "./dashboard.js";
-import { morePanel, applyAppearance } from "./vault-ui.js";
+import {
+  morePanel,
+  applyAppearance,
+  exportBackup,
+  backupSummary,
+} from "./vault-ui.js";
 import { readPreferences, defaults } from "./vault.js";
 import { visualAsset, hotspots, setupMotion } from "./visuals.js";
 import { financePanel } from "./finance-ui.js";
@@ -235,6 +240,7 @@ function render() {
   renderTopbar({
     profile,
     onDestination: navigate,
+    onQuickAdd: quickAdd,
     onProfile: openProfile,
     vehicles,
     current,
@@ -384,6 +390,7 @@ function render() {
       vehicles,
       schedules,
       records,
+      fuel,
       language,
       onChange: load,
       onSelect: (id) => {
@@ -433,7 +440,7 @@ function render() {
       node("h2", current.make + " " + current.model),
       node(
         "p",
-        current.year + " · " + current.variant,
+        [current.year, current.variant].filter(Boolean).join(" · "),
         "vehicle-specification",
       ),
     );
@@ -517,6 +524,18 @@ function render() {
       const c = node("section", undefined, "card");
       c.append(node("h3", title), node("p", value));
       if (title === t("next") && upcoming) {
+        c.append(
+          node(
+            "span",
+            {
+              overdue: "Overdue",
+              due: "Due now",
+              soon: "Due soon",
+              scheduled: "Scheduled",
+            }[upcoming.d.status],
+            "status " + upcoming.d.status,
+          ),
+        );
         const parts = [];
         if (Number.isFinite(upcoming.d.remaining))
           parts.push(
@@ -568,8 +587,8 @@ function render() {
         language,
         preferences: readPreferences(preferences),
         onFinance: () => {
-          view = "fuel";
-          render();
+          moreState.vehicleId = current.id;
+          navigate("history");
         },
       }),
     );
@@ -578,7 +597,30 @@ function render() {
       node("summary", layoutText[language].reminders),
       panel(true),
     );
-    app.append(reminders);
+    reminders.open = schedules.some(
+      (s) =>
+        s.vehicleId === current.id &&
+        dueStatus(s, current, records).status !== "scheduled",
+    );
+    app.insertBefore(reminders, app.querySelector(".dashboard-overview"));
+    const backup = node("section", undefined, "card backup-reminder");
+    const info = backupSummary(preferences);
+    const backupText = node("p", info.text);
+    backup.append(
+      node("h3", info.due ? "Keep a copy of your records" : "Your backup"),
+      backupText,
+      button(
+        "Export backup",
+        async () => {
+          await exportBackup(db, preferences);
+          backupText.textContent =
+            backupSummary(preferences).text +
+            ". Download requested; check your Downloads folder.";
+        },
+        "quiet",
+      ),
+    );
+    app.append(backup);
     const history = node("details", undefined, "card");
     history.append(node("summary", t("mileageHistory")));
     for (const entry of current.odometerHistory || []) {
@@ -851,7 +893,7 @@ function art(v) {
 function localize() {
   document.querySelector("#services-nav").textContent = t("services");
   document.querySelector("#fuel-nav").textContent = t("fuel");
-  document.querySelector("#quick-add").setAttribute("aria-label", t("add"));
+  document.querySelector("#quick-add").setAttribute("aria-label", "Quick add");
   form
     .querySelectorAll("[data-en]")
     .forEach((el) => (el.textContent = el.dataset[language]));
@@ -899,4 +941,49 @@ window.addEventListener("beforeinstallprompt", (event) => {
   document.querySelector(".app-bar").append(install);
 });
 
-document.querySelector("#quick-add").onclick = () => edit();
+function quickAdd() {
+  const sheet = node("dialog", undefined, "quick-add-sheet");
+  sheet.setAttribute("aria-label", "Quick add");
+  const head = node("div", undefined, "section-heading");
+  head.append(
+    node("h2", "Add to your journal"),
+    button("Close", () => sheet.close(), "quiet"),
+  );
+  sheet.append(head);
+  const current =
+    vehicles.find((v) => v.id === selected && !v.archived) ||
+    vehicles.find((v) => !v.archived);
+  sheet.append(
+    node(
+      "p",
+      current
+        ? current.make + " " + current.model
+        : "Add a vehicle to start recording fuel, services and expenses.",
+      "muted",
+    ),
+  );
+  const choices = node("div", undefined, "quick-add-choices");
+  for (const [label, kind, detail] of [
+    ["Add fuel", "fuel", "Record a fill-up"],
+    ["Log service", "record", "Save completed maintenance"],
+    ["Add expense", "expense", "Track a vehicle cost"],
+    ["Add vehicle", "vehicle", "Expand your garage"],
+  ]) {
+    const b = button(label, () => {
+      sheet.close();
+      if (kind === "vehicle") edit();
+      else {
+        pendingEditor = kind;
+        navigate(kind === "record" ? "services" : "fuel");
+      }
+    });
+    b.append(node("small", detail));
+    b.disabled = !current && kind !== "vehicle";
+    choices.append(b);
+  }
+  sheet.append(choices);
+  sheet.onclose = () => sheet.remove();
+  document.body.append(sheet);
+  sheet.showModal();
+}
+document.querySelector("#quick-add").onclick = quickAdd;

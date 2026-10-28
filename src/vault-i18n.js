@@ -1,6 +1,7 @@
 export const vaultMessages = {
   en: {
     settings: "Settings",
+    history: "Vehicle history",
     L100: "L/100 km",
     USmpg: "Miles / US gallon",
     UKmpg: "Miles / UK gallon",

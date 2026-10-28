@@ -1,0 +1,10 @@
+# Everyday workflows — 2.4
+
+1. Quick add: mobile center + opens a vehicle-aware sheet for fuel, completed service, expense or vehicle. Recording actions are disabled until an active vehicle exists. Desktop users have the same sheet under Tools → Quick add.
+2. Dashboard: due maintenance expands automatically; recent activity precedes metrics and spending. Spending insights stay collapsed until fuel records exist. View all opens the selected vehicle's combined history.
+3. Entry: new fuel entries recall the current vehicle's latest station/currency; service entries recall provider/currency. Fuel volume × unit price fills the total until the user overrides it. Edits preserve existing totals and fields.
+4. Maintenance: existing overdue/due-soon classifications are shown on the dashboard. Estimated mileage due dates use dated service/fuel readings from the last 180 days, with at least 14 days between readings, no decreasing odometers and a newest reading within 90 days. Units normalize to km. Projections beyond ten years are omitted. These are estimates, not manufacturer guarantees or background notifications. Export reminders downloads scheduled calendar dates only; mileage estimates are excluded.
+5. History: More → Vehicle history combines services, fuel, expenses and linked receipts/documents, searchable by title, date, notes, provider, station, currency and document name. It filters by type and selected vehicle. Unlinked documents remain visible as undated entries; no upload dates are invented. Inline fuel receipts can be viewed; attached documents can be downloaded.
+6. Backups: dashboard offers one-click JSON export and reminds users when no export was requested on this device or the last request is over 30 days old. Backup & restore displays the last request date too. The timestamp describes a download request, not proof the browser saved it or an off-device copy exists. It is device-local metadata and is not imported from backups.
+
+All records remain local. No account, cloud sync or push-notification service is added.

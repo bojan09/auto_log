@@ -63,3 +63,11 @@
 - Standardized inset select and disclosure chevrons while preserving native control behavior.
 - Reduced empty finance metric typography, fixed mobile selector width and filter action alignment.
 - Reserved space for long dashboard vehicle descriptions beside the edit control.
+
+## 2.4.0
+- Quick-add sheet for fuel, service, expense and vehicle, available from mobile + and desktop Tools.
+- Dashboard prioritizes due maintenance/recent activity and collapses empty spending insights.
+- Vehicle-specific entry defaults and automatically calculated, editable fuel totals.
+- Labelled mileage forecasts and calendar export from Maintenance.
+- Searchable vehicle history with receipt/document access.
+- Dashboard backup export and 30-day reminders with the last export-request date.

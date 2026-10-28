@@ -48,3 +48,6 @@ Reworked garage imagery with a scenic backdrop, refined card surfaces, pill butt
 
 ## Dashboard-first and form refinement — 2.3
 Launches without a destination now open Dashboard, with vehicle onboarding for an empty garage. Explicit hash links continue to open their requested page. Refined dashboard hero, summaries and charts; standardized rounded form controls, grouped entry sections, step navigation and mobile numeric keyboard hints across vehicle and record editors.
+
+## Everyday workflows — 2.4
+Completed all six requested improvements: contextual quick add, prioritized dashboard, remembered entry defaults and automatic fuel totals, mileage estimates/calendar access, searchable combined vehicle history, and backup reminders with one-click export. See EVERYDAY_WORKFLOWS.md for behavior and limits.

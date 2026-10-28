@@ -7,6 +7,7 @@ export const destinations = [
   ["reminders", "Reminders"],
   ["trips", "Trip preparation"],
   ["reports", "Statistics"],
+  ["history", "Vehicle history"],
   ["documents", "Documents"],
   ["settings", "Settings"],
   ["backup", "Backup & restore"],

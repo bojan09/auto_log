@@ -19,6 +19,7 @@ export function renderTopbar({
   onProfile,
   profile,
   onDestination,
+  onQuickAdd,
 }) {
   const t = layoutText[language],
     root = document.querySelector("#top-tools");
@@ -80,6 +81,7 @@ export function renderTopbar({
   }
   option(cars, t.vehicles + " →", onGarage);
   const tools = menu(t.tools);
+  if (onQuickAdd) option(tools, "Quick add", onQuickAdd);
   for (const [key, label] of allDestinations)
     option(tools, label, () => onDestination(key));
   const theme = el("button");
