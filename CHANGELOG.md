@@ -58,3 +58,8 @@
 - Open Dashboard on launch while preserving direct destination links.
 - Refined dashboard vehicle showcase, summary cards and charts.
 - Consistent rounded inputs and form sections across the app, with guided editor styling and mobile numeric keyboard hints.
+
+## 2.3.1
+- Standardized inset select and disclosure chevrons while preserving native control behavior.
+- Reduced empty finance metric typography, fixed mobile selector width and filter action alignment.
+- Reserved space for long dashboard vehicle descriptions beside the edit control.

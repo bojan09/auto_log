@@ -341,3 +341,60 @@ dialog iframe {
     font-size: 10px;
   }
 }
+
+/* Keep native select semantics with one consistent, inset chevron. */
+:root {
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%23acb8bf' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+[data-theme="light"] {
+  --select-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 7.5 5 5 5-5' fill='none' stroke='%234c606c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+select:not([multiple]):not([size]) {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: var(--select-chevron);
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px 18px;
+  padding-right: 42px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+select:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+details:not(.vehicle-menu):not(.vehicle-optional):not(.top-menu) > summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+}
+details:not(.vehicle-menu):not(.vehicle-optional):not(.top-menu)
+  > summary::-webkit-details-marker {
+  display: none;
+}
+details:not(.vehicle-menu):not(.vehicle-optional):not(.top-menu)
+  > summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  margin: -4px 5px 0 auto;
+  opacity: 0.8;
+}
+details[open]:not(.vehicle-menu):not(.vehicle-optional):not(.top-menu)
+  > summary::after {
+  transform: rotate(225deg);
+  margin-top: 4px;
+}
+@media (forced-colors: active) {
+  select:not([multiple]):not([size]) {
+    appearance: auto;
+    background-image: none;
+  }
+}

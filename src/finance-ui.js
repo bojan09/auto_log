@@ -229,7 +229,11 @@ export function financePanel({
       ],
     ]) {
       const card = el("article", undefined, "card");
-      card.append(el("h4", label), el("p", value, "metric"));
+      const metric = el("p", value, "metric");
+      metric.dataset.empty = String(
+        value === t("insufficient") || value === t("noPrevious"),
+      );
+      card.append(el("h4", label), metric);
       metrics.append(card);
     }
     root.append(metrics);

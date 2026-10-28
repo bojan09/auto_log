@@ -1414,3 +1414,40 @@
     gap: 12px;
   }
 }
+
+.finance-metrics .metric[data-empty="true"] {
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  font-weight: 500;
+  color: var(--muted);
+}
+.finance-metrics .card {
+  min-height: 108px;
+}
+@media (max-width: 700px) {
+  .hero-copy {
+    padding-right: 44px;
+  }
+  .dashboard-status .card {
+    justify-content: flex-start;
+    min-height: 128px;
+  }
+  .dashboard-status .card > p:first-of-type {
+    font-size: 18px;
+  }
+  .finance-filters button[type="submit"] {
+    grid-column: 1/-1;
+    justify-self: start;
+    min-width: 140px;
+  }
+  .finance-metrics .metric[data-empty="true"] {
+    font-size: 13px;
+  }
+}
+@media (max-width: 700px) {
+  .finance > label {
+    max-width: none;
+    width: 100%;
+  }
+}

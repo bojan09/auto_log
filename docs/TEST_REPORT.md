@@ -140,3 +140,6 @@ Passed 34 unit tests and all fourteen Chromium browser suites, including update 
 
 ## 2.3.0 — dashboard-first launch and form refinement
 Passed 34 unit tests and fourteen Chromium browser suites. Existing garage workflows now use explicit garage URLs; navigation tests verify empty dashboard landing, and the reference suite verifies populated dashboard landing. Fixed a light-theme contrast failure discovered in the final accessibility checks and reran rebuild/navigation/appearance suites successfully. Reviewed mobile dashboard and guided vehicle editor screenshots. Syntax checks, runtime build and stylesheet audit passed. Physical-device testing and live Vercel deployment remain unverified.
+
+## 2.3.1 — cross-page UI audit
+All 34 unit tests and fourteen existing Chromium suites passed. An additional UI audit suite passed six-page checks at 320/390/820/1440px, native selection changes, keyboard disclosures, forced-colors fallback and compact empty-state typography. Build, syntax and static stylesheet checks passed. Reviewed the mobile finance screenshot. See UI_AUDIT_2_3_1.md for findings and verification limits.
