@@ -37,3 +37,8 @@ Vehicle creation/editing now uses three stages with final review, optional detai
 
 ## Full matte UI rebuild — 2.0
 Completed discovery and six rebuild/verification phases. Removed the legacy CSS stack; rebuilt the shell, dashboard/monthly fuel, garage/details, fuel/expense workspaces, maintenance, ownership tools, statistics, settings and profile. All 34 unit tests and twelve browser suites pass. See UI_REBUILD_PLAN.md for phase commits and MATTE_DESIGN_SYSTEM.md for the final architecture and intentional scope.
+
+## Navigation and personal appearance — 2.1
+Shared feature directory and hash navigation resolve desktop/mobile parity, direct links and Back/reload behavior. Empty destinations explain the need for a vehicle. Updates have an explicit activation button that protects open editors.
+
+Settings now offer eight accent colors, five surface palettes and five background finishes with an isolated preview. Preferences retain backup validation and local persistence. Mobile workspace headers put actions below identity, tabs use compact segmented styling, quick actions have colored icon tiles, and empty spending charts use less vertical space. Mobile navigation remains bottom-only.

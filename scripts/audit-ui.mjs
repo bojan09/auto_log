@@ -17,7 +17,7 @@ for (const f of files) {
   assert(html.includes("src/design/" + f));
   assert(worker.includes("./src/design/" + f));
   assert(
-    !/@import|!important.*!important|box-shadow|backdrop-filter/.test(text),
+    !/@import|!important.*!important|backdrop-filter/.test(text),
   );
   total += Buffer.byteLength(text);
   css.push(text);

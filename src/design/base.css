@@ -3,7 +3,9 @@
 }
 body {
   margin: 0;
-  background: var(--canvas);
+  background: var(--backdrop, none), var(--canvas);
+  background-attachment: fixed;
+  min-height: 100dvh;
   color: var(--ink);
   font-size: 14px;
   line-height: 1.5;
@@ -30,12 +32,21 @@ button {
   color: var(--ink);
   background: var(--raised);
   border: 1px solid var(--line);
-  border-radius: 6px;
-  min-height: 34px;
+  border-radius: 9px;
+  min-height: 36px;
   padding: 7px 12px;
   font-size: 12px;
   font-weight: 600;
   line-height: 1.4;
+}
+button {
+  transition:
+    background-color 160ms,
+    border-color 160ms,
+    box-shadow 160ms;
+}
+button:active:not(:disabled) {
+  transform: translateY(1px);
 }
 button:hover,
 summary:hover {
@@ -51,6 +62,9 @@ button[type="submit"] {
   background: var(--accent);
   border-color: var(--accent);
   color: white;
+  box-shadow:
+    0 3px 10px color-mix(in srgb, var(--accent) 20%, transparent),
+    inset 0 1px #ffffff18;
 }
 button[data-tone="quiet"] {
   background: transparent;

@@ -131,3 +131,6 @@ The user's English-only instruction supersedes earlier bilingual requirements. S
 
 ## Vercel output-directory fix
 Vercel's build succeeded but looked for `public`. Added explicit static framework, build command and `dist` output configuration, plus service-worker cache revalidation. `npm run build` and a local configuration/artifact integrity check passed. No production deployment result is claimed by these local checks.
+
+## 2.1.0 — navigation, mobile controls and personal appearance
+Passed 34 unit tests, syntax checks, runtime build and static stylesheet audit. All fourteen Chromium browser suites passed (the six initial suites followed by the remaining suites after updating assertions for retained hash routes and the intentional button radius change). New coverage verifies identical destination lists at 390/820/1440px, direct routes/Back/reload, explicit service-worker activation, appearance preview/save/reload, backup validation and light/dark accessibility. Reviewed generated mobile maintenance and appearance screenshots. Firefox/WebKit and physical-device verification remain outstanding; no live Vercel verification is claimed.

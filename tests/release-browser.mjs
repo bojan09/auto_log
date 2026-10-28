@@ -1,7 +1,4 @@
-import {
-  fillVehicleField,
-  saveVehicleForm,
-} from "./helpers/vehicle.mjs";
+import { fillVehicleField, saveVehicleForm } from "./helpers/vehicle.mjs";
 import { chromium, firefox, webkit } from "playwright";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
@@ -35,8 +32,8 @@ const server = createServer(async (req, res) => {
         body
           .toString()
           .replace(
-            "autolog-v22",
-            version === "old" ? "autolog-release-old" : "autolog-v22",
+            "autolog-v24",
+            version === "old" ? "autolog-release-old" : "autolog-v24",
           ),
       );
     res.writeHead(200, {
@@ -107,6 +104,10 @@ try {
   assert.equal(await page.locator(".vault article").count(), 0);
   await page.reload();
   await page
+    .locator(".floating-nav")
+    .getByRole("button", { name: "Garage", exact: true })
+    .click();
+  await page
     .getByRole("heading", { name: hostile + " Sedici", exact: true })
     .waitFor();
   version = "new";
@@ -125,6 +126,13 @@ try {
   assert(
     (await page.evaluate(() => caches.keys())).includes("autolog-release-old"),
   );
+  await Promise.all([
+    page.waitForEvent("load"),
+    page.getByRole("button", { name: "Update now", exact: true }).click(),
+  ]);
+  assert(
+    !(await page.evaluate(() => caches.keys())).includes("autolog-release-old"),
+  );
   await page.close();
   let activated = false;
   for (let i = 0; i < 100; i++) {
@@ -134,7 +142,7 @@ try {
           await worker.evaluate(async () => {
             const keys = await caches.keys();
             return (
-              keys.includes("autolog-v22") &&
+              keys.includes("autolog-v24") &&
               !keys.includes("autolog-release-old")
             );
           })
@@ -193,7 +201,7 @@ try {
   );
   await prefPage.reload();
   await prefPage
-    .getByRole("heading", { name: "Garage", exact: true })
+    .getByRole("heading", { name: "Settings", exact: true })
     .waitFor();
   assert.equal(
     await prefPage.locator("html").getAttribute("data-theme"),

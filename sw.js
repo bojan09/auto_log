@@ -1,8 +1,9 @@
-const CACHE = "autolog-v22";
+const CACHE = "autolog-v24";
 const ASSETS = [
   "./",
   "./index.html",
   "./src/app.js",
+  "./src/navigation.js",
   "./src/vehicle-details.js",
   "./src/design/tokens.css",
   "./src/design/base.css",
@@ -71,4 +72,8 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(
       caches.match(e.request).then((hit) => hit || fetch(e.request)),
     );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "ACTIVATE_UPDATE") self.skipWaiting();
 });

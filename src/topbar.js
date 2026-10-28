@@ -1,3 +1,4 @@
+import { destinations as allDestinations } from "./navigation.js";
 import { avatarButton } from "./profile.js";
 import { visualAsset } from "./visuals.js";
 import { layoutText } from "./dashboard.js";
@@ -79,11 +80,8 @@ export function renderTopbar({
   }
   option(cars, t.vehicles + " →", onGarage);
   const tools = menu(t.tools);
-  option(tools, "Profile", onProfile);
-  option(tools, "Expenses", () => onDestination("expenses"));
-  option(tools, "Reminders", () => onDestination("reminders"));
-  for (const key of ["settings", "documents", "reports", "trips", "backup"])
-    option(tools, t[key], () => onTool(key));
+  for (const [key, label] of allDestinations)
+    option(tools, label, () => onDestination(key));
   const theme = el("button");
   theme.type = "button";
   theme.className = "theme-toggle";

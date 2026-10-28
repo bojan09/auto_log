@@ -127,6 +127,7 @@ export function fuelSpendingPanel({ fuel, vehicles, vehicle }) {
       );
       stats.append(block);
     }
+    root.classList.toggle("is-empty", !data.months.some((m) => m.count));
     root.append(stats);
     const bars = el("div", undefined, "month-bars"),
       detail = el("div", undefined, "fuel-drilldown");

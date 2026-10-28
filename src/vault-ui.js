@@ -1,3 +1,4 @@
+import { destinations } from "./navigation.js";
 import { fuelSpendingPanel } from "./fuel-spending.js";
 import { vaultMessages } from "./vault-i18n.js";
 import {
@@ -28,6 +29,8 @@ export function applyAppearance(preferences) {
         : "dark"
       : p.theme;
   document.documentElement.dataset.accent = p.accent;
+  document.documentElement.dataset.surface = p.surface;
+  document.documentElement.dataset.background = p.background;
 }
 const el = (tag, text, cls) => {
   const e = document.createElement(tag);
@@ -57,6 +60,7 @@ export function morePanel({
   state,
   onProfile,
   onGarage,
+  onDestination,
 }) {
   const t = (k) => vaultMessages[language][k] || k;
   const root = el("section", undefined, "vault");
@@ -65,7 +69,21 @@ export function morePanel({
   const nav = el("div", undefined, "vault-tabs");
   nav.setAttribute("aria-label", t("settings"));
   const content = el("div", undefined, "vault-content");
-  root.append(nav, notice, content);
+  const directory = el("details", undefined, "feature-directory");
+  directory.append(el("summary", "All features"));
+  const links = el("div", undefined, "feature-links");
+  for (const [key, label] of destinations) {
+    const link = el("a", label);
+    link.href = "#" + key;
+    link.onclick = (event) => {
+      event.preventDefault();
+      onDestination(key);
+    };
+    links.append(link);
+  }
+  directory.append(links);
+  root.append(directory, nav, notice, content);
+
   const message = (key, error = false) => {
     notice.setAttribute("role", error ? "alert" : "status");
     notice.textContent = t(key);
@@ -617,7 +635,7 @@ export function morePanel({
     const f = el("form", undefined, "card settings-grid");
     const prefs = readPreferences(preferences);
     const groups = [
-      ["Appearance", ["theme", "accent", "motion"]],
+      ["Appearance", ["theme", "accent", "surface", "background", "motion"]],
       [
         "Units & formats",
         ["distance", "volume", "consumption", "currency", "dateFormat"],
@@ -629,6 +647,39 @@ export function morePanel({
       group.append(el("legend", title));
       for (const key of keys) {
         const values = preferenceOptions[key];
+        if (["accent", "surface", "background"].includes(key)) {
+          const picker = el("fieldset", undefined, "appearance-picker");
+          picker.append(
+            el(
+              "legend",
+              {
+                accent: "Accent color",
+                surface: "Surface palette",
+                background: "Background finish",
+              }[key],
+            ),
+          );
+          const choices = el("div", undefined, "appearance-choices");
+          for (const value of values) {
+            const label = el("label", undefined, "appearance-choice");
+            const radio = el("input");
+            radio.type = "radio";
+            radio.name = key;
+            radio.value = value;
+            radio.checked = prefs[key] === value;
+            const swatch = el("span", undefined, "appearance-swatch");
+            swatch.dataset.choice = value;
+            label.append(
+              radio,
+              swatch,
+              el("span", value[0].toUpperCase() + value.slice(1)),
+            );
+            choices.append(label);
+          }
+          picker.append(choices);
+          group.append(picker);
+          continue;
+        }
         field(
           group,
           key,
@@ -639,10 +690,41 @@ export function morePanel({
       }
       f.append(group);
     }
+    const preview = el("section", undefined, "appearance-preview");
+    preview.setAttribute("aria-label", "Appearance preview");
+    preview.append(
+      el("span", "YOUR PERSONAL COCKPIT", "eyebrow"),
+      el("h3", "Make every journey yours."),
+    );
+    const sample = el("button", "Primary action");
+    sample.type = "button";
+    sample.dataset.tone = "primary";
+    preview.append(
+      sample,
+      el("p", "Preview your colors here. Save to apply them across AutoLog."),
+    );
+    const refreshPreview = () => {
+      const values = Object.fromEntries(new FormData(f));
+      for (const key of ["theme", "accent", "surface", "background"])
+        preview.dataset[key] =
+          values[key] === "system"
+            ? document.documentElement.dataset.theme
+            : values[key];
+    };
+    f.addEventListener("change", refreshPreview);
+    f.prepend(preview);
+    refreshPreview();
     const submit = el("button", t("save"));
     submit.type = "submit";
     f.append(submit);
-    content.append(el("p", t("settingsHelp"), "muted"), f);
+    content.append(
+      el(
+        "p",
+        "Choose your colors, then save. Your records stay unchanged.",
+        "muted",
+      ),
+      f,
+    );
     f.onsubmit = async (e) => {
       e.preventDefault();
       submit.disabled = true;
@@ -750,8 +832,11 @@ export function morePanel({
   state.tab ||= "settings";
   for (const key of ["settings", "documents", "reports", "trips", "backup"]) {
     const b = action(t(key), async () => {
-      state.tab = key;
-      await draw();
+      if (onDestination) onDestination(key);
+      else {
+        state.tab = key;
+        await draw();
+      }
     });
     b.dataset.tab = key;
     nav.append(b);

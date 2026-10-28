@@ -1,3 +1,4 @@
+import { readRoute } from "./navigation.js";
 import { openVehicleDetails } from "./vehicle-details.js";
 import { setupVehicleEditor } from "./entry-forms.js";
 import { profilePanel, avatarButton } from "./profile.js";
@@ -52,6 +53,46 @@ const app = document.querySelector("#app"),
   form = document.querySelector("form");
 const t = (k) => messages[language][k];
 const vehicleEditor = setupVehicleEditor({ form, dialog });
+function navigate(key, draw = true) {
+  pendingFinanceRoute = null;
+  if (key === "more") key = "settings";
+  if (key === "expenses" || key === "fuel") {
+    view = "fuel";
+    const id =
+      vehicles.find((v) => v.id === selected && !v.archived)?.id ||
+      vehicles.find((v) => !v.archived)?.id ||
+      selected;
+    if (id)
+      Object.assign((financeStates[id] ??= {}), {
+        workspace: key === "expenses" ? "expenses" : "overview",
+        category: "all",
+      });
+    pendingFinanceRoute = key;
+  } else if (key === "reminders" || key === "services") {
+    view = "services";
+  } else if (["dashboard", "garage", "profile"].includes(key)) view = key;
+  else {
+    view = "more";
+    moreState.tab = key;
+  }
+  if (draw) render();
+}
+let pendingFinanceRoute = null;
+let routeFromHistory = false;
+const initialRoute = readRoute(location.hash);
+if (initialRoute) navigate(initialRoute, false);
+window.addEventListener("hashchange", () => {
+  const key = readRoute(location.hash);
+  if (key) {
+    routeFromHistory = true;
+    try {
+      navigate(key);
+    } finally {
+      routeFromHistory = false;
+    }
+    window.scrollTo(0, 0);
+  }
+});
 
 preferences.setItem("language", language);
 const db = await openDatabase();
@@ -166,6 +207,26 @@ function render() {
   const current =
     vehicles.find((v) => v.id === selected && !v.archived) ||
     vehicles.find((v) => !v.archived);
+  if (current && pendingFinanceRoute) {
+    Object.assign((financeStates[current.id] ??= {}), {
+      workspace: pendingFinanceRoute === "expenses" ? "expenses" : "overview",
+      category: "all",
+    });
+    pendingFinanceRoute = null;
+  }
+  const route =
+    view === "more"
+      ? moreState.tab || "settings"
+      : view === "fuel" &&
+          (pendingFinanceRoute === "expenses" ||
+            financeStates[current?.id]?.workspace === "expenses")
+        ? "expenses"
+        : view;
+  if (location.hash !== "#" + route) {
+    const method =
+      location.hash && !routeFromHistory ? "pushState" : "replaceState";
+    history[method]({}, "", "#" + route);
+  }
   const openProfile = () => {
     if (view === "profile") return;
     view = "profile";
@@ -173,25 +234,7 @@ function render() {
   };
   renderTopbar({
     profile,
-    onDestination: (key) => {
-      if (key === "expenses") {
-        view = "fuel";
-        if (current)
-          Object.assign((financeStates[current.id] ??= {}), {
-            category: "all",
-            workspace: "expenses",
-          });
-      } else if (key === "reminders") view = "services";
-      else {
-        view = "more";
-        moreState.tab = key;
-      }
-      render();
-      if (key === "expenses")
-        document
-          .querySelector(".ledger-heading")
-          ?.scrollIntoView({ block: "start" });
-    },
+    onDestination: navigate,
     onProfile: openProfile,
     vehicles,
     current,
@@ -207,11 +250,7 @@ function render() {
       view = "garage";
       render();
     },
-    onTool: (key) => {
-      moreState.tab = key;
-      view = "more";
-      render();
-    },
+    onTool: navigate,
     onTheme: () => {
       preferences.setItem(
         "theme",
@@ -255,6 +294,7 @@ function render() {
         language,
         preferences,
         state: moreState,
+        onDestination: navigate,
         onProfile: openProfile,
         onGarage: () => {
           view = "garage";
@@ -276,6 +316,39 @@ function render() {
         },
       }),
     );
+    return;
+  }
+  if (!vehicles.some((v) => !v.archived) && view !== "garage") {
+    const empty = node("section", undefined, "card empty-state");
+    const descriptions = {
+      dashboard: [
+        "Your dashboard is ready",
+        "Add a vehicle to see its mileage, maintenance and running costs.",
+      ],
+      fuel: [
+        "Fuel records need a vehicle",
+        "Add a vehicle first, then record fill-ups and expenses here.",
+      ],
+      services: [
+        "Maintenance needs a vehicle",
+        "Add a vehicle first, then create schedules and service records.",
+      ],
+    };
+    const [title, description] = descriptions[view] || descriptions.dashboard;
+    empty.append(
+      node("h3", title),
+      node("p", description),
+      button("Add vehicle", () => edit(), "primary"),
+      button("Open garage", () => navigate("garage"), "quiet"),
+    );
+    empty.append(
+      node(
+        "p",
+        "Records are saved in this browser. To move existing records from another device, use Backup & restore.",
+        "muted",
+      ),
+    );
+    app.append(empty);
     return;
   }
   if (!vehicles.length) {
@@ -693,14 +766,13 @@ document.querySelector("#cancel").onclick = () => dialog.close();
 document.querySelectorAll("nav [data-view]").forEach(
   (b) =>
     (b.onclick = () => {
-      view = b.dataset.view;
-      render();
+      navigate(b.dataset.view);
     }),
 );
 await load();
 if ("serviceWorker" in navigator)
   navigator.serviceWorker
-    .register("./sw.js")
+    .register("./sw.js", { updateViaCache: "none" })
     .then((reg) => {
       const notify = () => {
         if (
@@ -708,10 +780,37 @@ if ("serviceWorker" in navigator)
           document.querySelector("#update-ready")
         )
           return;
-        const notice = node("p", t("ui9"));
+        const notice = node("div");
         notice.id = "update-ready";
         notice.setAttribute("role", "status");
-        app.prepend(notice);
+        const text = node(
+          "span",
+          "An update is ready. Install the latest design without deleting your records.",
+        );
+        const install = button(
+          "Update now",
+          () => {
+            if (document.querySelector("dialog[open]")) {
+              text.textContent =
+                "Save or close your open form, then select Update now.";
+              return;
+            }
+            if (!reg.waiting) {
+              reg.update().catch(() => {});
+              return;
+            }
+            install.disabled = true;
+            navigator.serviceWorker.addEventListener(
+              "controllerchange",
+              () => location.reload(),
+              { once: true },
+            );
+            reg.waiting.postMessage({ type: "ACTIVATE_UPDATE" });
+          },
+          "primary",
+        );
+        notice.append(text, install);
+        document.body.append(notice);
       };
       const watch = (worker) => {
         if (!worker) return;
@@ -724,6 +823,7 @@ if ("serviceWorker" in navigator)
       reg.addEventListener("updatefound", () => watch(reg.installing));
       watch(reg.installing);
       if (reg.waiting) notify();
+      reg.update().catch(() => {});
     })
     .catch(() => {
       const notice = node("p", t("ui10"));

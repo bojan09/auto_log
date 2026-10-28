@@ -42,3 +42,9 @@
 - Optimized WebP artwork, safer import validation, linear relationship checks and storage-failure recovery.
 - Tested offline update lifecycle and project-subpath release packaging.
 - Added manual deployment workflow, troubleshooting and verification limits.
+
+## 2.1.0
+- Shared navigation destinations, direct hash URLs, Back/reload support and contextual empty screens.
+- Eight accents, five surface palettes and five solid/gradient finishes, with preview before save.
+- Mobile action-row, tab and quick-action refinements; compact empty charts.
+- Explicit service-worker update activation and cache revalidation without deleting user records.

@@ -127,6 +127,10 @@ await page.evaluate(() => {
   localStorage.setItem("language", "mk");
 });
 await page.reload();
+await page
+  .locator(".floating-nav")
+  .getByRole("button", { name: "Garage", exact: true })
+  .click();
 await page.screenshot({
   path: "test-results/controls-garage-1440.png",
   fullPage: true,
@@ -145,7 +149,7 @@ assert.equal(
   await page
     .locator("#app .heading>button:not(.mobile-profile)")
     .evaluate((e) => getComputedStyle(e).borderRadius),
-  "6px",
+  "9px",
 );
 assert.deepEqual(errors, []);
 console.log(

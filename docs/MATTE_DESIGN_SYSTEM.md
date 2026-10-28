@@ -13,7 +13,7 @@ The October 27 matte-charcoal reference supersedes earlier neon/teal or glossy d
 
 All four old stylesheets were deleted. None are imported or shipped. `node scripts/audit-ui.mjs` checks the runtime manifest, explicit stylesheet ownership, forbidden legacy files/imports and a static class-reference audit. The static audit is a useful guard, not proof that every CSS rule executes in every browser. Conditional responsive, print and accessibility rules are retained deliberately.
 
-Semantic colors use matte graphite, slate blue, sage and ochre. No CSS shadows, blur/glass surfaces or glow effects remain. Vehicle imagery appears in showcase/cards/details; owner photos take precedence over labeled body-style illustrations. The original flat A/road emblem and raster install icons use the same palette. Motion preferences remain stored; the presentation avoids decorative animation.
+Version 2.1 adds eight accent colors, five independent surface palettes, and solid/aurora/ocean/sunset/spotlight backgrounds. These work in light and dark themes. Primary buttons use a restrained shadow; surfaces remain opaque for readable content. This intentionally supersedes the original no-gradient restriction following the user’s personalization request. Vehicle imagery appears in showcase/cards/details; owner photos take precedence over labeled body-style illustrations. The original flat A/road emblem and raster install icons use the same palette. Motion preferences remain stored; the presentation avoids decorative animation.
 
 ## Workspaces
 
@@ -25,4 +25,4 @@ The monthly fuel chart filters transaction dates, vehicle and currency. Its aver
 
 ## Intentional limits
 
-Internal page selection retains the existing app state navigation model; this release does not add URL-based routing. No GPS trips, currency conversion, cloud account, weather feed or closed-app notifications are invented. Device-stored records and backup formats are preserved. Firefox/WebKit, physical phone keyboards and screen-reader review need device verification.
+Hash routes preserve destinations across reloads and browser Back. Desktop tools and the mobile All features directory expose the same destination registry. No GPS trips, currency conversion, cloud account, weather feed or closed-app notifications are invented. Device-stored records and backup formats are preserved. Firefox/WebKit, physical phone keyboards and screen-reader review need device verification.

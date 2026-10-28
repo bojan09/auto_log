@@ -115,7 +115,7 @@ const ics = await readFile(await (await dl).path(), "utf8");
 assert(ics.includes("Winter trip"));
 await tab("Settings");
 await page.getByLabel("Theme", { exact: true }).selectOption("light");
-await page.getByLabel("Accent color", { exact: true }).selectOption("mint");
+await page.getByRole("radio", { name: "Mint", exact: true }).check();
 await page
   .getByLabel("Default distance unit", { exact: true })
   .selectOption("mi");
