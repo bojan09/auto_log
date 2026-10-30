@@ -37,7 +37,6 @@ async function fill(day, odo, volume, full) {
     odometer: String(odo),
     volume: String(volume),
     unitPrice: "80",
-    totalPaid: String(volume * 80),
   }))
     await d.locator("[name=" + name + "]").fill(value);
   await d.locator("[name=full]").setChecked(full);

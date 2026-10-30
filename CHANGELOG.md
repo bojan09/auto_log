@@ -71,3 +71,9 @@
 - Labelled mileage forecasts and calendar export from Maintenance.
 - Searchable vehicle history with receipt/document access.
 - Dashboard backup export and 30-day reminders with the last export-request date.
+
+## 2.4.1
+- Fuel price labels now follow litres, US gallons or imperial gallons.
+- Total paid is calculated automatically and read-only by default; changes to volume/price recalculate it, and clearing either input clears the result.
+- Receipt discounts/rounding require an explicit adjustment option; existing adjusted records retain their values.
+- Save recomputes automatic totals instead of relying on a manually populated total field.

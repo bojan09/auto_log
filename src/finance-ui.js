@@ -558,27 +558,50 @@ export function financePanel({
           ["UKgal", t("volumeUK")],
         ],
       );
-      field(form, "unitPrice", "number", existing.unitPrice);
-      field(form, "totalPaid", "number", existing.total);
+      const price = field(form, "unitPrice", "number", existing.unitPrice);
+      const totalInput = field(form, "totalPaid", "number", existing.total);
+      const existingCalculated = Number(
+        (Number(existing.volume) * Number(existing.unitPrice)).toFixed(2),
+      );
+      const adjustment = field(
+        form,
+        "adjustTotal",
+        "checkbox",
+        saved &&
+          Number.isFinite(existing.total) &&
+          existing.total !== existingCalculated,
+      );
       const preview = el("p");
-      let manualTotal = saved;
-      form.elements.totalPaid.addEventListener("input", () => {
-        manualTotal = form.elements.totalPaid.value !== "";
-      });
-      const update = (event) => {
-        const volume = form.elements.volume,
-          price = form.elements.unitPrice;
+      preview.setAttribute("role", "status");
+      const update = () => {
+        const unit = form.elements.volumeUnit.value;
+        const priceLabel = {
+          L: "Price per litre",
+          USgal: "Price per US gallon",
+          UKgal: "Price per imperial gallon",
+        }[unit];
+        price.closest("label").firstChild.textContent = priceLabel;
+        const volume = form.elements.volume;
+        const valid =
+          volume.value !== "" &&
+          price.value !== "" &&
+          volume.validity.valid &&
+          price.validity.valid;
         const total = Number(volume.value) * Number(price.value);
-        preview.textContent = t("preview") + ": " + n(total);
-        if (
-          !manualTotal &&
-          volume.value &&
-          price.value &&
-          Number.isFinite(total)
-        )
-          form.elements.totalPaid.value = total.toFixed(2);
+        totalInput.readOnly = !adjustment.checked;
+        if (!adjustment.checked)
+          totalInput.value =
+            valid && Number.isFinite(total) ? total.toFixed(2) : "";
+        preview.textContent = valid
+          ? "Calculated total: " +
+            n(total) +
+            " " +
+            form.elements.currency.value.toUpperCase()
+          : "Enter fuel volume and price to calculate the total.";
       };
       form.addEventListener("input", update);
+      form.elements.volumeUnit.addEventListener("change", update);
+      adjustment.addEventListener("change", update);
       update();
       form.append(preview, el("p", t("priceNote"), "muted"));
       field(form, "full", "checkbox", existing.full ?? true);
@@ -634,6 +657,7 @@ export function financePanel({
                   "volumeUnit",
                   "unitPrice",
                   "totalPaid",
+                  "adjustTotal",
                   "currency",
                   "full",
                   "missed",
@@ -668,8 +692,11 @@ export function financePanel({
           if (key in data) data[key] = Number(data[key]);
         data.currency = data.currency.trim().toUpperCase();
         if (kind === "fuel") {
-          data.total = Number(data.totalPaid);
+          data.total = form.elements.adjustTotal.checked
+            ? Number(data.totalPaid)
+            : Number((data.volume * data.unitPrice).toFixed(2));
           delete data.totalPaid;
+          delete data.adjustTotal;
           data.full = form.elements.full.checked;
           data.missed = form.elements.missed.checked;
           data.receipt = form.elements.removeReceipt?.checked
