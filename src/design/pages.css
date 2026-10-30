@@ -1529,3 +1529,21 @@
     justify-self: start;
   }
 }
+
+@media (max-width: 700px), (pointer: coarse) {
+  .hotspot,
+  .manage-vehicle {
+    min-height: 44px;
+  }
+  .manage-vehicle {
+    min-width: 44px;
+  }
+  .vehicle-menu > summary {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+  .service-card button {
+    min-height: 44px;
+  }
+}

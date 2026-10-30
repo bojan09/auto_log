@@ -77,3 +77,8 @@
 - Total paid is calculated automatically and read-only by default; changes to volume/price recalculate it, and clearing either input clears the result.
 - Receipt discounts/rounding require an explicit adjustment option; existing adjusted records retain their values.
 - Save recomputes automatic totals instead of relying on a manually populated total field.
+
+## 2.5.0
+- Improve touch targets and input sizing on mobile and landscape touch devices.
+- Keep phone forms and focused fields visible in reduced or keyboard-overlay viewports.
+- Add compact short-screen editor headers, display-cutout padding and modal scroll locking.

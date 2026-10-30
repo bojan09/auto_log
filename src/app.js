@@ -1,3 +1,4 @@
+import { setupMobileViewport } from "./mobile.js";
 import { readRoute } from "./navigation.js";
 import { openVehicleDetails } from "./vehicle-details.js";
 import { setupVehicleEditor } from "./entry-forms.js";
@@ -22,6 +23,7 @@ const financeStates = {};
 const moreState = {};
 let pendingEditor = null;
 setupTopbar();
+setupMobileViewport();
 const transientPreferences = new Map();
 const preferences = {
   getItem(key) {

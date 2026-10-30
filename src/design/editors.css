@@ -574,3 +574,64 @@ input::file-selector-button {
     font-size: 12px;
   }
 }
+
+@media (max-width: 700px), (pointer: coarse) {
+  .editor-close {
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+    top: 10px;
+    right: 10px;
+  }
+  .vehicle-editor-header,
+  .record-editor-header {
+    padding-right: 24px;
+  }
+  .record-editor-body,
+  .vehicle-editor-body {
+    scroll-padding-block: 16px;
+  }
+}
+@media (max-width: 700px) {
+  #editor.vehicle-editor,
+  dialog.record-editor,
+  dialog.quick-add-sheet {
+    bottom: var(--keyboard-inset, 0px);
+    max-height: calc(var(--visible-height, 100dvh) - 12px);
+  }
+  #vehicle,
+  .record-entry-form {
+    max-height: calc(var(--visible-height, 100dvh) - 12px);
+  }
+}
+@media (pointer: coarse) {
+  .vehicle-fields input,
+  .record-fields input,
+  .record-fields select,
+  .vault-form input,
+  .profile-card input,
+  .finance-filters input,
+  .finance-filters select,
+  .fuel-filters select {
+    font-size: 16px;
+  }
+}
+
+[data-short-viewport] .vehicle-editor-intro,
+[data-short-viewport] .record-context,
+[data-short-viewport] .vehicle-editor-header .eyebrow,
+[data-short-viewport] .record-editor-header .eyebrow {
+  display: none;
+}
+[data-short-viewport] .vehicle-editor-header,
+[data-short-viewport] .record-editor-header {
+  padding-top: 14px;
+}
+[data-short-viewport] .vehicle-editor-header h2,
+[data-short-viewport] .record-editor-header h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+[data-short-viewport] .vehicle-progress {
+  padding-bottom: 6px;
+}

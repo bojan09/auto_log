@@ -51,3 +51,6 @@ Launches without a destination now open Dashboard, with vehicle onboarding for a
 
 ## Everyday workflows — 2.4
 Completed all six requested improvements: contextual quick add, prioritized dashboard, remembered entry defaults and automatic fuel totals, mileage estimates/calendar access, searchable combined vehicle history, and backup reminders with one-click export. See EVERYDAY_WORKFLOWS.md for behavior and limits.
+
+## Phase 7 — Mobile compatibility (2.5)
+Completed environment-supported mobile resilience work: touch targets, landscape input sizing, safe-area padding, keyboard-overlay viewport handling, compact short-screen headers and focused-field visibility. Chromium checks pass; physical iOS/Android and unavailable Firefox/WebKit verification remain outstanding. See MOBILE_COMPATIBILITY.md.

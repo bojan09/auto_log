@@ -323,3 +323,16 @@ main {
     display: none;
   }
 }
+
+@media (max-width: 700px) {
+  .mobile-profile {
+    min-width: 44px;
+    width: 44px;
+    height: 44px;
+    min-height: 44px;
+  }
+  .floating-nav {
+    left: max(12px, env(safe-area-inset-left));
+    right: max(12px, env(safe-area-inset-right));
+  }
+}

@@ -149,3 +149,6 @@ Passed 37 unit tests and all sixteen Chromium browser suites. The new integrated
 
 ## 2.4.1 — automatic fuel total
 Clean npm installation succeeded using a writable temporary cache. Syntax checks, production build, 37 unit tests and all sixteen Chromium browser suites passed. Expanded entry coverage checks litre/US-gallon/imperial-gallon price labels, read-only calculated totals, repeated volume changes, explicit receipt adjustments, returning to automatic mode and clearing incomplete inputs. Automatic saves recalculate from volume and price. GitHub deployment-status access remains blocked; the failed Vercel check cannot be diagnosed without its error log, and production success is not claimed.
+
+## 2.5.0 — mobile compatibility
+37 unit tests and sixteen existing Chromium suites passed. The new seventeenth suite verifies touch entry, portrait/landscape and short viewport sizing, focused-input visibility, 44px close targets, 16px text, simulated overlay keyboard/zoom handling and offline launch. Reran guided-entry tests after the focused-field refinement; they passed. Reviewed the 390×360 form screenshot. Build, syntax and static stylesheet checks pass. Physical iOS/Android and cross-engine testing remain explicitly outstanding.

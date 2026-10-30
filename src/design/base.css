@@ -398,3 +398,44 @@ details[open]:not(.vehicle-menu):not(.vehicle-optional):not(.top-menu)
     background-image: none;
   }
 }
+
+/* Keep focus destinations clear of the floating dock and respect display cutouts. */
+html {
+  scroll-padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+input,
+select,
+textarea,
+button,
+summary {
+  scroll-margin-block: 16px;
+}
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+@media (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  button,
+  summary {
+    min-height: 44px;
+  }
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 18px;
+  }
+  label.checkbox,
+  label.check-item {
+    min-height: 44px;
+  }
+}
+@media (max-width: 700px) {
+  main {
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+  }
+}
